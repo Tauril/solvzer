@@ -19,4 +19,18 @@ namespace cube
     return face_;
   }
 
+  inline
+  Face::const_iterator
+  Face::begin() const
+  {
+    return face_.begin();
+  }
+
+  inline
+  Face::const_iterator
+  Face::end() const
+  {
+    return face_.end();
+  }
+
 } // namespace cube

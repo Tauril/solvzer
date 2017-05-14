@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 namespace cube
 {
 
@@ -14,5 +16,7 @@ namespace cube
   };
 
   color get_color(int c);
+
+  std::ostream& operator<<(std::ostream& o, const color& c);
 
 } // namespace cube

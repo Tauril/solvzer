@@ -15,6 +15,7 @@ int main(int argc, char** argv)
                                           {5, 5, 5, 5, 5, 5, 5, 5, 5}}};
 
   auto cube = cube::Cube(c);
-  std::cout << "Tauril" << std::endl;
+  std::cout << cube << std::endl;
+
   return 0;
 }

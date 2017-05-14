@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <ostream>
 
 #include <cube/face.hh>
 
@@ -12,7 +13,7 @@ namespace cube
   **
   **      0   1   2   3   4   5   6   7   8   9   10  11
   **
-  **                    'Up`
+  **                    `Up`
   **
   **                `---'---'---`
   **  0             | 0 | 1 | 2 |
@@ -53,6 +54,8 @@ namespace cube
     private:
       cube_t cube_;
   };
+
+  std::ostream& operator<<(std::ostream& o, const Cube& c);
 
 } // namespace cube
 

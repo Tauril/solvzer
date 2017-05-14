@@ -27,4 +27,10 @@ namespace cube
     }
   }
 
+  std::ostream&
+  operator<<(std::ostream& o, const color& c)
+  {
+    return o << static_cast<int>(c);
+  }
+
 } // namespace cube
