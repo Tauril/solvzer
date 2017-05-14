@@ -40,8 +40,6 @@ case $($CXX --version) in
     ;;
 esac
 
-SOLVZER_CXXFLAGS = "-std=c++14 -Wall -Wextra -Werror"
-
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
@@ -50,6 +48,10 @@ SOLVZER_CXXFLAGS = "-std=c++14 -Wall -Wextra -Werror"
 # We don't need shared libraries, speed the compilation up.
 LT_INIT([disable-shared])
 
+AC_ARG_VAR([SOLVZER], [Rubik''s Cube Solving Robot])
+AC_CHECK_PROGS([SOLVZER], [solvzer])
+
+
 ## ----------- ##
 ## Libraries.  ##
 ## ----------- ##
@@ -57,8 +59,8 @@ LT_INIT([disable-shared])
 BOOST_REQUIRE([1.61])
 BOOST_PROGRAM_OPTIONS
 
-## ------- ##
 
+## ------- ##
 ## Tests.  ##
 ## ------- ##
 
