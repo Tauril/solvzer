@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include <cube/face.hh>
+
 namespace cube
 {
 
@@ -35,26 +37,23 @@ namespace cube
   **                    `Down`
   */
 
-  enum class color
-  {
-    white,    // 0
-    blue,     // 1
-    orange,   // 2
-    green,    // 3
-    red,      // 4
-    yellow    // 5
-  };
-
   class Cube
   {
     public:
       /// Cube type
-      using cube_t = std::array<std::array<int, 9>, 6>;
+      using cube_t = std::array<Face, 6>;
 
-      Cube(cube_t cube);
+      Cube() = default;
+      Cube(std::array<std::array<int, 9>, 6>& cube);
+      Cube(cube_t& cube);
+
+      const cube_t& cube_get() const;
+      cube_t& cube_get();
 
     private:
       cube_t cube_;
   };
 
 } // namespace cube
+
+#include <cube/cube.hxx>

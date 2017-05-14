@@ -10,5 +10,7 @@ bin_PROGRAMS = solvzer
 
 EXTRA_DIST = bootstrap README.md
 
-solvzer_SOURCES = 	src/cube.hh src/cube.cc 	\
+solvzer_SOURCES = 	src/cube/color.hh src/cube/color.cc		    \
+			src/cube/face.hh src/cube/face.hxx src/cube/face.cc \
+			src/cube/cube.hh src/cube/cube.hxx src/cube/cube.cc \
 			src/solvzer.cc
