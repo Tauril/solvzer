@@ -1,6 +1,5 @@
-#include <cstdlib>
-
 #include <cube/color.hh>
+#include <misc/contract.hh>
 
 namespace cube
 {
@@ -23,7 +22,7 @@ namespace cube
       case 5:
         return color::yellow;
       default:
-        std::abort();
+        die("Can't match an integer to a color");
     }
   }
 
