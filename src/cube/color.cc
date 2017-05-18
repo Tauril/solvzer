@@ -10,17 +10,17 @@ namespace cube
     switch (c)
     {
       case 0:
-        return color::white;
+        return color::U;
       case 1:
-        return color::blue;
+        return color::R;
       case 2:
-        return color::orange;
+        return color::F;
       case 3:
-        return color::green;
+        return color::D;
       case 4:
-        return color::red;
+        return color::L;
       case 5:
-        return color::yellow;
+        return color::B;
       default:
         die("Can't match an integer to a color");
     }
