@@ -1,5 +1,3 @@
-//#include <algorithm>
-
 #include <cube/facelet.hh>
 #include <misc/contract.hh>
 
@@ -122,6 +120,12 @@ namespace cube
       default:
         die("Can't match an integer to a facelet");
     }
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const facelet& f)
+  {
+    return o << static_cast<int>(f);
   }
 
 } // namespace cube
