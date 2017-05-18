@@ -14,6 +14,7 @@ solvzer_SOURCES = 	src/misc/contract.hh src/misc/contract.cc	    \
 			src/misc/indent.hh src/misc/indent.cc		    \
 			src/cube/color.hh src/cube/color.cc		    \
 			src/cube/corner.hh				    \
+			src/cube/edge.hh				    \
 			src/cube/facelet.hh src/cube/facelet.cc 	    \
 			src/cube/face.hh src/cube/face.cc		    \
 			src/cube/cube.hh src/cube/cube.hxx src/cube/cube.cc \
