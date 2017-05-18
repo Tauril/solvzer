@@ -5,7 +5,7 @@
 namespace cube
 {
 
-  enum class edge
+  enum edge
   {
     UR,   // 0
     UF,   // 1

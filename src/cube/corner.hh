@@ -5,7 +5,7 @@
 namespace cube
 {
 
-  enum class corner
+  enum corner
   {
     URF,  // 0
     UFL,  // 1
