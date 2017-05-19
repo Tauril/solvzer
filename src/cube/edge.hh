@@ -21,7 +21,10 @@ namespace cube
     BR    // 11
   };
 
-  static constexpr std::array<edge, 12> edges =
+  using e_perm = std::array<edge, 12>;
+  using e_ori = std::array<unsigned char, 12>;
+
+  static constexpr e_perm edges =
     { UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR };
 
 } // namespace cube

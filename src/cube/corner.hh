@@ -17,7 +17,10 @@ namespace cube
     DRB   // 7
   };
 
-  static constexpr std::array<corner, 8> corners =
+  using c_perm = std::array<corner, 8>;
+  using c_ori = std::array<unsigned char, 8>;
+
+  static constexpr c_perm corners =
     { URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB };
 
 } // namespace cube
