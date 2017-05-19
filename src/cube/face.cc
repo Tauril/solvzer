@@ -29,7 +29,7 @@ namespace cube
       if (x == 0)
         o << '|';
 
-      o << ' ' << *it << " |";
+      o << ' ' << clr_to_chr(*it) << " |";
     }
 
     return o;
@@ -108,6 +108,12 @@ namespace cube
     }
 
     return o;
+  }
+
+  char
+  clr_to_chr(color c)
+  {
+    return "URFDLB"[c];
   }
 
 } // namespace cube

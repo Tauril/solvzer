@@ -63,5 +63,6 @@ namespace cube
   };
 
   std::ostream& operator<<(std::ostream& o, const Face& f);
+  char clr_to_chr(color c);
 
 } // namespace cube
