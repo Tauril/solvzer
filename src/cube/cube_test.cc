@@ -252,10 +252,127 @@ int main(int argc, char** argv)
 
   // BFS.
 
+  // 1.
+  world.clear();
+  q.clear();
+  q.emplace_back(cube::Cube::identity_cube_);
+  world[cube::Cube::identity_cube_] = 0;
+
+  unsigned int qg = 0;
+  int prevd = -1;
+
+  while (qg < q.size())
+  {
+    int d = world[q[qg]];
+    if (d != prevd)
+    {
+      std::cout << "At lev " << d << " size " << (q.size() - qg) << std::endl;
+      if (cube::allpos[d] != q.size() - qg)
+        cube::Cube::error("Bad value");
+      if (q.size() > MAXELEMENTS)
+        break;
+      prevd = d;
+    }
+
+    for (int i = 0; i < cube::NMOVES; i++)
+    {
+      cp1 = q[qg];
+      cp1.move(i);
+
+      if (world.find(cp1) == world.end())
+      {
+        world[cp1] = d + 1;
+        q.emplace_back(cp1);
+      }
+    }
+    qg++;
+  }
+
+  // 2.
+  world.clear();
+  q.clear();
+  q.emplace_back(cube::Cube::identity_cube_);
+  world[cube::Cube::identity_cube_] = 0;
+  qg = 0;
+  prevd = -1;
+
+  while (qg < q.size())
+  {
+    int d = world[q[qg]];
+    if (d != prevd)
+    {
+      std::cout << "At lev " << d << " size " << (q.size() - qg) << std::endl;
+      if (cube::c48pos[d] != q.size() - qg)
+        cube::Cube::error("Bad value");
+      if (q.size() > MAXELEMENTS)
+        break;
+      prevd = d;
+    }
+
+    for (int i = 0; i < cube::NMOVES; i++)
+    {
+      cp1 = q[qg];
+      cp1.move(i);
+      cp1.canon_into_48(cp2);
+      if (world.find(cp2) == world.end())
+      {
+        world[cp2] = d + 1;
+        q.emplace_back(cp2);
+      }
+    }
+    qg++;
+  }
+
+  // 3.
+  world.clear();
+  q.clear();
+  q.emplace_back(cube::Cube::identity_cube_);
+  world[cube::Cube::identity_cube_] = 0;
+  qg = 0;
+  prevd = -1;
+
+  while (qg < q.size())
+  {
+    int d = world[q[qg]];
+    if (d != prevd)
+    {
+      std::cout << "At lev " << d << " size " << (q.size() - qg) << std::endl;
+      if (cube::c96pos[d] != q.size() - qg)
+        cube::Cube::error("Bad value");
+      if (q.size() > MAXELEMENTS)
+        break;
+      prevd = d;
+    }
+
+    for (int i = 0; i < cube::NMOVES; i++)
+    {
+      cp1 = q[qg];
+      cp1.move(i);
+      cp1.canon_into_96(cp2);
+
+      if (world.find(cp2) == world.end())
+      {
+        world[cp2] = d + 1;
+        q.emplace_back(cp2);
+      }
+
+      cp1 = q[qg];
+      cp1.movesc(i);
+      cp1.canon_into_96(cp2);
+      if (world.find(cp2) == world.end())
+      {
+        world[cp2] = d + 1;
+        q.emplace_back(cp2);
+      }
+    }
+    qg++;
+  }
+
+  // 4.
   world.clear();
   unsigned int prev_count = 0;
 
-  for (int d = 0;; d++)
+  for (int d = 0; ; d++)
   {
     q.clear();
     recurse_search(cube::Cube::identity_cube_, d, cube::CANONSEQSTART, q);
