@@ -2,9 +2,9 @@
 
 #include <array>
 #include <iostream>
-#include <vector>
 
-#include <misc/contract.hh>
+#include <cube/corner.hh>
+#include <cube/edge.hh>
 
 namespace cube
 {
@@ -23,11 +23,11 @@ namespace cube
   **      `Left`    `---'---'---`   `Right` |   `Back`
   **  2             | 6 | 7 | 8 |
   **    `---'---'---'---'---'---'---'---'---'---'---'---`
-  **  3 | 45| 46| 47| 9 | 10| 11| 18| 19| 20| 36| 37| 38|
+  **  3 | 36| 37| 38| 18| 19| 20| 9 | 10| 11| 45| 46| 47|
   **    `---'---'---'---'---'---'---'---'---'---'---'---`
-  **  4 | 48| 49| 50| 12| 13| 14| 21| 22| 23| 39| 40| 41|
+  **  4 | 39| 40| 41| 21| 22| 23| 12| 13| 14| 48| 49| 50|
   **    `---'---'---'---'---'---'---'---'---'---'---'---`
-  **  5 | 51| 52| 53| 15| 16| 17| 24| 25| 26| 42| 43| 44|
+  **  5 | 42| 43| 44| 24| 25| 26| 15| 16| 17| 51| 52| 53|
   **    `---'---'---'---'---'---'---'---'---'---'---'---`
   **  6             | 27| 28| 29|
   **                `---'---'---`
@@ -39,149 +39,109 @@ namespace cube
   **                    `Down`
   */
 
-  constexpr int NMOVES = 18;
-  constexpr int TWISTS = 3;
-  constexpr int FACES = 6;
-  constexpr int M = 48;
-  constexpr int CUBIES = 24;
-  constexpr int ALLMOVEMASK = (1 << NMOVES) - 1;
-  constexpr int ALLMOVEMASK_EXT = (1 << NMOVES) - 1;
-  constexpr int CANONSEQSTATES = FACES + 1;
-  constexpr int CANONSEQSTART = 0;
-
   class Cube
   {
     public:
-      Cube(Cube* cube);
+      static void init_move_cube();
 
-      bool operator<(const Cube& cube) const;
-      bool operator==(const Cube& cube) const;
-      bool operator!=(const Cube& cube) const;
+      /// 6 basic cube moves.
+      static std::array<Cube, 6> move_cube_;
 
-      /// Convenient to go to and from separate permutation/orientation
-      /// to combined cube values, and from cube values to permutations
-      /// and orientations.
-      static int edge_perm(int cubie_val);
-      static int edge_ori(int cubie_val);
-      static int corner_perm(int cubie_val);
-      static int corner_ori(int cubie_val);
-      static int edge_flip(int cubie_val);
-      static int edge_val(int perm, int ori);
-      static int corner_val(int perm, int ori);
+      std::array<corner, 8> corner_perm_ =
+        {{ URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB }};
 
-      /// Add the orientation (only) from one cubieval to another one
-      /// (for both corners and edges).
-      static int edge_ori_add(int cubie_val1, int cubie_val2);
-      static int corner_ori_add(int cubie_val1, int cubie_val2);
-      static int corner_ori_sub(int cubie_val1, int cubie_val2);
+      std::array<unsigned char, 8> corner_ori_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      /// Initialization declaration.
-      static void init();
+      std::array<edge, 12> edge_perm_ =
+        {{ UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR }};
 
-      /// Cubie to slot map move.
-      void move(int move);
-      static int invert_move(int move);
-      static std::vector<int> invert_sequence(const std::vector<int>& sequence);
-      void invert_into(Cube& dst) const;
+      std::array<unsigned char, 12> edge_ori_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      /// Slot to cubie map move.
-      void movesc(int move);
+    private:
+      /// Up moves.
+      static constexpr std::array<corner, 8> corner_perm_U_ =
+        {{ UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB }};
 
-      /// Swap and four-cycle.
-      void rot_2(unsigned char* cc, int a, int b);
-      void rot_4(unsigned char* cc, int a, int b, int c, int d);
-      void rot_2_2(unsigned char* cc, int a, int b, int c, int d);
+      static constexpr std::array<unsigned char, 8> corner_ori_U_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      /// Flips.
-      void edge_4_flip(int a, int b, int c, int d);
-      void corner_4_flip(int a, int b, int c, int d);
+      static constexpr std::array<edge, 12> edge_perm_U_ =
+        {{ UB, UR, UF, UL, DR, DF, DL, DB, FR, FL, BL, BR }};
 
-      /// Multiplications
-      static void mul(const Cube& c1, const Cube& c2, Cube& ret);
-      static void mulsc(const Cube& c1, const Cube& c2, Cube& ret);
+      static constexpr std::array<unsigned char, 12> edge_ori_U_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      /// Parsing.
-      static void skip_whitespace(const char*& p);
-      static int parse_face(const char*& p);
-      static int parse_face(char f);
-      static void append_face(char*& p, int f);
-      static int parse_move(const char*& p);
-      static void append_move(char*& p, int move);
-      static std::vector<int> parse_move_sequence(const char*& p);
-      static void append_move_sequence(char*& p, const std::vector<int>& seq);
-      static char* move_sequence_string(const std::vector<int>& seq);
 
-      /// Parsing Singmaster notation.
-      const char* parse_sing(const char* p);
-      char* sing_string() const;
+      /// Right moves.
+      static constexpr std::array<corner, 8> corner_perm_R_ =
+        {{ DFR, UFL, ULB, URF, DRB, DLF, DBL, UBR }};
 
-      /// Remap and canonicalization.
-      void remap_into(int m, Cube& dst) const;
-      void canon_into_48(Cube& dst) const;
-      void canon_into_48_aux(Cube& dst) const;
-      void canon_into_96(Cube& dst) const;
+      static constexpr std::array<unsigned char, 8> corner_ori_R_ =
+        {{ 2, 0, 0, 1, 1, 0, 0, 2 }};
 
-      /// Get a random cube position.
-      void randomize();
+      static constexpr std::array<edge, 12> edge_perm_R_ =
+        {{ FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR }};
 
-      /// Utility methods.
-      static inline int next_cs(int cs, int mv)
-      {
-        return canon_seq_[cs][mv];
-      }
+      static constexpr std::array<unsigned char, 12> edge_ori_perm_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      static inline int cs_mask(int cs)
-      {
-        return canon_seq_mask_[cs];
-      }
 
-      static inline int cs_mask_ext(int cs)
-      {
-        return canon_seq_mask_ext_[cs];
-      }
+      /// Face moves.
+      static constexpr std::array<corner, 8> corner_perm_F_ =
+        {{ UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB }};
 
-      static inline double my_rand()
-      {
-        return static_cast<double>(rand()) / RAND_MAX;
-      }
+      static constexpr std::array<unsigned char, 8> corner_ori_F_ =
+        {{ 1, 2, 0, 0, 2, 1, 0, 0 }};
 
-      static inline int random_move()
-      {
-        return static_cast<int>(NMOVES * my_rand());
-      }
+      static constexpr std::array<edge, 12> edge_perm_F_ =
+        {{ UR, FL, UL, UB, DR, FR, DL, DB, UF, DF, BL, BR }};
 
-      double walltime();
-      double duration();
-      static void error(const char* s);
+      static constexpr std::array<unsigned char, 12> edge_ori_F_ =
+        {{ 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0 }};
 
-      static const Cube identity_cube_;
 
-    public:
-      unsigned char cubie_[8];
-      unsigned char edge_[12];
+      /// Down moves.
+      static constexpr std::array<corner, 8> corner_perm_D_ =
+        {{ URF, UFL, ULB, UBR, DLF, DBL, DRB, DFR }};
 
-      static unsigned char corner_ori_inc_[CUBIES];
-      static unsigned char corner_ori_dec_[CUBIES];
-      static unsigned char corner_ori_neg_strip_[CUBIES];
-      static unsigned char mod_24_[2 * CUBIES];
+      static constexpr std::array<unsigned char, 8> corner_ori_D_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      static unsigned char edge_trans_[NMOVES][CUBIES];
-      static unsigned char corner_trans_[NMOVES][CUBIES];
+      static constexpr std::array<edge, 12> edge_perm_D_ =
+        {{ UR, UF, UL, UB, DF, DL, DB, DR, FR, FL, BL, BR }};
 
-      static unsigned char inv_move_[NMOVES];
+      static constexpr std::array<unsigned char, 12> edge_ori_D_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-      static char static_buff_[200];
 
-      static unsigned char face_map_[M][FACES];
-      static unsigned char move_map_[M][NMOVES];
-      static unsigned char invm_[M];
-      static unsigned char m_m_[M][M];
-      static unsigned char rot_edge_[M][CUBIES];
-      static unsigned char rot_corner_[M][CUBIES];
+      /// Left moves.
+      static constexpr std::array<corner, 8> corner_perm_L_ =
+        {{ URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB }};
 
-      static unsigned char canon_seq_[CANONSEQSTATES][NMOVES];
-      static int canon_seq_mask_[CANONSEQSTATES];
-      static int canon_seq_mask_ext_[CANONSEQSTATES];
+      static constexpr std::array<unsigned char, 8> corner_ori_L_ =
+        {{ 0, 1, 2, 0, 0, 2, 1, 0 }};
+
+      static constexpr std::array<edge, 12> edge_perm_L_ =
+        {{ UR, UF, BL, UB, DR, DF, FL, DB, FR, UL, DL, BR }};
+
+      static constexpr std::array<unsigned char, 12> edge_ori_L_ =
+        {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+
+
+      /// Back moves.
+      static constexpr std::array<corner, 8> corner_perm_B_ =
+        {{ URF, UFL, UBR, DRB, DFR, DLF, ULB, DBL }};
+
+      static constexpr std::array<unsigned char, 8> corner_ori_B_ =
+        {{ 0, 0, 1, 2, 0, 0, 2, 1 }};
+
+      static constexpr std::array<edge, 12> edge_perm_B_ =
+        {{ UR, UF, UL, BR, DR, DF, DL, BL, FR, FL, UB, DB }};
+
+      static constexpr std::array<unsigned char, 12> edge_ori_B_ =
+        {{ 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1 }};
   };
 
   std::ostream& operator<<(std::ostream& o, const Cube& c);

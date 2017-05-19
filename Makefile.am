@@ -17,7 +17,7 @@ solvzer_SOURCES = 	src/misc/contract.hh src/misc/contract.cc	    \
 			src/cube/edge.hh				    \
 			src/cube/facelet.hh src/cube/facelet.cc 	    \
 			src/cube/face.hh src/cube/face.cc		    \
-			src/cube/cube.hh src/cube/cube.hxx src/cube/cube.cc \
+			src/cube/cube.hh src/cube/cube.cc 		    \
 			src/solvzer.cc
 
 TESTS = cube_test
