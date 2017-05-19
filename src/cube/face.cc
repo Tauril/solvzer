@@ -5,6 +5,11 @@
 namespace cube
 {
 
+  constexpr facelet Face::corner_facelet_[8][3];
+  constexpr facelet Face::edge_facelet_[12][2];
+  constexpr color Face::corner_color_[8][3];
+  constexpr color Face::edge_color_[12][2];
+
   Face::Face(const std::string& cube)
   {
     precondition(cube.size() == 54);

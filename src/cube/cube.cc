@@ -1,10 +1,11 @@
 #include <cube/cube.hh>
-#include <cube/face.hh>
 
 namespace cube
 {
 
+  /// Static data
   std::array<Cube, 6> Cube::move_cube_;
+
 
   Cube::Cube(c_perm& corner_perm, c_ori& corner_ori,
              e_perm& edge_perm,   e_ori& edge_ori)
@@ -19,6 +20,36 @@ namespace cube
     {
       edge_perm_[i] = edge_perm[i];
       edge_ori_[i] = edge_ori[i];
+    }
+  }
+
+  void
+  Cube::to_face(Face& face) const
+  {
+    for (corner c : corners)
+    {
+      int i = c;
+      int j = corner_perm_[i];
+      unsigned char ori = corner_ori_[i];
+
+      for (int n = 0; n < 3; n++)
+      {
+        face.face_[Face::corner_facelet_[i][(n + ori) % 3]] =
+          Face::corner_color_[j][n];
+      }
+    }
+
+    for (edge e : edges)
+    {
+      int i = e;
+      int j = edge_perm_[i];
+      unsigned char ori = edge_ori_[i];
+
+      for (int n = 0; n < 2; n++)
+      {
+        face.face_[Face::edge_facelet_[i][(n + ori) % 2]] =
+          Face::edge_color_[j][n];
+      }
     }
   }
 
@@ -60,7 +91,7 @@ namespace cube
   operator<<(std::ostream& o, const Cube& c)
   {
     Face face;
-    //c.to_face(face);
+    c.to_face(face);
     return o << face;
   }
 

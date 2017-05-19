@@ -5,6 +5,7 @@
 
 #include <cube/corner.hh>
 #include <cube/edge.hh>
+#include <cube/face.hh>
 
 namespace cube
 {
@@ -45,6 +46,8 @@ namespace cube
       Cube() = default;
       Cube(c_perm& corner_perm, c_ori& corner_ori,
            e_perm& edge_perm,   e_ori& edge_ori);
+
+      void to_face(Face& face) const;
 
       static void init_move_cube();
 
