@@ -51,11 +51,11 @@ namespace cube
       std::array<color, 54> face_ =
       {{
          U, U, U, U, U, U, U, U, U,
-         F, F, F, F, F, F, F, F, F,
          R, R, R, R, R, R, R, R, R,
+         F, F, F, F, F, F, F, F, F,
          D, D, D, D, D, D, D, D, D,
-         B, B, B, B, B, B, B, B, B,
-         L, L, L, L, L, L, L, L, L
+         L, L, L, L, L, L, L, L, L,
+         B, B, B, B, B, B, B, B, B
       }};
   };
 

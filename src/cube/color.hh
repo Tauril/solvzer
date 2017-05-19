@@ -8,11 +8,11 @@ namespace cube
   enum color
   {
     U,  // 0
-    F,  // 1
-    R,  // 2
+    R,  // 1
+    F,  // 2
     D,  // 3
-    B,  // 4
-    L   // 5
+    L,  // 4
+    B   // 5
   };
 
   color get_color(int c);

@@ -28,41 +28,41 @@ namespace cube
       case 8:
         return facelet::U9;
       case 9:
-        return facelet::F1;
-      case 10:
-        return facelet::F2;
-      case 11:
-        return facelet::F3;
-      case 12:
-        return facelet::F4;
-      case 13:
-        return facelet::F5;
-      case 14:
-        return facelet::F6;
-      case 15:
-        return facelet::F7;
-      case 16:
-        return facelet::F8;
-      case 17:
-        return facelet::F9;
-      case 18:
         return facelet::R1;
-      case 19:
+      case 10:
         return facelet::R2;
-      case 20:
+      case 11:
         return facelet::R3;
-      case 21:
+      case 12:
         return facelet::R4;
-      case 22:
+      case 13:
         return facelet::R5;
-      case 23:
+      case 14:
         return facelet::R6;
-      case 24:
+      case 15:
         return facelet::R7;
-      case 25:
+      case 16:
         return facelet::R8;
-      case 26:
+      case 17:
         return facelet::R9;
+      case 18:
+        return facelet::F1;
+      case 19:
+        return facelet::F2;
+      case 20:
+        return facelet::F3;
+      case 21:
+        return facelet::F4;
+      case 22:
+        return facelet::F5;
+      case 23:
+        return facelet::F6;
+      case 24:
+        return facelet::F7;
+      case 25:
+        return facelet::F8;
+      case 26:
+        return facelet::F9;
       case 27:
         return facelet::D1;
       case 28:
@@ -82,41 +82,41 @@ namespace cube
       case 35:
         return facelet::D9;
       case 36:
-        return facelet::B1;
-      case 37:
-        return facelet::B2;
-      case 38:
-        return facelet::B3;
-      case 39:
-        return facelet::B4;
-      case 40:
-        return facelet::B5;
-      case 41:
-        return facelet::B6;
-      case 42:
-        return facelet::B7;
-      case 43:
-        return facelet::B8;
-      case 44:
-        return facelet::B9;
-      case 45:
         return facelet::L1;
-      case 46:
+      case 37:
         return facelet::L2;
-      case 47:
+      case 38:
         return facelet::L3;
-      case 48:
+      case 39:
         return facelet::L4;
-      case 49:
+      case 40:
         return facelet::L5;
-      case 50:
+      case 41:
         return facelet::L6;
-      case 51:
+      case 42:
         return facelet::L7;
-      case 52:
+      case 43:
         return facelet::L8;
-      case 53:
+      case 44:
         return facelet::L9;
+      case 45:
+        return facelet::B1;
+      case 46:
+        return facelet::B2;
+      case 47:
+        return facelet::B3;
+      case 48:
+        return facelet::B4;
+      case 49:
+        return facelet::B5;
+      case 50:
+        return facelet::B6;
+      case 51:
+        return facelet::B7;
+      case 52:
+        return facelet::B8;
+      case 53:
+        return facelet::B9;
       default:
         die("Can't match an integer to a facelet");
     }
