@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <iostream>
 
 #include <cube/color.hh>
 #include <cube/corner.hh>
@@ -15,6 +16,8 @@ namespace cube
     public:
       Face() = default;
       Face(const std::string& cube);
+
+      std::ostream& dump_row(std::ostream& o, int i, int j, int x) const;
 
       /// Map the corner positions to the facelet poisitions.
       /// Example: corner_facelet[URF][0] gives the facelet position in
@@ -58,5 +61,7 @@ namespace cube
          B, B, B, B, B, B, B, B, B
       }};
   };
+
+  std::ostream& operator<<(std::ostream& o, const Face& f);
 
 } // namespace cube
