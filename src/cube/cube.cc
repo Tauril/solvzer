@@ -1,121 +1,67 @@
-#include <algorithm>
-
 #include <cube/cube.hh>
-#include <misc/indent.hh>
+#include <cube/face.hh>
 
 namespace cube
 {
 
+  std::array<Cube, 6> Cube::move_cube_;
+
+  Cube::Cube(c_perm& corner_perm, c_ori& corner_ori,
+             e_perm& edge_perm,   e_ori& edge_ori)
+  {
+    for (int i = 0; i < 8; i++)
+    {
+      corner_perm_[i] = corner_perm[i];
+      corner_ori_[i] = corner_ori[i];
+    }
+
+    for (int i = 0; i < 12; i++)
+    {
+      edge_perm_[i] = edge_perm[i];
+      edge_ori_[i] = edge_ori[i];
+    }
+  }
+
   void
   Cube::init_move_cube()
   {
-    Cube::move_cube_[0] = Cube::corner_perm_U_;
-    Cube::move_cube_[0] = Cube::corner_ori_U_;
-    Cube::move_cube_[0] = Cube::edge_perm_U_;
-    Cube::move_cube_[0] = Cube::edge_ori_U_;
+    move_cube_[0].corner_perm_ = Cube::corner_perm_U_;
+    move_cube_[0].corner_ori_ = Cube::corner_ori_U_;
+    move_cube_[0].edge_perm_ = Cube::edge_perm_U_;
+    move_cube_[0].edge_ori_ = Cube::edge_ori_U_;
 
-    Cube::move_cube_[1] = Cube::corner_perm_R_;
-    Cube::move_cube_[1] = Cube::corner_ori_R_;
-    Cube::move_cube_[1] = Cube::edge_perm_R_;
-    Cube::move_cube_[1] = Cube::edge_ori_R_;
+    move_cube_[1].corner_perm_ = Cube::corner_perm_R_;
+    move_cube_[1].corner_ori_ = Cube::corner_ori_R_;
+    move_cube_[1].edge_perm_ = Cube::edge_perm_R_;
+    move_cube_[1].edge_ori_ = Cube::edge_ori_R_;
 
-    Cube::move_cube_[2] = Cube::corner_perm_F_;
-    Cube::move_cube_[2] = Cube::corner_ori_F_;
-    Cube::move_cube_[2] = Cube::edge_perm_F_;
-    Cube::move_cube_[2] = Cube::edge_ori_F_;
+    move_cube_[2].corner_perm_ = Cube::corner_perm_F_;
+    move_cube_[2].corner_ori_ = Cube::corner_ori_F_;
+    move_cube_[2].edge_perm_ = Cube::edge_perm_F_;
+    move_cube_[2].edge_ori_ = Cube::edge_ori_F_;
 
-    Cube::move_cube_[3] = Cube::corner_perm_D_;
-    Cube::move_cube_[3] = Cube::corner_ori_D_;
-    Cube::move_cube_[3] = Cube::edge_perm_D_;
-    Cube::move_cube_[3] = Cube::edge_ori_D_;
+    move_cube_[3].corner_perm_ = Cube::corner_perm_D_;
+    move_cube_[3].corner_ori_ = Cube::corner_ori_D_;
+    move_cube_[3].edge_perm_ = Cube::edge_perm_D_;
+    move_cube_[3].edge_ori_ = Cube::edge_ori_D_;
 
-    Cube::move_cube_[4] = Cube::corner_perm_L_;
-    Cube::move_cube_[4] = Cube::corner_ori_L_;
-    Cube::move_cube_[4] = Cube::edge_perm_L_;
-    Cube::move_cube_[4] = Cube::edge_ori_L_;
+    move_cube_[4].corner_perm_ = Cube::corner_perm_L_;
+    move_cube_[4].corner_ori_ = Cube::corner_ori_L_;
+    move_cube_[4].edge_perm_ = Cube::edge_perm_L_;
+    move_cube_[4].edge_ori_ = Cube::edge_ori_L_;
 
-    Cube::move_cube_[5] = Cube::corner_perm_B_;
-    Cube::move_cube_[5] = Cube::corner_ori_B_;
-    Cube::move_cube_[5] = Cube::edge_perm_B_;
-    Cube::move_cube_[5] = Cube::edge_ori_B_;
+    move_cube_[5].corner_perm_ = Cube::corner_perm_B_;
+    move_cube_[5].corner_ori_ = Cube::corner_ori_B_;
+    move_cube_[5].edge_perm_ = Cube::edge_perm_B_;
+    move_cube_[5].edge_ori_ = Cube::edge_ori_B_;
   }
 
   std::ostream&
   operator<<(std::ostream& o, const Cube& c)
   {
-    /*auto sep = "`---'---'---`";
-
-    // Up
-    for (auto i = 0; i < 3; i++)
-    {
-      misc::indent(o);
-
-      if (i == 0)
-      {
-        o << sep
-          << std::endl;
-
-        misc::indent(o);
-      }
-
-      //c.cube_get()[0].dump_row(o, i, 0);
-      o << std::endl;
-
-      if (i < 2)
-      {
-        misc::indent(o);
-
-        o << sep
-          << std::endl;
-      }
-    }
-
-    for (auto i = 0; i < 4; i++)
-    {
-      if (i == 0)
-        o << '`';
-      o << "---'---'---`";
-    }
-
-    o << std::endl;
-
-
-    // Left | Right | Back
-    for (auto i = 0; i < 3; i++)
-    {
-      int x = 0;
-      for (auto j = 1; j < 5; j++, x++)
-      {
-        //c.cube_get()[j].dump_row(o, i, x);
-      }
-      o << std::endl;
-
-      for (auto k = 0; k < 4; k++)
-      {
-        if (k == 0)
-          o << '`';
-        o << "---'---'---`";
-      }
-
-      o << std::endl;
-    }
-
-
-    // Down
-    for (auto i = 0; i < 3; i++)
-    {
-      misc::indent(o);
-
-      //c.cube_get()[5].dump_row(o, i, 0);
-      o << std::endl;
-
-      misc::indent(o);
-
-      o << sep
-        << std::endl;
-    }*/
-
-    return o;
+    Face face;
+    //c.to_face(face);
+    return o << face;
   }
 
 } // namespace cube

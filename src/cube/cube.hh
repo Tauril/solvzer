@@ -42,6 +42,10 @@ namespace cube
   class Cube
   {
     public:
+      Cube() = default;
+      Cube(c_perm& corner_perm, c_ori& corner_ori,
+           e_perm& edge_perm,   e_ori& edge_ori);
+
       static void init_move_cube();
 
       /// 6 basic cube moves.
@@ -84,7 +88,7 @@ namespace cube
       static constexpr std::array<edge, 12> edge_perm_R_ =
         {{ FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR }};
 
-      static constexpr std::array<unsigned char, 12> edge_ori_perm_ =
+      static constexpr std::array<unsigned char, 12> edge_ori_R_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
 
@@ -147,5 +151,3 @@ namespace cube
   std::ostream& operator<<(std::ostream& o, const Cube& c);
 
 } // namespace cube
-
-#include <cube/cube.hxx>
