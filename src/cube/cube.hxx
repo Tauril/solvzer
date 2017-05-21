@@ -266,7 +266,7 @@ namespace cube
     int j = 5;
     int k = id / 720;  // Combination
 
-    for (int l = DRB; l >= 0; l--)
+    for (int l = DRB; l >= URF; l--)
     {
       if (k - Cnk(l, j + 1) >= 0)
       {
@@ -366,7 +366,7 @@ namespace cube
     int j = 5;
     int k = id / 720;  // Combination
 
-    for (int l = BR; l >= 0; l--)
+    for (int l = BR; l >= UR; l--)
     {
       if (k - Cnk(l, j + 1) >= 0)
       {
@@ -441,7 +441,7 @@ namespace cube
     int j = 2;
     int k = id / 6;  // Combination
 
-    for (int l = BR; l >= 0; l--)
+    for (int l = BR; l >= UR; l--)
     {
       if (k - Cnk(l, j + 1) >= 0)
       {
@@ -511,7 +511,7 @@ namespace cube
     int j = 2;
     int k = id / 6;  // Combination
 
-    for (int l = BR; l >= 0; l--)
+    for (int l = BR; l >= UR; l--)
     {
       if (k - Cnk(l, j + 1) >= 0)
       {
@@ -532,7 +532,7 @@ namespace cube
       corner[i] = corner_perm_[i];
 
     // Compute the index i < 8! for the permutation in perm.
-    for (int j = 7; j > 0; j--)
+    for (int j = DRB; j > URF; j--)
     {
       int k = 0;
       while (corner[j] != j)
@@ -565,7 +565,7 @@ namespace cube
 
     int j = 7;
 
-    for (int k = 7; k >= 0; k--)
+    for (int k = DRB; k >= URF; k--)
       corner_perm_[k] = slice_corner[j--];
   }
 
@@ -580,7 +580,7 @@ namespace cube
       perm[i] = edge_perm_[i];
 
     // Compute the index i < 12! for the permutation in perm.
-    for (int j = 11; j > 0; j--)
+    for (int j = BR; j > UR; j--)
     {
       int k = 0;
       while (perm[j] != j)
@@ -613,7 +613,7 @@ namespace cube
 
     int j = 11;
 
-    for (int k = 11; k >= 0; k--)
+    for (int k = BR; k >= UR; k--)
       edge_perm_[k] = slice_edge[j--];
   }
 

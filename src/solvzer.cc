@@ -12,10 +12,9 @@ int main()
   std::cout << face << std::endl;
 
   cube::Search search;
-  auto solved_state = search.solution(init_state, 24);
+  auto solved_state = search.solution(init_state, 20);
 
-  auto sol = cube::Face(solved_state);
-  std::cout << sol << std::endl;
+  std::cout << solved_state << std::endl;
 
   return 0;
 }

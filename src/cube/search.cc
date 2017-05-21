@@ -199,7 +199,7 @@ namespace cube
             {
               if (n == depth_phase1)
               {
-                if (depth_phase2 <= max_depth_phase2)
+                if (depth_phase2 >= max_depth_phase2)
                   return -1;
                 else
                 {
@@ -213,8 +213,8 @@ namespace cube
               else
               {
                 n--;
-                 busy = true;
-                 break;
+                busy = true;
+                break;
               }
             }
             else

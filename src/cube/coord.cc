@@ -126,7 +126,7 @@ namespace cube
           for (int k = 0; k < 3; k++)
           {
             c.edge_multiply(Cube::move_cube_[j]);
-            Coord::UR_to_DF_move_[i][3 * j + k] = (short)c.get_UR_to_DF();
+            Coord::UR_to_DF_move_[i][3 * j + k] = c.get_UR_to_DF();
           }
           c.edge_multiply(Cube::move_cube_[j]);
         }
