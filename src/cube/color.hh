@@ -5,6 +5,7 @@
 namespace cube
 {
 
+  /// We get the locations in the URFDLB order.
   enum color
   {
     U,  // 0

@@ -44,15 +44,56 @@ namespace cube
   {
     public:
       Cube() = default;
-      Cube(c_perm& corner_perm, c_ori& corner_ori,
-           e_perm& edge_perm,   e_ori& edge_ori);
+      Cube(const Face& face);
+      Cube(const c_perm& corner_perm, const c_ori& corner_ori,
+           const e_perm& edge_perm,   const e_ori& edge_ori);
+
+      static void init_statics();
+
+      /// Multiply `*this` and `cube`, restricted to the corners.
+      void corner_multiply(const Cube& cube);
+      /// Multiply `*this` and `cube`, restricted to the edges.
+      void edge_multiply(const Cube& cube);
+
+      int get_twist() const;
+      void set_twist(int twist);
+
+      int get_flip() const;
+      void set_flip(int flip);
+
+      int corner_parity() const;
+      int edge_parity() const;
+
+      int get_FR_to_BR() const;
+      void set_FR_to_BR(int id);
+
+      int get_URF_to_DLF() const;
+      void set_URF_to_DLF(int id);
+
+      int get_UR_to_DF() const;
+      static int get_UR_to_DF(int id1, int id2);
+      void set_UR_to_DF(int id);
+
+      int get_UR_to_UL() const;
+      void set_UR_to_UL(int id);
+
+      int get_UB_to_DF() const;
+      void set_UB_to_DF(int id);
+
+      int get_URF_to_DLB() const;
+      void set_URF_to_DLB(int id);
+
+      int get_UR_to_BR() const;
+      void set_UR_to_BR(int id);
+
+      std::string verify() const;
 
       void to_face(Face& face) const;
 
-      static void init_move_cube();
-
+    public:
       /// 6 basic cube moves.
       static std::array<Cube, 6> move_cube_;
+
 
       std::array<corner, 8> corner_perm_ =
         {{ URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB }};
@@ -66,7 +107,6 @@ namespace cube
       std::array<unsigned char, 12> edge_ori_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-    private:
       /// Up moves.
       static constexpr std::array<corner, 8> corner_perm_U_ =
         {{ UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB }};
@@ -79,7 +119,6 @@ namespace cube
 
       static constexpr std::array<unsigned char, 12> edge_ori_U_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
-
 
       /// Right moves.
       static constexpr std::array<corner, 8> corner_perm_R_ =
@@ -94,7 +133,6 @@ namespace cube
       static constexpr std::array<unsigned char, 12> edge_ori_R_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-
       /// Face moves.
       static constexpr std::array<corner, 8> corner_perm_F_ =
         {{ UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB }};
@@ -107,7 +145,6 @@ namespace cube
 
       static constexpr std::array<unsigned char, 12> edge_ori_F_ =
         {{ 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0 }};
-
 
       /// Down moves.
       static constexpr std::array<corner, 8> corner_perm_D_ =
@@ -122,7 +159,6 @@ namespace cube
       static constexpr std::array<unsigned char, 12> edge_ori_D_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-
       /// Left moves.
       static constexpr std::array<corner, 8> corner_perm_L_ =
         {{ URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB }};
@@ -135,7 +171,6 @@ namespace cube
 
       static constexpr std::array<unsigned char, 12> edge_ori_L_ =
         {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
-
 
       /// Back moves.
       static constexpr std::array<corner, 8> corner_perm_B_ =
@@ -154,3 +189,5 @@ namespace cube
   std::ostream& operator<<(std::ostream& o, const Cube& c);
 
 } // namespace cube
+
+#include <cube/cube.hxx>

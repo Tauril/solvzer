@@ -9,17 +9,17 @@ namespace cube
   {
     switch (c)
     {
-      case 0:
+      case 85:  // "U"
         return color::U;
-      case 1:
+      case 82:  // "R"
         return color::R;
-      case 2:
+      case 70:  // "F"
         return color::F;
-      case 3:
+      case 68:  // "D"
         return color::D;
-      case 4:
+      case 76:  // "L"
         return color::L;
-      case 5:
+      case 66:  // "B"
         return color::B;
       default:
         die("Can't match an integer to a color");

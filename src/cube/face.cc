@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <map>
+
 #include <cube/face.hh>
 #include <misc/contract.hh>
 #include <misc/indent.hh>
@@ -14,8 +17,18 @@ namespace cube
   {
     precondition(cube.size() == 54);
 
+    std::map<color, int> cube_colors{};
+
     for (unsigned i = 0; i < cube.size(); i++)
-      face_[i] = get_color(cube[i]);
+    {
+      color c = get_color(cube[i]);
+      face_[i] = c;
+      cube_colors[c] += 1;
+    }
+
+    postcondition(cube_colors.size() == 6);
+    postcondition(std::all_of(cube_colors.begin(), cube_colors.end(),
+                              [](const auto& m){ return m.second == 9; }));
   }
 
   std::ostream&
