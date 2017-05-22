@@ -1,3 +1,6 @@
+#include <chrono>
+#include <iostream>
+
 #include <cube/search.hh>
 
 namespace cube
@@ -17,11 +20,13 @@ namespace cube
 
   Search::Search()
   {
+    std::cout << "Intializing all statics ..." << std::endl;
     init_statics();
+    std::cout << " ... intialization is finished." << std::endl;
   }
 
   std::string
-  Search::solution(std::string facelets, int max_depth)
+  Search::solution(const std::string& facelets, int max_depth)
   {
     Face face(facelets);
     Cube cube(face);
@@ -47,6 +52,8 @@ namespace cube
     int n = 0;
     bool busy = false;
     int depth_phase1 = 1;
+
+    auto start = std::chrono::system_clock::now();
 
     do {
       do {
@@ -117,7 +124,15 @@ namespace cube
           if (depth == depth_phase1
               || (axis_[depth_phase1 - 1] != axis_[depth_phase1]
                   && axis_[depth_phase1 - 1] != axis_[depth_phase1] + 3))
+          {
+            auto end = std::chrono::system_clock::now();
+            std::chrono::duration<double> dt = end - start;
+
+            std::cout << "Computation time: "
+                      << dt.count() << "s" << std::endl;
+
             return solution_to_string(depth);
+          }
       }
 
     } while (true);
@@ -298,6 +313,12 @@ namespace cube
     }
 
     return ret;
+  }
+
+  bool
+  Search::ack_solution(const std::string& state, const std::string& solution)
+  {
+    return move::make_moves(state, solution) == Cube::solved_state_;
   }
 
 } // namespace cube

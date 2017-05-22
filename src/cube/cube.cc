@@ -5,6 +5,7 @@ namespace cube
 
   /// Static data
   std::array<Cube, 6> Cube::move_cube_;
+  constexpr char Cube::solved_state_[];
 
   namespace
   {

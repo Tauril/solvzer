@@ -184,6 +184,9 @@ namespace cube
 
       static constexpr std::array<unsigned char, 12> edge_ori_B_ =
         {{ 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1 }};
+
+      static constexpr char solved_state_[] =
+        "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
   };
 
   std::ostream& operator<<(std::ostream& o, const Cube& c);
