@@ -1,12 +1,15 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <iostream>
+#include <map>
 
 #include <cube/color.hh>
 #include <cube/corner.hh>
 #include <cube/edge.hh>
 #include <cube/facelet.hh>
+#include <misc/contract.hh>
 
 namespace cube
 {
@@ -16,6 +19,10 @@ namespace cube
     public:
       Face() = default;
       Face(const std::string& cube);
+
+      std::string scramble();
+
+      void face_set(const std::string& state);
 
       std::ostream& dump_row(std::ostream& o, int i, int j, int x) const;
 
@@ -60,9 +67,17 @@ namespace cube
          L, L, L, L, L, L, L, L, L,
          B, B, B, B, B, B, B, B, B
       }};
+
+      const std::string& face_str_get() const;
+      void face_str_set(const std::string& state);
+
+    private:
+      std::string face_str_;
   };
 
   std::ostream& operator<<(std::ostream& o, const Face& f);
   char clr_to_chr(color c);
 
 } // namespace cube
+
+#include <cube/face.hxx>

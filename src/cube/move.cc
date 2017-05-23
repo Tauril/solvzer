@@ -212,22 +212,26 @@ namespace cube
       int face = get_color(move);
       int times = 0;
 
-      std::cout << move << *moves << std::endl;
+      std::cout << move;
 
       switch (*moves)
       {
         case '2':
           times = 2;
+          std::cout << *moves;
           moves++;
           break;
         case '\'':
           times = 3;
+          std::cout << *moves;
           moves++;
           break;
         default:
           times = 1;
           break;
       }
+
+      std::cout << std::endl;
 
       while (std::isspace(*moves))
         moves++;

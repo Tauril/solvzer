@@ -1,8 +1,8 @@
-#include <algorithm>
-#include <map>
+#include <cstdlib>
+#include <ctime>
 
 #include <cube/face.hh>
-#include <misc/contract.hh>
+#include <cube/move.hh>
 #include <misc/indent.hh>
 
 namespace cube
@@ -15,20 +15,88 @@ namespace cube
 
   Face::Face(const std::string& cube)
   {
-    precondition(cube.size() == 54);
+    face_set(cube);
+  }
 
-    std::map<color, int> cube_colors{};
+  std::string
+  Face::scramble()
+  {
+    std::string moves = "";
 
-    for (unsigned i = 0; i < cube.size(); i++)
+    std::srand(std::time(0));
+    for (int i = 0; i < 30; i++)
     {
-      color c = get_color(cube[i]);
-      face_[i] = c;
-      cube_colors[c] += 1;
+      auto n = std::rand() % 18;
+
+      switch (n)
+      {
+        case 0:
+          moves += "U";
+          break;
+        case 1:
+          moves += "U2";
+          break;
+        case 2:
+          moves += "U'";
+          break;
+        case 3:
+          moves += "R";
+          break;
+        case 4:
+          moves += "R2";
+          break;
+        case 5:
+          moves += "R'";
+          break;
+        case 6:
+          moves += "F";
+          break;
+        case 7:
+          moves += "F2";
+          break;
+        case 8:
+          moves += "F'";
+          break;
+        case 9:
+          moves += "D";
+          break;
+        case 10:
+          moves +="D2";
+          break;
+        case 11:
+          moves += "D'";
+          break;
+        case 12:
+          moves += "L";
+          break;
+        case 13:
+          moves += "L2";
+          break;
+        case 14:
+          moves += "L'";
+          break;
+        case 15:
+          moves += "B";
+          break;
+        case 16:
+          moves += "B2";
+          break;
+        case 17:
+          moves += "B'";
+          break;
+      }
+
+      if (i < 29)
+        moves += ' ';
     }
 
-    postcondition(cube_colors.size() == 6);
-    postcondition(std::all_of(cube_colors.begin(), cube_colors.end(),
-                              [](const auto& m){ return m.second == 9; }));
+    std::string state = move::make_moves(face_str_, moves);
+
+    face_set(state);
+
+    std::cout << "Scramble: " << moves << std::endl;
+
+    return state;
   }
 
   std::ostream&
@@ -36,13 +104,13 @@ namespace cube
   {
     // If i == 2, we want to go from (begin + 6) to (begin + 9).
     // If j == 0, we want the firt color.
-    for (auto it = face_.begin() + (j * 9) + (i * 3);
-         it != face_.begin() + (j * 9) + ((i + 1) * 3); it++, x++)
+    for (auto it = face_str_.begin() + (j * 9) + (i * 3);
+         it != face_str_.begin() + (j * 9) + ((i + 1) * 3); it++, x++)
     {
       if (x == 0)
         o << '|';
 
-      o << ' ' << clr_to_chr(*it) << " |";
+      o << ' ' << *it << " |";
     }
 
     return o;
@@ -121,12 +189,6 @@ namespace cube
     }
 
     return o;
-  }
-
-  char
-  clr_to_chr(color c)
-  {
-    return "URFDLB"[c];
   }
 
 } // namespace cube

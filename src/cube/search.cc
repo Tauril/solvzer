@@ -312,6 +312,8 @@ namespace cube
       }
     }
 
+    std::cout << "Solution: " << ret << std::endl;
+
     return ret;
   }
 

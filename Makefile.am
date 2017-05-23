@@ -16,15 +16,13 @@ solvzer_SOURCES = 	src/misc/contract.hh src/misc/contract.cc	    \
 			src/cube/corner.hh				    \
 			src/cube/edge.hh				    \
 			src/cube/facelet.hh src/cube/facelet.cc 	    \
-			src/cube/face.hh src/cube/face.cc		    \
+			src/cube/face.hh src/cube/face.hxx src/cube/face.cc \
 			src/cube/cube.hh src/cube/cube.hxx src/cube/cube.cc \
 			src/cube/move.hh src/cube/move.cc		    \
 			src/cube/coord.hh src/cube/coord.cc		    \
 			src/cube/search.hh src/cube/search.cc		    \
 			src/solvzer.cc
 
-TESTS = cube_test
-check_PROGRAMS = cube_test
-cube_test_SOURCES = 	src/cube/cube_test.cc 				\
-			src/cube/cube.cc				\
-			src/misc/contract.cc
+TESTS =
+check_PROGRAMS =
+cube_test_SOURCES =

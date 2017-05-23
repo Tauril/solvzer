@@ -6,7 +6,7 @@ int main()
 {
   cube::Search search;
 
-  std::string init_state =
+  /*std::string init_state =
     "RUBFUBFDBUDDFRUUBFDLLFFUFRLUBFUDLRRDBRLFLLBLRLBDRBDRDU";
 
   auto face = cube::Face(init_state);
@@ -17,7 +17,7 @@ int main()
   std::cout << "Solution: " << solution << std::endl;
 
   if (!search.ack_solution(init_state, solution))
-    std::cout << "Solution is wrong" << std::endl;
+    std::cout << "Solution is wrong" << std::endl; */
 
   /*
   std::cout << "============================================================\n";
@@ -28,6 +28,13 @@ int main()
   auto new_state = "BRDRUDULURLFBRFDDFFFFBFDBRBLFRUDFBBDRDLBLULLDLUUUBLRRU";
   auto sol = search.solution(new_state, 21);
   std::cout << sol << std::endl; */
+
+  auto face = cube::Face(cube::Cube::solved_state_);
+  std::cout << face << std::endl;
+  face.scramble();
+  //std::cout << face << std::endl;
+
+  auto sol = search.solution(face.face_str_get(), 21);
 
   return 0;
 }
