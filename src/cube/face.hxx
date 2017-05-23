@@ -22,7 +22,7 @@ namespace cube
 
     postcondition(cube_colors.size() == 6);
     postcondition(std::all_of(cube_colors.begin(), cube_colors.end(),
-                              [](const auto& m){ return m.second == 9; }));
+                              [](const auto& m) { return m.second == 9; }));
   }
 
   inline

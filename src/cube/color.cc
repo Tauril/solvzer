@@ -1,3 +1,5 @@
+#include <map>
+
 #include <cube/color.hh>
 #include <misc/contract.hh>
 
@@ -7,23 +9,16 @@ namespace cube
   color
   get_color(int c)
   {
-    switch (c)
+    std::map<int, color> colors =
     {
-      case 'U':
-        return color::U;
-      case 'R':
-        return color::R;
-      case 'F':
-        return color::F;
-      case 'D':
-        return color::D;
-      case 'L':
-        return color::L;
-      case 'B':
-        return color::B;
-      default:
-        die("Can't match an integer to a color");
-    }
+      {'U', color::U}, {'R', color::R}, {'F', color::F},
+      {'D', color::D}, {'L', color::L}, {'B', color::B}
+    };
+
+    if (colors.find(c) == colors.end())
+      die("Can't match an integer to a color.");
+    else
+      return colors.at(c);
   }
 
   std::ostream&

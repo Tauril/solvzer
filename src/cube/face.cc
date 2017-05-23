@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <map>
 
 #include <cube/face.hh>
 #include <cube/move.hh>
@@ -22,71 +23,22 @@ namespace cube
   Face::scramble()
   {
     std::string moves = "";
+    std::map<int, std::string> move =
+    {
+      {0, "U"}, {1, "U2"}, {2, "U'"}, {3, "R"}, {4, "R2"}, {5, "R'"},
+      {6, "F"}, {7, "F2"}, {8, "F'"}, {9, "D"}, {10, "D2"}, {11, "D'"},
+      {12, "L"}, {13, "L2"}, {14, "L'"}, {15, "B"}, {16, "B2"}, {17, "B'"}
+    };
 
     std::srand(std::time(0));
-    for (int i = 0; i < 30; i++)
+    int scramble_length = 30;
+    for (int i = 0; i < scramble_length; i++)
     {
-      auto n = std::rand() % 18;
+      auto n = std::rand() % move.size();
 
-      switch (n)
-      {
-        case 0:
-          moves += "U";
-          break;
-        case 1:
-          moves += "U2";
-          break;
-        case 2:
-          moves += "U'";
-          break;
-        case 3:
-          moves += "R";
-          break;
-        case 4:
-          moves += "R2";
-          break;
-        case 5:
-          moves += "R'";
-          break;
-        case 6:
-          moves += "F";
-          break;
-        case 7:
-          moves += "F2";
-          break;
-        case 8:
-          moves += "F'";
-          break;
-        case 9:
-          moves += "D";
-          break;
-        case 10:
-          moves +="D2";
-          break;
-        case 11:
-          moves += "D'";
-          break;
-        case 12:
-          moves += "L";
-          break;
-        case 13:
-          moves += "L2";
-          break;
-        case 14:
-          moves += "L'";
-          break;
-        case 15:
-          moves += "B";
-          break;
-        case 16:
-          moves += "B2";
-          break;
-        case 17:
-          moves += "B'";
-          break;
-      }
+      moves += move.at(n);
 
-      if (i < 29)
+      if (i < scramble_length - 1)
         moves += ' ';
     }
 
