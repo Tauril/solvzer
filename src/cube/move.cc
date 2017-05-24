@@ -269,7 +269,7 @@ namespace cube
 
         auto face = Face(solution);
         std::cout << "State: " << solution << std::endl;
-        std::cout << "Visual representation: " << std::endl
+        std::cout << "Visual representation:" << std::endl
                   << face << std::endl;
       }
 

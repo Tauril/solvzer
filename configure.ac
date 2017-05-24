@@ -45,6 +45,8 @@ esac
 ## Auxiliary programs.  ##
 ## -------------------- ##
 
+AM_PROG_AR
+
 # We don't need shared libraries, speed the compilation up.
 LT_INIT([disable-shared])
 

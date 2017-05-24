@@ -32,9 +32,8 @@ int main()
   auto face = cube::Face(cube::Cube::solved_state_);
   std::cout << face << std::endl;
   face.scramble();
-  //std::cout << face << std::endl;
 
-  auto sol = search.solution(face.face_str_get(), 21);
+  auto sol = search.solution(face, 21);
 
   return 0;
 }

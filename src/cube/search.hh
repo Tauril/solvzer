@@ -18,7 +18,9 @@ namespace cube
       /// \param facelets   cube definition string
       /// \param max_depth  maximal allowed maneuver length
       std::string solution(const std::string& facelets, int max_depth);
+      std::string solution(const Face& face, int max_depth);
       bool ack_solution(const std::string& state, const std::string& solution);
+      bool ack_solution(const Face& face, const std::string& solution);
 
     private:
       int total_depth(int depth_phase1, int max_depth);

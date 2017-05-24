@@ -140,6 +140,12 @@ namespace cube
     return 0;
   }
 
+  std::string
+  Search::solution(const Face& face, int max_depth)
+  {
+    return solution(face.face_str_get(), max_depth);
+  }
+
   int
   Search::total_depth(int depth_phase1, int max_depth)
   {
@@ -301,15 +307,15 @@ namespace cube
 
       switch (power_[i])
       {
-        case 1:
-          ret += " ";
-          break;
         case 2:
-          ret += "2 ";
+          ret += "2";
           break;
         case 3:
-          ret += "' ";
+          ret += "'";
       }
+
+      if (i < length - 1)
+        ret += " ";
     }
 
     std::cout << "Solution: " << ret << std::endl;
@@ -321,6 +327,12 @@ namespace cube
   Search::ack_solution(const std::string& state, const std::string& solution)
   {
     return move::make_moves(state, solution) == Cube::solved_state_;
+  }
+
+  bool
+  Search::ack_solution(const Face& face, const std::string& solution)
+  {
+    return ack_solution(face.face_str_get(), solution);
   }
 
 } // namespace cube

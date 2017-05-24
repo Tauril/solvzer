@@ -1,10 +1,14 @@
 # Global.
 *~
+*.la
 *.lo
+*.log
 *.o
-.*.swp
+*.swp
+*.trs
 .deps
 .dirstamp
+.libs
 
 # Local
 /*aclocal.m4
@@ -17,12 +21,12 @@
 /config.status*
 /configure
 /libtool
-/solvzer
 /stamp-h1
 
 # Inside
 Makefile
 Makefile.in
+build-aux/ar-lib
 build-aux/compile
 build-aux/config.guess
 build-aux/config.sub
@@ -36,3 +40,7 @@ build-aux/m4/ltversion.m4
 build-aux/m4/lt~obsolete.m4
 build-aux/missing
 build-aux/test-driver
+/src/solvzer
+
+# Binaries
+/src/cube/search-test
