@@ -528,8 +528,8 @@ namespace cube
     int i = 0;
     corner corner[6];
 
-    for (int j = 0; i < 8; j++)
-      corner[i] = corner_perm_[i];
+    for (int j = 0; j < 8; j++)
+      corner[j] = corner_perm_[j];
 
     // Compute the index i < 8! for the permutation in perm.
     for (int j = DRB; j > URF; j--)
@@ -576,8 +576,8 @@ namespace cube
     int i = 0;
     edge perm[12];
 
-    for (int j = 0; i < 12; j++)
-      perm[i] = edge_perm_[i];
+    for (int j = 0; j < 12; j++)
+      perm[j] = edge_perm_[j];
 
     // Compute the index i < 12! for the permutation in perm.
     for (int j = BR; j > UR; j--)
