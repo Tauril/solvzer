@@ -40,6 +40,33 @@ case $($CXX --version) in
     ;;
 esac
 
+# Enable C++ 2014 support.
+AC_CANONICAL_HOST
+# Passing -stdlib=libc++ to clang++ is a requirement on OS X to enable
+# full C++ 2011 support.  For more information on this, see
+# http://cplusplusmusings.wordpress.com/2012/07/05/clang-and-standard-libraries
+# We don't try to enable it by default on other platforms, as libc++
+# is principally supported by OS X.
+case $host_os in
+  (darwin*)
+    AX_CHECK_COMPILE_FLAG([-std=c++14 -stdlib=libc++],
+                          [CXXFLAGS="$CXXFLAGS -std=c++14 -stdlib=libc++"
+                           stdpass=true])
+    ;;
+esac
+
+if ! "${stdpass-false}"; then
+  AX_CHECK_COMPILE_FLAG([-std=c++14],
+                        [CXXFLAGS="$CXXFLAGS -std=c++14"
+                         stdpass=true])
+fi
+
+if ! "${stdpass-false}"; then
+  AC_ERROR([unable to turn on C++14 mode with this compiler])
+fi
+
+# Try to use pipes between compiler stages to speed the compilation up.
+AX_CHECK_COMPILE_FLAG([-pipe], [CXXFLAGS="$CXXFLAGS -pipe"])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
