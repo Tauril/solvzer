@@ -13,7 +13,7 @@ AC_CONFIG_MACRO_DIR([build-aux/m4])
 # Automake.
 AM_INIT_AUTOMAKE([foreign -Wall silent-rules])
 
-AM_SILENT_RULES([no])
+AM_SILENT_RULES([yes])
 
 
 ## --------------------- ##
