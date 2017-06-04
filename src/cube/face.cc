@@ -22,11 +22,11 @@ namespace cube
   std::string
   Face::scramble()
   {
-    std::string moves = "";
-    std::map<int, std::string> move =
+    std::string moves_str = "";
+    std::map<int, std::string> moves =
     {
-      {0, "U"}, {1, "U2"}, {2, "U'"}, {3, "R"}, {4, "R2"}, {5, "R'"},
-      {6, "F"}, {7, "F2"}, {8, "F'"}, {9, "D"}, {10, "D2"}, {11, "D'"},
+      {0,  "U"}, {1,  "U2"}, {2,  "U'"}, {3,  "R"}, {4,  "R2"}, {5,  "R'"},
+      {6,  "F"}, {7,  "F2"}, {8,  "F'"}, {9,  "D"}, {10, "D2"}, {11, "D'"},
       {12, "L"}, {13, "L2"}, {14, "L'"}, {15, "B"}, {16, "B2"}, {17, "B'"}
     };
 
@@ -34,19 +34,19 @@ namespace cube
     int scramble_length = 30;
     for (int i = 0; i < scramble_length; i++)
     {
-      auto n = std::rand() % move.size();
+      auto n = std::rand() % moves.size();
 
-      moves += move.at(n);
+      moves_str += moves.at(n);
 
       if (i < scramble_length - 1)
-        moves += ' ';
+        moves_str += ' ';
     }
 
-    std::string state = move::make_moves(face_str_, moves);
+    std::string state = move::make_moves(face_str_, moves_str);
 
     face_set(state);
 
-    std::cout << "Scramble: " << moves << std::endl;
+    std::cout << "Scramble: " << moves_str << std::endl;
 
     return state;
   }

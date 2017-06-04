@@ -281,38 +281,14 @@ namespace cube
   {
     std::string ret = "";
 
+    std::map<int, std::string> axes =
+      {{0, "U"}, {1, "R"}, {2, "F"}, {3, "D"}, {4, "L"}, {5, "B"}};
+    std::map<int, std::string> powers = {{1, ""}, {2, "2"}, {3, "'"}};
+
     for (int i = 0; i < length; i++)
     {
-      switch (axis_[i])
-      {
-        case 0:
-          ret += "U";
-          break;
-        case 1:
-          ret += "R";
-          break;
-        case 2:
-          ret += "F";
-          break;
-        case 3:
-          ret += "D";
-          break;
-        case 4:
-          ret += "L";
-          break;
-        case 5:
-          ret += "B";
-          break;
-      }
-
-      switch (power_[i])
-      {
-        case 2:
-          ret += "2";
-          break;
-        case 3:
-          ret += "'";
-      }
+      ret += axes.at(axis_[i]);
+      ret += powers.at(power_[i]);
 
       if (i < length - 1)
         ret += " ";

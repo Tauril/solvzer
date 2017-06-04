@@ -7,18 +7,19 @@ namespace cube
 {
 
   color
-  get_color(int c)
+  get_color(char c)
   {
-    std::map<int, color> colors =
+    std::map<char, color> colors =
     {
       {'U', color::U}, {'R', color::R}, {'F', color::F},
       {'D', color::D}, {'L', color::L}, {'B', color::B}
     };
 
-    if (colors.find(c) == colors.end())
+    auto clr = colors.find(c);
+    if (clr == colors.end())
       die("Can't match an integer to a color.");
-    else
-      return colors.at(c);
+
+    return clr->second;
   }
 
   std::ostream&

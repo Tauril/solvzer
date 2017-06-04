@@ -16,7 +16,7 @@ namespace cube
     B   // 5
   };
 
-  color get_color(int c);
+  color get_color(char c);
 
   std::ostream& operator<<(std::ostream& o, const color& c);
 
