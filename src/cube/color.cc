@@ -11,8 +11,8 @@ namespace cube
   {
     std::map<char, color> colors =
     {
-      {'U', color::U}, {'R', color::R}, {'F', color::F},
-      {'D', color::D}, {'L', color::L}, {'B', color::B}
+      { 'U', color::U }, { 'R', color::R }, { 'F', color::F },
+      { 'D', color::D }, { 'L', color::L }, { 'B', color::B }
     };
 
     auto clr = colors.find(c);
