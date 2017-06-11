@@ -20,7 +20,8 @@ namespace cube
       Face() = default;
       Face(const std::string& cube);
 
-      std::string scramble();
+      void scramble(const std::string& moves);
+      void scramble();
 
       void face_set(const std::string& state);
 

@@ -19,7 +19,15 @@ namespace cube
     face_set(cube);
   }
 
-  std::string
+  void
+  Face::scramble(const std::string& moves)
+  {
+    std::string state = move::make_moves(face_str_, moves);
+    face_set(state);
+    std::cout << "Scramble: " << moves << std::endl;
+  }
+
+  void
   Face::scramble()
   {
     std::string moves_str = "";
@@ -47,13 +55,7 @@ namespace cube
       prev_axis = cur_axis;
     }
 
-    std::string state = move::make_moves(face_str_, moves_str);
-
-    face_set(state);
-
-    std::cout << "Scramble: " << moves_str << std::endl;
-
-    return state;
+    scramble(moves_str);
   }
 
   std::ostream&
