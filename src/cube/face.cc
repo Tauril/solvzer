@@ -23,23 +23,28 @@ namespace cube
   Face::scramble()
   {
     std::string moves_str = "";
-    std::map<int, std::string> moves =
-    {
-      {0,  "U"}, {1,  "U2"}, {2,  "U'"}, {3,  "R"}, {4,  "R2"}, {5,  "R'"},
-      {6,  "F"}, {7,  "F2"}, {8,  "F'"}, {9,  "D"}, {10, "D2"}, {11, "D'"},
-      {12, "L"}, {13, "L2"}, {14, "L'"}, {15, "B"}, {16, "B2"}, {17, "B'"}
-    };
 
     std::srand(std::time(0));
     int scramble_length = 30;
+    int prev_axis = 6;
     for (int i = 0; i < scramble_length; i++)
     {
-      auto n = std::rand() % moves.size();
+      auto cur_axis = std::rand() % 6;
+      if (cur_axis == prev_axis)
+      {
+        i--;
+        continue;
+      }
 
-      moves_str += moves.at(n);
+      std::string current_move{move::axis[cur_axis]};
+      current_move += move::power[std::rand() % 3];
+
+      moves_str += current_move;
 
       if (i < scramble_length - 1)
         moves_str += ' ';
+
+      prev_axis = cur_axis;
     }
 
     std::string state = move::make_moves(face_str_, moves_str);

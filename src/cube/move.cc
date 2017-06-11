@@ -216,6 +216,10 @@ namespace cube
 
       switch (*moves)
       {
+        case '1':
+          times = 1;
+          moves++;
+          break;
         case '2':
           times = 2;
           std::cout << *moves;
