@@ -26,9 +26,8 @@ namespace cube
   }
 
   std::string
-  Search::solution(const std::string& facelets, int max_depth)
+  Search::solution(const Face& face, int max_depth)
   {
-    Face face(facelets);
     Cube cube(face);
 
     if (cube.verify() != "")
@@ -112,7 +111,8 @@ namespace cube
           Coord::get_pruning(Coord::slice_flip_prune_,
                              Coord::SLICE1 * flip_[n + 1] + slice_[n + 1]),
           Coord::get_pruning(Coord::slice_twist_prune_,
-                             Coord::SLICE1 * twist_[n + 1] + slice_[n + 1]));
+                             Coord::SLICE1 * twist_[n + 1] + slice_[n + 1])
+        );
 
       if (min_depth_phase1_[n + 1] == 0 && n >= depth_phase1 - 5)
       {
@@ -134,16 +134,16 @@ namespace cube
             return solution_to_string(depth);
           }
       }
-
     } while (true);
 
     return 0;
   }
 
   std::string
-  Search::solution(const Face& face, int max_depth)
+  Search::solution(const std::string& facelets, int max_depth)
   {
-    return solution(face.face_str_get(), max_depth);
+    Face face(facelets);
+    return solution(face, max_depth);
   }
 
   int
@@ -270,7 +270,6 @@ namespace cube
                             (Coord::SLICE2
                              * URF_to_DLF_[n + 1] + FR_to_BR_[n + 1])
                              * 2 + parity_[n + 1]));
-
     } while (min_depth_phase2_[n + 1] != 0);
 
     return depth_phase1 + depth_phase2;
