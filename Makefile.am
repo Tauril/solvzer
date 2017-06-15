@@ -29,9 +29,12 @@ libsolvzer_la_SOURCES = src/misc/contract.hh src/misc/contract.cc	     \
 			 src/cube/search.hh src/cube/search.cc		     \
 			 src/detect/detector.hh src/detect/detector.cc	     \
 			 src/detect/displayer.hh src/detect/displayer.cc     \
+			 src/misc/display.hh src/misc/display.cc	     \
 			 src/solvzer.cc
 
 libsolvzer_la_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LDFLAGS)
+libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs sdl2)
+libsolvzer_la_LDFLAGS += -lpthread
 libsolvzer_la_LIBADD = $(BOOST_PROGRAM_OPTIONS_LIBS)
 libsolvzer_la_LIBADD += $(OPENCV_LIBS)
 
