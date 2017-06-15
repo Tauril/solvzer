@@ -213,18 +213,8 @@ namespace cube
 
       unsigned char ori1 = corner_ori_[cube.corner_perm_[c]];
       unsigned char ori2 = cube.corner_ori_[c];
-      unsigned char ori  = 0;
 
-      // If both cubes are regular cubes
-      if (ori1 < 3 && ori2 < 3)
-      {
-        ori = static_cast<unsigned char>(ori1 + ori2);
-        if (ori >= 3)
-          // the composition is a regular cube.
-          ori -= 3;
-      }
-
-      corner_ori[c] = ori;
+      corner_ori[c] = static_cast<unsigned char>((ori1 + ori2) % 3);
     }
 
     for (corner c : corners)
@@ -244,8 +234,8 @@ namespace cube
     {
       edge_perm[e] = edge_perm_[cube.edge_perm_[e]];
 
-      unsigned char ori1 = cube.edge_ori_[e];
-      unsigned char ori2 = edge_ori_[cube.edge_perm_[e]];
+      unsigned char ori1 = edge_ori_[cube.edge_perm_[e]];
+      unsigned char ori2 = cube.edge_ori_[e];
 
       edge_ori[e] = static_cast<unsigned char>((ori1 + ori2) % 2);
     }
