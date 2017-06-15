@@ -8,7 +8,7 @@
 #include <array>
 
 #include <cube/move.hh>
-
+#include <misc/display.hh>
 namespace cube
 {
 
@@ -277,6 +277,7 @@ namespace cube
         solution = make_move(solution, move);
 
         auto face = Face(solution);
+        display::Display::Instance().draw_rubiks(solution);
         std::cout << "State: " << solution << std::endl;
         std::cout << "Visual representation:" << std::endl
                   << face << std::endl;

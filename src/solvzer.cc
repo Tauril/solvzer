@@ -24,27 +24,12 @@ int main(int argc, char** argv)
   auto display = display::Display(window, renderer);
   //display.setup_background();
 
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
   SDL_Event event;
-  auto rub = "UUUUUUUUU";
-  display.draw_rubiks(rub);
-  /*while (true)
-  {
-    SDL_WaitEvent(&event);
-    if(event.window.event == SDL_WINDOWEVENT_CLOSE)
-      break;*/
-  //}
-  SDL_Delay(10000);
-  return 0;
+  auto display = display::Display::Instance(&window, &renderer);
+
   cube::Search search;
-
-  /*auto face = cube::Face(init_state);
-
-  std::cout << face << std::endl;
-
-  auto solution = search.solution(init_state, DEPTH);
-
-  if (!search.ack_solution(init_state, solution))
-    std::cout << "Solution is wrong" << std::endl; */
 
 
   //auto face = cube::Face(cube::Cube::solved_state_);
