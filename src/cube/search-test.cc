@@ -7,7 +7,7 @@ search_check()
 {
   cube::Search search;
 
-  for (int i = 0; i < 200; i++)
+  for (int i = 0; i < 1000; i++)
   {
     auto face = cube::Face(cube::Cube::solved_state_);
     face.scramble();
