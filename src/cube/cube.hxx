@@ -327,7 +327,7 @@ namespace cube
     c1.set_UR_to_UL(id1);
     c2.set_UB_to_DF(id2);
 
-    for (int i = 0; i < 8; i++)
+    for (int i = URF; i <= DRB; i++)
     {
       if (c1.edge_perm_[i] != BR)
       {
@@ -528,7 +528,7 @@ namespace cube
     int i = 0;
     corner corner[6];
 
-    for (int j = 0; j < 8; j++)
+    for (int j = URF; j <= DRB; j++)
       corner[j] = corner_perm_[j];
 
     // Compute the index i < 8! for the permutation in perm.
@@ -554,7 +554,7 @@ namespace cube
     int i = 0;
     corner slice_corner[8] = { URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB };
 
-    for (int j = 1; j < 8; j++)
+    for (int j = UFL; j <= DRB; j++)
     {
       i = id % (j + 1);
       id /= j + 1;
@@ -576,7 +576,7 @@ namespace cube
     int i = 0;
     edge perm[12];
 
-    for (int j = 0; j < 12; j++)
+    for (int j = UR; j <= BR; j++)
       perm[j] = edge_perm_[j];
 
     // Compute the index i < 12! for the permutation in perm.
@@ -602,7 +602,7 @@ namespace cube
     int i = 0;
     edge slice_edge[12] = { UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR };
 
-    for (int j = 1; j < 12; j++)
+    for (int j = UF; j <= BR; j++)
     {
       i = id % (j + 1);
       id /= j + 1;
