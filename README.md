@@ -2,7 +2,7 @@
 
 # The SolvZer (Rubik's Cube solver)
 
-The SolvZer project aims to implement a rubik's cube solving algorithm and
+The SolvZer project aims to implement a Rubik's Cube solving algorithm and
 integrate it into a robot.
 
 ### Authors
@@ -15,3 +15,9 @@ integrate it into a robot.
 ## Project
 
 The project has been done in the purpose of the Graduating project of EPITA.
+
+### Solver
+
+The Cube solving algorithm has been inspired by the Kociemba algorithm.
+
+The Cube structure has been inspired by [Kociemba](http://kociemba.org)
