@@ -1,3 +1,10 @@
+/**
+ ** \file cube/face.hh
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Declaration of cube::Face.
+ **/
+
 #pragma once
 
 #include <algorithm>
@@ -14,20 +21,44 @@
 namespace cube
 {
 
+  /** \class Face
+   ** \brief Face representation of the Cube. The face is represented
+   **        by the cubies it owns.
+   **/
   class Face
   {
     public:
+      /** \name Ctor.
+       ** \{ */
+      /// Constructs a default Face.
       Face() = default;
+      /// Constructs a Face from an already built Cube.
       Face(const std::string& cube);
+      /** \} */
 
+      /** \name Methods.
+       ** \{ */
+      /// \brief        Scrambles the Face with the given moves.
+      /// \param moves  The moves to apply to the Face.
       void scramble(const std::string& moves);
+      /// Generates random moves to scramble the Face.
       void scramble();
 
+      /// Applies the state to the current Face.
       void face_set(const std::string& state);
 
       std::ostream& dump_row(std::ostream& o, int i, int j, int x) const;
+      /** \} */
 
-      /// Map the corner positions to the facelet poisitions.
+      /** \name Accessors.
+       ** \{ */
+      const std::string& face_str_get() const;
+      void face_str_set(const std::string& state);
+      /** \} */
+
+      /** \name Attributes.
+       ** \{ */
+      /// Map the corner positions to the facelet positions.
       /// Example: corner_facelet[URF][0] gives the facelet position in
       /// the `URF` corner.
       static constexpr facelet corner_facelet_[8][3] =
@@ -69,15 +100,13 @@ namespace cube
          B, B, B, B, B, B, B, B, B
       }};
 
-      const std::string& face_str_get() const;
-      void face_str_set(const std::string& state);
-
     private:
       std::string face_str_;
+      /** \} */
   };
 
+  /// Pretty-prints \a f on \o.
   std::ostream& operator<<(std::ostream& o, const Face& f);
-  char clr_to_chr(color c);
 
 } // namespace cube
 

@@ -1,3 +1,10 @@
+/**
+ ** \file cube/move.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube/move.hh
+ **/
+
 #include <array>
 
 #include <cube/move.hh>
@@ -201,6 +208,23 @@ namespace cube
         { nullptr, B1_, B2_, B3_ }
       };
 
+      std::string
+      make_move(const std::string& solution, const int* move)
+      {
+        std::string ret(54, ' ');
+
+        for (int i = 0; i < 54; i++)
+          ret[i] = solution[move[i]];
+
+        return ret;
+      }
+
+      std::string
+      make_move(const std::string& solution, std::pair<int, int> move)
+      {
+        return make_move(solution, moves_table_[move.first][move.second]);
+      }
+
     }
 
     std::pair<int, int>
@@ -216,10 +240,6 @@ namespace cube
 
       switch (*moves)
       {
-        case '1':
-          times = 1;
-          moves++;
-          break;
         case '2':
           times = 2;
           std::cout << *moves;
@@ -230,6 +250,8 @@ namespace cube
           std::cout << *moves;
           moves++;
           break;
+        case '1':
+          moves++;
         default:
           times = 1;
           break;
@@ -241,23 +263,6 @@ namespace cube
         moves++;
 
       return std::pair<int, int>(face, times);
-    }
-
-    std::string
-    make_move(const std::string& solution, const int* move)
-    {
-      std::string ret(54, ' ');
-
-      for (int i = 0; i < 54; i++)
-        ret[i] = solution[move[i]];
-
-      return ret;
-    }
-
-    std::string
-    make_move(const std::string& solution, std::pair<int, int> move)
-    {
-      return make_move(solution, moves_table_[move.first][move.second]);
     }
 
     std::string

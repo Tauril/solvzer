@@ -1,3 +1,10 @@
+/**
+ ** \file cube/edge.hh
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Declaration of cube::edge.
+ **/
+
 #pragma once
 
 #include <array>
@@ -5,6 +12,9 @@
 namespace cube
 {
 
+  /** \enum  edge
+   ** \brief Edges are the combination of 2 cubies.
+   **/
   enum edge
   {
     UR,   // 0

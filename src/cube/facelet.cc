@@ -1,3 +1,10 @@
+/**
+ ** \file cube/facelet.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube/facelet.hh
+ **/
+
 #include <map>
 
 #include <cube/facelet.hh>

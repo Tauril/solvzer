@@ -1,3 +1,10 @@
+/**
+ ** \file cube/face.hxx
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Inline methods of cube::Face.
+ **/
+
 #include <cube/face.hh>
 
 namespace cube
@@ -20,7 +27,9 @@ namespace cube
 
     face_str_set(state);
 
+    // Assert we have only 6 colors in our Face.
     postcondition(cube_colors.size() == 6);
+    // Assert we only have 9 of each color.
     postcondition(std::all_of(cube_colors.begin(), cube_colors.end(),
                               [](const auto& m) { return m.second == 9; }));
   }

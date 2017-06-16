@@ -1,3 +1,10 @@
+/**
+ ** \file cube/facelet.hh
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Declaration of cube::facelet.
+ **/
+
 #pragma once
 
 #include <ostream>
@@ -5,6 +12,37 @@
 namespace cube
 {
 
+  /** \enum  facelet
+   ** \brief Each facelet represents a position in the cube. On a solved
+   **        state, the facelets are positioned as follows:
+   **
+   **      0   1   2   3   4   5   6   7   8   9   10  11
+   **
+   **                    `Up`
+   **
+   **                `---'---'---`
+   **  0             | U1| U2| U3|
+   **                `---'---'---`
+   **  1             | U4| U5| U6|
+   **      `Left`    `---'---'---`   `Right` |   `Back`
+   **  2             | U7| U8| U9|
+   **    `---'---'---'---'---'---'---'---'---'---'---'---`
+   **  3 | L1| L2| L3| F1| F2| F3| R1| R2| R3| B1| B2| B3|
+   **    `---'---'---'---'---'---'---'---'---'---'---'---`
+   **  4 | L4| L5| L6| F4| F5| F6| R4| R5| R6| B4| B5| B6|
+   **    `---'---'---'---'---'---'---'---'---'---'---'---`
+   **  5 | L7| L8| L9| F7| F8| F9| R7| R8| R9| B7| B8| B9|
+   **    `---'---'---'---'---'---'---'---'---'---'---'---`
+   **  6             | D1| D2| D3|
+   **                `---'---'---`
+   **  7             | D4| D5| D6|
+   **                `---'---'---`
+   **  8             | D7| D8| D9|
+   **                `---'---'---`
+   **
+   **                    `Down`
+   **
+   **/
   enum facelet
   {
     U1,   // 0
@@ -63,8 +101,12 @@ namespace cube
     B9    // 53
   };
 
+  /// \brief      Returns a facelet from its enum value.
+  /// \param c    the enum value.
+  /// \return     The facelet.
   facelet get_facelet(int f);
 
+  /// Reports \a f on \a o for debugging purpose.
   std::ostream& operator<<(std::ostream& o, const facelet& f);
 
 } // namespace cube

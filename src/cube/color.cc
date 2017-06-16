@@ -1,3 +1,10 @@
+/**
+ ** \file cube/color.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube/color.hh
+ **/
+
 #include <map>
 
 #include <cube/color.hh>
@@ -9,6 +16,7 @@ namespace cube
   color
   get_color(char c)
   {
+    /// Associate the ASCII representation with its enum representation.
     std::map<char, color> colors =
     {
       { 'U', color::U }, { 'R', color::R }, { 'F', color::F },

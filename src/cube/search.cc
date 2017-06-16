@@ -1,3 +1,10 @@
+/**
+ ** \file cube/search.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube::Search.
+ **/
+
 #include <chrono>
 #include <iostream>
 
@@ -6,16 +13,21 @@
 namespace cube
 {
 
-  void
-  init_statics()
+  namespace
   {
-    static bool init = false;
-    if (!init)
+
+    void
+    init_statics()
     {
-      init = true;
-      Cube::init_statics();
-      Coord::init_statics();
+      static bool init = false;
+      if (!init)
+      {
+        init = true;
+        Cube::init_statics();
+        Coord::init_statics();
+      }
     }
+
   }
 
   Search::Search()
@@ -40,7 +52,7 @@ namespace cube
     flip_[0] = coord.flip_;
     twist_[0] = coord.twist_;
     parity_[0] = coord.parity_;
-    slice_[0] = coord.FR_to_BR_ / 24;
+    slice_[0] = coord.FR_to_BR_ / Coord::SLICE2;
     URF_to_DLF_[0] = coord.URF_to_DLF_;
     FR_to_BR_[0] = coord.FR_to_BR_;
     UR_to_UL_[0] = coord.UR_to_UL_;

@@ -1,3 +1,10 @@
+/**
+ ** \file cube/face.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube::Face.
+ **/
+
 #include <cstdlib>
 #include <ctime>
 #include <map>
@@ -87,8 +94,7 @@ namespace cube
 
       if (i == 0)
       {
-        o << sep
-          << std::endl;
+        o << sep << std::endl;
 
         misc::indent(o);
       }
@@ -100,8 +106,7 @@ namespace cube
       {
         misc::indent(o);
 
-        o << sep
-          << std::endl;
+        o << sep << std::endl;
       }
     }
 
@@ -113,7 +118,6 @@ namespace cube
     }
 
     o << std::endl;
-
 
     // Left | Face | Right | Back
     for (auto i = 0; i < 3; i++)
@@ -132,7 +136,6 @@ namespace cube
 
       o << std::endl;
     }
-
 
     // Down
     for (auto i = 0; i < 3; i++)

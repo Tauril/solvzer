@@ -1,3 +1,10 @@
+/**
+ ** \file cube/cube.cc
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Implementation for cube::Cube.
+ **/
+
 #include <cube/cube.hh>
 
 namespace cube
@@ -126,17 +133,21 @@ namespace cube
 
   Cube::Cube(const Face& face)
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = URF; i <= DRB; i++)
       corner_perm_[i] = URF;
-    for (int i = 0; i < 12; i++)
+    for (int i = UR; i <= BR; i++)
       edge_perm_[i] = UR;
 
     color c1;
     color c2;
 
+    /// Set the corners' orientation and permutation.
     for (corner i : corners)
     {
       int ori = 0;
+
+      /// If the `ori`th cubie belonging to the corner `i` is `U` or `D`,
+      /// get the two other corner's cubies color.
       for (; ori < 3; ori++)
         if (face.face_[Face::corner_facelet_[i][ori]] == U
             || face.face_[Face::corner_facelet_[i][ori]] == D)
@@ -145,6 +156,7 @@ namespace cube
       c1 = face.face_[Face::corner_facelet_[i][(ori + 1) % 3]];
       c2 = face.face_[Face::corner_facelet_[i][(ori + 2) % 3]];
 
+      /// Find the permutation `face`'s `i` corner resulted from.
       for (corner j : corners)
       {
         if (c1 == Face::corner_color_[j][1] && c2 == Face::corner_color_[j][2])
@@ -156,6 +168,7 @@ namespace cube
       }
     }
 
+    /// Set the edges' orientation and permutation.
     for (edge i : edges)
     {
       for (edge j : edges)
@@ -182,13 +195,13 @@ namespace cube
   Cube::Cube(const c_perm& corner_perm, const c_ori& corner_ori,
              const e_perm& edge_perm,   const e_ori& edge_ori)
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = UR; i <= BR; i++)
     {
       corner_perm_[i] = corner_perm[i];
       corner_ori_[i] = corner_ori[i];
     }
 
-    for (int i = 0; i < 12; i++)
+    for (int i = URF; i <= DRB; i++)
     {
       edge_perm_[i] = edge_perm[i];
       edge_ori_[i] = edge_ori[i];
@@ -253,26 +266,26 @@ namespace cube
     std::array<int, 12> edge_cnt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     for (edge e : edges)
       edge_cnt[edge_perm_[e]]++;
-    for (int i = 0; i < 12; i++)
-      if (edge_cnt[i] != 1)
+    for (int cnt : edge_cnt)
+      if (cnt != 1)
         return "Wrong edge count!";
 
     int sum = 0;
-    for (int i = 0; i < 12; i++)
-      sum += edge_ori_[i];
+    for (int ori : edge_ori_)
+      sum += ori;
     if (sum % 2 != 0)
       return "Edge flipped!";
 
     std::array<int, 8> corner_cnt = { 0, 0, 0, 0, 0, 0, 0, 0 };
     for (corner c : corners)
       corner_cnt[corner_perm_[c]]++;
-    for (int i = 0; i < 8; i++)
-      if (corner_cnt[i] != 1)
+    for (int cnt : corner_cnt)
+      if (cnt != 1)
         return "Wrong corner count!";
 
     sum = 0;
-    for (int i = 0; i < 8; i++)
-      sum += corner_ori_[i];
+    for (int ori : corner_ori_)
+      sum += ori;
     if (sum % 3 != 0)
       return "Corner twisted!";
 

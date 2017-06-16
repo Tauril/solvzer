@@ -1,3 +1,10 @@
+/**
+ ** \file cube/move.hh
+ ** \author Guillaume Marques
+ ** \version 1.0
+ ** \brief Declaration of cube::move.
+ **/
+
 #pragma once
 
 #include <utility>
@@ -15,12 +22,11 @@ namespace cube
     static constexpr std::array<char, 3> power =
       { '1', '2', '\'' };
 
+    /// Parses the next move frmo \æ moves.
     std::pair<int, int> parse_move(const char*& moves);
-    std::string make_move(const std::string& solution, const int* move);
-    std::string make_move(const std::string& solution,
-                          std::pair<int, int> move);
+    /// Applies \a moves on \a solution.
     std::string make_moves(std::string solution, const std::string& moves);
 
-  }
+  } // namespace move
 
 } // namespace cube
