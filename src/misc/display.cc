@@ -22,7 +22,7 @@ namespace display
     SDL_Quit();
   }
 
-  const Display&
+  Display&
   Display::Instance(SDL_Window **window, SDL_Renderer **renderer)
   {
     static bool isInit = false;
@@ -38,24 +38,52 @@ namespace display
     return d;
   }
 
-  const Display&
+  Display&
   Display::Instance()
   {
     return Instance(nullptr, nullptr);
   }
 
   void
+  Display::setup_ui_for(const std::string& file, int y_offset)
+  {
+    int sizes[4];
+    SDL_Surface *image = SDL_LoadBMP(file.c_str());
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer_, image);
+    SDL_QueryTexture(texture, nullptr, nullptr, &sizes[0], &sizes[1]);
+    SDL_GetWindowSize(window_, &sizes[2], &sizes[3]);
+    SDL_Rect dstrect = {sizes[2] - sizes[0] - 50, 100 * y_offset, sizes[0], sizes[1]};
+    SDL_RenderCopy(renderer_, texture, NULL, &dstrect);
+    elements_[file] = dstrect;
+  }
+
+  void
+  Display::setup_ui()
+  {
+    elements_.clear();
+    setup_ui_for(scramble_button_, 1);
+    setup_ui_for(resolve_button_, 2);
+  }
+
+  const std::string&
+  Display::is_intersect(int x, int y) const
+  {
+    for (const auto& el : elements_)
+    {
+      auto& rect = el.second;
+      if (x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h)
+        return el.first;
+    }
+    return "";
+  }
+
+  void
   Display::setup_background() const
   {
-      // Set the background
-      static SDL_Surface *Loading_Surf = SDL_LoadBMP("resources/background.bmp");
-      static SDL_Texture *Background_Tx = SDL_CreateTextureFromSurface(renderer_,
-          Loading_Surf);
-      SDL_RenderCopy(renderer_, Background_Tx, NULL, NULL);
-      //SDL_RenderPresent(renderer_);
-
-      // Freeing stuff
-      //SDL_FreeSurface(Loading_Surf);
+      SDL_RenderClear(renderer_);
+      static SDL_Surface *surf = SDL_LoadBMP("resources/background.bmp");
+      static SDL_Texture *background = SDL_CreateTextureFromSurface(renderer_, surf);
+      SDL_RenderCopy(renderer_, background, nullptr, nullptr);
   }
 
   inline
@@ -102,36 +130,43 @@ namespace display
       return std::pair<int, int>(get_generic_x_pos(index, 3), \
           get_generic_y_pos(index, 1));
   }
+
   void
   get_color(std::array<int, 3>& color, const char& c)
   {
     switch (c)
     {
+      // White
       case 'U':
         color[0] = 255;
         color[1] = 255;
         color[2] = 255;
         break;
+      // Blue
       case 'R':
         color[0] = 0;
         color[1] = 0;
         color[2] = 255;
         break;
+      // Yellow
       case 'D':
         color[0] = 255;
         color[1] = 255;
         color[2] = 0;
         break;
+      // Red
       case 'F':
         color[0] = 255;
         color[1] = 0;
         color[2] = 0;
         break;
+      // Green
       case 'L':
         color[0] = 0;
         color[1] = 255;
         color[2] = 0;
         break;
+      // Orange
       case 'B':
         color[0] = 255;
         color[1] = 165;
@@ -143,12 +178,9 @@ namespace display
   void
   Display::draw_rubiks(const std::string& rubiks) const
   {
-      SDL_RenderClear(renderer_);
-      setup_background();
       int index = 0;
       for (char c : rubiks)
         draw_square(get_pos(index++), c);
-      SDL_RenderPresent(renderer_);
       SDL_Delay(500);
   }
 
@@ -164,5 +196,11 @@ namespace display
       get_color(color, c);
       SDL_SetRenderDrawColor(renderer_, color[0], color[1], color[2], 255);
       SDL_RenderFillRect(renderer_, &r);
+  }
+
+  void
+  Display::refresh() const
+  {
+    SDL_RenderPresent(renderer_);
   }
 }

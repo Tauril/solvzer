@@ -277,7 +277,9 @@ namespace cube
         solution = make_move(solution, move);
 
         auto face = Face(solution);
+        #ifdef DRAW
         display::Display::Instance().draw_rubiks(solution);
+        #endif
         std::cout << "State: " << solution << std::endl;
         std::cout << "Visual representation:" << std::endl
                   << face << std::endl;

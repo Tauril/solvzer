@@ -1,9 +1,10 @@
 #include <cassert>
 #include <iostream>
+#include <cube/cube.hh>
 #include <cube/search.hh>
 #include <detect/detector.hh>
 #include <misc/display.hh>
-
+#include <misc/controller.hh>
 
 // temp
 #include <opencv2/imgcodecs.hpp>
@@ -14,6 +15,7 @@
 
 detect::Displayer displayer("solvzer");
 
+#define DRAW
 int main(int argc, char** argv)
 {
   //cube::Search search;
@@ -26,8 +28,15 @@ int main(int argc, char** argv)
 
   SDL_Window *window = nullptr;
   SDL_Renderer *renderer = nullptr;
-  auto display = display::Display::Instance(&window, &renderer);
+  SDL_Event event;
 
+  auto& dis = display::Display::Instance(&window, &renderer);
+  //display.draw_rubiks(cube::Cube::solved_state_);
+  dis.setup_background();
+  dis.setup_ui();
+  dis.refresh();
+  controller::start_controller(&event);
+  return 0;
   cube::Search search;
 
 
