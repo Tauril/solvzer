@@ -47,7 +47,6 @@ namespace display
   void
   Display::setup_background() const
   {
-    std::cout << "rend " << &renderer_ << std::endl;
       // Set the background
       static SDL_Surface *Loading_Surf = SDL_LoadBMP("resources/background.bmp");
       static SDL_Texture *Background_Tx = SDL_CreateTextureFromSurface(renderer_,
@@ -110,33 +109,33 @@ namespace display
     {
       case 'U':
         color[0] = 255;
-        color[1] = 0;
-        color[2] = 0;
+        color[1] = 255;
+        color[2] = 255;
         break;
       case 'R':
         color[0] = 0;
+        color[1] = 0;
+        color[2] = 255;
+        break;
+      case 'D':
+        color[0] = 255;
         color[1] = 255;
         color[2] = 0;
         break;
       case 'F':
         color[0] = 255;
-        color[1] = 255;
-        color[2] = 0;
-        break;
-      case 'D':
-        color[0] = 255;
-        color[1] = 128;
+        color[1] = 0;
         color[2] = 0;
         break;
       case 'L':
-        color[0] = 255;
+        color[0] = 0;
         color[1] = 255;
-        color[2] = 255;
+        color[2] = 0;
         break;
       case 'B':
-        color[0] = 0;
-        color[1] = 0;
-        color[2] = 255;
+        color[0] = 255;
+        color[1] = 165;
+        color[2] = 0;
         break;
     }
   }
@@ -144,15 +143,13 @@ namespace display
   void
   Display::draw_rubiks(const std::string& rubiks) const
   {
-      std::cout << &renderer_ << std::endl;
       SDL_RenderClear(renderer_);
       setup_background();
       int index = 0;
-      std::cout << "HERE" << std::endl;
       for (char c : rubiks)
         draw_square(get_pos(index++), c);
       SDL_RenderPresent(renderer_);
-      SDL_Delay(2000);
+      SDL_Delay(500);
   }
 
   void

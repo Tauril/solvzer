@@ -48,5 +48,6 @@ int main(int argc, char** argv)
     displayer.display();
   }
 
+  SDL_Delay(5000);
   return 0;
 }
