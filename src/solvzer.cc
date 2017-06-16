@@ -3,8 +3,6 @@
 
 #include <cube/search.hh>
 
-#define DEPTH 21
-
 int main()
 {
   cube::Search search;
@@ -25,8 +23,8 @@ int main()
   //  "L'D2R1F1R1F2L'F'D'F2L'F'R2B'D'F1D'R1D'F'R2B'F2B2U2L1D1B2U'L'";
   face.scramble();
 
-  auto sol = search.solution(face, DEPTH);
-  //assert(search.ack_solution(face, sol));
+  auto sol = search.solution(face, cube::Search::DEPTH);
+  assert(search.ack_solution(face, sol));
 
   return 0;
 }
