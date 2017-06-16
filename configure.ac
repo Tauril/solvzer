@@ -91,6 +91,8 @@ BOOST_PROGRAM_OPTIONS
 
 PKG_CHECK_MODULES([OPENCV], [opencv])
 
+AC_CHECK_HEADERS([SDL2/SDL.h], [],
+  [AC_MSG_ERROR(You need the SDL development library.)])
 
 ## ------- ##
 ## Tests.  ##
