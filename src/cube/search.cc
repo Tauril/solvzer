@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <cube/search.hh>
+#include <misc/state.hh>
 
 namespace cube
 {
@@ -146,6 +147,7 @@ namespace cube
 
             std::cout << "Computation time: "
                       << dt.count() << "s" << std::endl;
+            state::State::Instance().compute_time_set(dt.count());
 
             return solution_to_string(depth);
           }

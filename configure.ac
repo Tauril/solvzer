@@ -94,8 +94,8 @@ PKG_CHECK_MODULES([OPENCV], [opencv])
 AC_CHECK_HEADERS([SDL2/SDL.h], [],
   [AC_MSG_ERROR(You need the SDL development library.)])
 
-AC_CHECK_HEADERS([SDL/SDL_ttf.h], [],
-  [AC_MSG_ERROR(You need the SDL_ttf development library.)])
+AC_CHECK_HEADERS([SDL2/SDL_ttf.h], [],
+  [AC_MSG_ERROR(You need the SDL2_ttf development library.)])
 
 ## ------- ##
 ## Tests.  ##

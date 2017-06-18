@@ -19,6 +19,7 @@ namespace display
   {
     SDL_DestroyWindow(window_);
     SDL_DestroyRenderer(renderer_);
+    TTF_Quit();
     SDL_Quit();
   }
 
@@ -33,6 +34,7 @@ namespace display
           SDL_WINDOWPOS_CENTERED,
           1280, 680, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
       *renderer =  SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
+      TTF_Init();
     }
     static Display d(window, renderer);
     return d;
@@ -178,19 +180,16 @@ namespace display
   void
   Display::draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y)
   {
-    TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
-
-    SDL_Color sdl_color = {color[0], color[1], color[2]};
-
+    TTF_Font* Sans = TTF_OpenFont("resources/Arial-Rounded-Bold.ttf", 30);
+    SDL_Color sdl_color = {color[0], color[1], color[2], 1};
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, text.c_str(), sdl_color);
-
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer_, surfaceMessage);
 
     SDL_Rect Message_rect;
     Message_rect.x = x;
     Message_rect.y = y;
-    Message_rect.w = 100;
-    Message_rect.h = 100;
+    Message_rect.w = surfaceMessage->w;
+    Message_rect.h = surfaceMessage->h;
 
     SDL_RenderCopy(renderer_, Message, NULL, &Message_rect);
   }
@@ -230,6 +229,13 @@ namespace display
     setup_background();
     draw_rubiks(state::State::Instance().face_str_get());
     setup_ui();
+    state::State::Instance().draw_text_data();
     refresh();
+  }
+
+  void
+  Display::window_size_get(std::pair<int, int>& res) const
+  {
+    SDL_GetWindowSize(window_, &res.first, &res.second);
   }
 }

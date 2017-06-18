@@ -18,7 +18,10 @@ namespace state
       std::string move_get();
       const std::string& face_str_get() const;
       void face_str_set(const std::string& state);
+      void compute_time_set(const double d);
+      double compute_time_get() const;
       static State& Instance();
+      void draw_text_data() const;
 
     private:
       State();

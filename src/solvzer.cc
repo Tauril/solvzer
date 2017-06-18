@@ -34,10 +34,7 @@ int main(int argc, char** argv)
   auto& dis = display::Display::Instance(&window, &renderer);
   auto face = cube::Face(cube::Cube::solved_state_);
   state::State::Instance().face_set(face);
-  dis.setup_background();
-  dis.draw_rubiks(state::State::Instance().face_str_get());
-  dis.setup_ui();
-  dis.refresh();
+  dis.repaint();
   controller::start_controller(&event);
   return 0;
   cube::Search search;

@@ -1,4 +1,6 @@
+#include <sstream>
 #include "state.hh"
+#include "display.hh"
 
 namespace state
 {
@@ -56,5 +58,31 @@ namespace state
   State::face_str_set(const std::string& state)
   {
     face_.face_str_set(state);
+  }
+
+  void
+  State::compute_time_set(const double d)
+  {
+    compute_time_ = d;
+  }
+
+  double
+  State::compute_time_get() const
+  {
+    return compute_time_;
+  }
+
+  void
+  State::draw_text_data() const
+  {
+    auto& dis = display::Display::Instance();
+    std::pair<int, int> size;
+    dis.window_size_get(size);
+
+    // Draw compute time
+    std::ostringstream strs;
+    strs << compute_time_;
+    std::array<uint8_t, 3> color{{255, 0, 0}};
+    dis.draw_text("Computation time: " + strs.str(), color, size.first - 450, size.second -  150);
   }
 }

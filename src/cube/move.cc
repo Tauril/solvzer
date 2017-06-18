@@ -283,8 +283,8 @@ namespace cube
         {
           display::Display::Instance().setup_background();
           display::Display::Instance().draw_rubiks(solution);
+          state::State::Instance().draw_text_data();
           display::Display::Instance().refresh();
-          //display::Display::Instance().setup_ui()
         }
         std::cout << "State: " << solution << std::endl;
         std::cout << "Visual representation:" << std::endl
