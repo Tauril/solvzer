@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include <ctime>
-#include <map>
 
 #include <cube/face.hh>
 #include <cube/move.hh>
