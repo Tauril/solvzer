@@ -68,6 +68,7 @@ fi
 # Try to use pipes between compiler stages to speed the compilation up.
 AX_CHECK_COMPILE_FLAG([-pipe], [CXXFLAGS="$CXXFLAGS -pipe"])
 
+
 ## -------------------- ##
 ## Auxiliary programs.  ##
 ## -------------------- ##
@@ -87,6 +88,7 @@ AC_CHECK_PROGS([SOLVZER], [solvzer])
 
 BOOST_REQUIRE([1.61])
 BOOST_PROGRAM_OPTIONS
+
 PKG_CHECK_MODULES([OPENCV], [opencv])
 
 
