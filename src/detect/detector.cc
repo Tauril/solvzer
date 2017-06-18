@@ -16,7 +16,7 @@ namespace detect
     if (!image_.data)
     {
       std::cerr << "Could not load image " << path_to_file << ", aborting."
-        << std::endl;
+                << std::endl;
       std::abort();
     }
 
@@ -34,7 +34,7 @@ namespace detect
               << "x" << image_.rows << std::endl;
 
     // If the debug mode is set, we open a window to display the visual debug
-   cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
+    cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
 #endif
 
     while (1)
@@ -62,9 +62,9 @@ namespace detect
     // We compute the black mask used to detect extremities
     cv::Mat bMask;
     cv::Scalar lowerb = cv::Scalar(0, 0, 0);
-    cv::Scalar upperb = cv::Scalar(100, 100, 100);
+    cv::Scalar upperb = cv::Scalar(50, 50, 50);
     cv::inRange(image_, lowerb, upperb, bMask);
-    int erosion_size = 3;
+    int erosion_size = 2;
     cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
                                                 cv::Size(2 * erosion_size + 1,
                                                          2 * erosion_size + 1),
@@ -156,7 +156,7 @@ namespace detect
           facelets_.push_back(t1);
         facelets_.push_back(t2);
 
- #ifdef DEBUG_DETECT
+#ifdef DEBUG_DETECT
         std::cout << "intersection " << l << ": t1 = " << t1
                   << ", t2 = " << t2 << std::endl;
         cv::circle(image_debug_, t1, DEBUG_THICKNESS, PINK, -1);
@@ -171,44 +171,63 @@ namespace detect
 
   void Detector::computeColors()
   {
+#ifdef DEBUG_DETECT
+    // We draw circles around the faces spots
+    image_debug_ = image_.clone();
+    for (size_t i = 0; i < facelets_.size(); i++)
+    {
+      cv::putText(image_debug_, std::to_string(i),
+                  facelets_[i] - cv::Point2f(6, 10),
+                  cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, BLACK, 1, CV_AA);
+      cv::circle(image_debug_, facelets_[i], DEBUG_THICKNESS, BLACK, 2);
+      cv::imshow("detect debug", image_debug_);
+      cv::waitKey(1);
+    }
+#endif
+
     // We convert our image to HSV
     cv::cvtColor(image_, image_, CV_BGR2HSV);
+    for (size_t i = 0; i < facelets_.size(); i++)
+    {
+      std::cout << "[" << i << "] " << facelets_[i] << " = "
+                << image_.at<cv::Vec3b>(facelets_[i]);
 
-#ifdef DEBUG_DETECT
-    cv::cvtColor(image_debug_, image_debug_, CV_BGR2HSV);
-    cv::Scalar lowerb;
-    cv::Scalar upperb;
-    // green
-    lowerb = cv::Scalar(35, 50, 50);
-    upperb = cv::Scalar(75, 255, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-    // red
-    lowerb = cv::Scalar(35, 50, 50);
-    upperb = cv::Scalar(75, 255, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-    // blue 175 - 280
-    lowerb = cv::Scalar(87, 50, 50);
-    upperb = cv::Scalar(140, 255, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-    // orange 18 - 28
-    lowerb = cv::Scalar(9, 50, 50);
-    upperb = cv::Scalar(14, 255, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-    // yellow 29 - 60
-    lowerb = cv::Scalar(15, 50, 50);
-    upperb = cv::Scalar(30, 255, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-    // white
-    lowerb = cv::Scalar(0, 0, 200);
-    upperb = cv::Scalar(255, 55, 255);
-    cv::inRange(image_, lowerb, upperb, image_debug_);
-    update_debug();
-#endif
+      if (isInRangeMask(cv::Scalar(160, 220, 25), cv::Scalar(180, 255, 255), facelets_[i]))
+        std::cout << " RED" << std::endl;
+      else if (isInRangeMask(cv::Scalar(0, 217, 50), cv::Scalar(3, 255, 255), facelets_[i]))
+        std::cout << " RED" << std::endl;
+      else if (isInRangeMask(cv::Scalar(0, 50, 30), cv::Scalar(18, 255, 255), facelets_[i]))
+        std::cout << " ORANGE" << std::endl;
+      else if (isInRangeMask(cv::Scalar(177, 50, 30), cv::Scalar(180, 255, 255), facelets_[i]))
+        std::cout << " ORANGE" << std::endl;
+      else if (isInRangeMask(cv::Scalar(19, 100, 30), cv::Scalar(33, 255, 255), facelets_[i]))
+        std::cout << " YELLOW" << std::endl;
+      else if (isInRangeMask(cv::Scalar(34, 50, 30), cv::Scalar(87, 255, 255), facelets_[i]))
+        std::cout << " GREEN" << std::endl;
+      else if (isInRangeMask(cv::Scalar(88, 50, 30), cv::Scalar(130, 255, 255), facelets_[i]))
+        std::cout << " BLUE" << std::endl;
+      else if (isInRangeMask(cv::Scalar(0, 0, 127), cv::Scalar(255, 100, 255), facelets_[i]))
+        std::cout << " WHITE" << std::endl;
+      else
+        std::cout << " UNKNOWN" << std::endl;
+    }
+
+    while (1)
+    {
+      cv::waitKey(0);
+    }
+  }
+
+  // Computes the mask with the given lower bound and upper bound. Returns true
+  // if the pixel at coord is positive within the mask, false otherwise
+  bool Detector::isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
+                               const cv::Point2f& coord)
+  {
+    cv::inRange(image_, low, high, image_debug_);
+    if (image_debug_.at<unsigned char>(coord) != 0)
+      return true;
+
+    return false;
   }
 
   // Clones the original image and returns the call to fillDirection on it
@@ -292,10 +311,10 @@ namespace detect
       fillDirection(dir, current + p3, res, bMask, tmp);
   }
 
+  // Updates res if current if closer to the chosen direction
   void Detector::updateExtreme(const Direction dir, const cv::Point& current,
                                cv::Point& res)
   {
-    // FIXME: Temporary solution to update the extreme
     if (dir == Direction::TOP && current.y < res.y)
       res = current;
     if (dir == Direction::TOP_RIGHT
@@ -308,10 +327,11 @@ namespace detect
         && current.y > res.y)
       res = current;
     if (dir == Direction::BOTTOM_LEFT
-        && current.x < res.x && current.y > res.y)
+        && image_.rows - current.y + current.x < image_.rows - res.y + res.x)
       res = current;
     if (dir == Direction::BOTTOM_RIGHT
-        && current.x > res.x && current.y > res.y)
+        && (image_.rows - current.y) + (image_.cols - current.x)
+          < (image_.rows - res.y) + (image_.cols - res.x))
       res = current;
   }
 

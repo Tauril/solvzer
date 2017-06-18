@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 
+#include <cube/color.hh>
+
 #define DEBUG_DETECT
 #define DEBUG_THICKNESS 5 // size of debug visuals
 
@@ -34,6 +36,8 @@ namespace detect
     private:
       void startDetection();
       void computeColors();
+      bool isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
+                         const cv::Point2f& coord);
       cv::Point computeExtremity(const detect::Direction dir,
                                  const cv::Mat& mat);
       void fillDirection(const Direction dir, const cv::Point current,
@@ -50,6 +54,7 @@ namespace detect
       cv::Mat image_debug_;
       cv::Point center_;
       std::vector<cv::Point2f> facelets_;
+      std::vector<cube::color> colors_;
   };
 
   static void setCenter(int event, int x, int y, int flags, void *userdata);
