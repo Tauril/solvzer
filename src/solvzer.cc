@@ -2,10 +2,11 @@
 #include <iostream>
 
 #include <cube/search.hh>
+#include <detect/detector.hh>
 
-int main()
+int main(int argc, char** argv)
 {
-  cube::Search search;
+  //cube::Search search;
 
   /*auto face = cube::Face(init_state);
 
@@ -16,6 +17,7 @@ int main()
   if (!search.ack_solution(init_state, solution))
     std::cout << "Solution is wrong" << std::endl; */
 
+  /*
   auto face = cube::Face(cube::Cube::solved_state_);
   std::cout << face << std::endl;
 
@@ -25,6 +27,14 @@ int main()
 
   auto sol = search.solution(face, cube::Search::DEPTH);
   assert(search.ack_solution(face, sol));
+  */
+
+  if (argc != 2)
+  {
+    std::cout << "Usage: ./solvzer path_to_cube" << std::endl;
+    return 1;
+  }
+  detect::Detector d(argv[1]);
 
   return 0;
 }
