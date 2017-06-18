@@ -40,6 +40,10 @@ namespace cube
   std::string
   Search::solution(const Face& face, int max_depth)
   {
+    // If the cube is already solved, nothing to do.
+    if (face.face_str_get() == Cube::solved_state_)
+      return "";
+
     Cube cube(face);
 
     if (cube.verify() != "")
