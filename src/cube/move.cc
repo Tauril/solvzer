@@ -8,7 +8,9 @@
 #include <array>
 
 #include <cube/move.hh>
+#include <misc/controller.hh>
 #include <misc/display.hh>
+#include <misc/state.hh>
 namespace cube
 {
 
@@ -277,9 +279,13 @@ namespace cube
         solution = make_move(solution, move);
 
         auto face = Face(solution);
-        #ifdef DRAW
-        display::Display::Instance().draw_rubiks(solution);
-        #endif
+        if (state::State::Instance().draw_)
+        {
+          display::Display::Instance().setup_background();
+          display::Display::Instance().draw_rubiks(solution);
+          display::Display::Instance().refresh();
+          //display::Display::Instance().setup_ui()
+        }
         std::cout << "State: " << solution << std::endl;
         std::cout << "Visual representation:" << std::endl
                   << face << std::endl;

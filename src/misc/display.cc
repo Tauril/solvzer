@@ -176,6 +176,26 @@ namespace display
   }
 
   void
+  Display::draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y)
+  {
+    TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
+
+    SDL_Color sdl_color = {color[0], color[1], color[2]};
+
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, text.c_str(), sdl_color);
+
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer_, surfaceMessage);
+
+    SDL_Rect Message_rect;
+    Message_rect.x = x;
+    Message_rect.y = y;
+    Message_rect.w = 100;
+    Message_rect.h = 100;
+
+    SDL_RenderCopy(renderer_, Message, NULL, &Message_rect);
+  }
+
+  void
   Display::draw_rubiks(const std::string& rubiks) const
   {
       int index = 0;

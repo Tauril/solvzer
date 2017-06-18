@@ -5,6 +5,7 @@
 #include <detect/detector.hh>
 #include <misc/display.hh>
 #include <misc/controller.hh>
+#include <misc/state.hh>
 
 // temp
 #include <opencv2/imgcodecs.hpp>
@@ -31,17 +32,18 @@ int main(int argc, char** argv)
   SDL_Event event;
 
   auto& dis = display::Display::Instance(&window, &renderer);
-  //display.draw_rubiks(cube::Cube::solved_state_);
+  auto face = cube::Face(cube::Cube::solved_state_);
+  state::State::Instance().face_set(face);
   dis.setup_background();
+  dis.draw_rubiks(state::State::Instance().face_str_get());
   dis.setup_ui();
   dis.refresh();
   controller::start_controller(&event);
   return 0;
   cube::Search search;
 
-
-  //auto face = cube::Face(cube::Cube::solved_state_);
-  //std::cout << face << std::endl;
+  /*auto face = cube::Face(cube::Cube::solved_state_);
+  std::cout << face << std::endl;
 
   //std::string moves =
   //  "L'D2R1F1R1F2L'F'D'F2L'F'R2B'D'F1D'R1D'F'R2B'F2B2U2L1D1B2U'L'";
