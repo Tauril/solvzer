@@ -19,81 +19,81 @@ namespace cube
 
     /// Up moves.
     static constexpr std::array<corner, 8> corner_perm_U_ =
-      {{ UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB }};
+      { UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB };
 
     static constexpr std::array<unsigned char, 8> corner_ori_U_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     static constexpr std::array<edge, 12> edge_perm_U_ =
-      {{ UB, UR, UF, UL, DR, DF, DL, DB, FR, FL, BL, BR }};
+      { UB, UR, UF, UL, DR, DF, DL, DB, FR, FL, BL, BR };
 
     static constexpr std::array<unsigned char, 12> edge_ori_U_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     /// Right moves.
     static constexpr std::array<corner, 8> corner_perm_R_ =
-      {{ DFR, UFL, ULB, URF, DRB, DLF, DBL, UBR }};
+      { DFR, UFL, ULB, URF, DRB, DLF, DBL, UBR };
 
     static constexpr std::array<unsigned char, 8> corner_ori_R_ =
-      {{ 2, 0, 0, 1, 1, 0, 0, 2 }};
+      { 2, 0, 0, 1, 1, 0, 0, 2 };
 
     static constexpr std::array<edge, 12> edge_perm_R_ =
-      {{ FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR }};
+      { FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR };
 
     static constexpr std::array<unsigned char, 12> edge_ori_R_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     /// Face moves.
     static constexpr std::array<corner, 8> corner_perm_F_ =
-      {{ UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB }};
+      { UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB };
 
     static constexpr std::array<unsigned char, 8> corner_ori_F_ =
-      {{ 1, 2, 0, 0, 2, 1, 0, 0 }};
+      { 1, 2, 0, 0, 2, 1, 0, 0 };
 
     static constexpr std::array<edge, 12> edge_perm_F_ =
-      {{ UR, FL, UL, UB, DR, FR, DL, DB, UF, DF, BL, BR }};
+      { UR, FL, UL, UB, DR, FR, DL, DB, UF, DF, BL, BR };
 
     static constexpr std::array<unsigned char, 12> edge_ori_F_ =
-      {{ 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0 }};
+      { 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0 };
 
     /// Down moves.
     static constexpr std::array<corner, 8> corner_perm_D_ =
-      {{ URF, UFL, ULB, UBR, DLF, DBL, DRB, DFR }};
+      { URF, UFL, ULB, UBR, DLF, DBL, DRB, DFR };
 
     static constexpr std::array<unsigned char, 8> corner_ori_D_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     static constexpr std::array<edge, 12> edge_perm_D_ =
-      {{ UR, UF, UL, UB, DF, DL, DB, DR, FR, FL, BL, BR }};
+      { UR, UF, UL, UB, DF, DL, DB, DR, FR, FL, BL, BR };
 
     static constexpr std::array<unsigned char, 12> edge_ori_D_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     /// Left moves.
     static constexpr std::array<corner, 8> corner_perm_L_ =
-      {{ URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB }};
+      { URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB };
 
     static constexpr std::array<unsigned char, 8> corner_ori_L_ =
-      {{ 0, 1, 2, 0, 0, 2, 1, 0 }};
+      { 0, 1, 2, 0, 0, 2, 1, 0 };
 
     static constexpr std::array<edge, 12> edge_perm_L_ =
-      {{ UR, UF, BL, UB, DR, DF, FL, DB, FR, UL, DL, BR }};
+      { UR, UF, BL, UB, DR, DF, FL, DB, FR, UL, DL, BR };
 
     static constexpr std::array<unsigned char, 12> edge_ori_L_ =
-      {{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }};
+      { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     /// Back moves.
     static constexpr std::array<corner, 8> corner_perm_B_ =
-      {{ URF, UFL, UBR, DRB, DFR, DLF, ULB, DBL }};
+      { URF, UFL, UBR, DRB, DFR, DLF, ULB, DBL };
 
     static constexpr std::array<unsigned char, 8> corner_ori_B_ =
-      {{ 0, 0, 1, 2, 0, 0, 2, 1 }};
+      { 0, 0, 1, 2, 0, 0, 2, 1 };
 
     static constexpr std::array<edge, 12> edge_perm_B_ =
-      {{ UR, UF, UL, BR, DR, DF, DL, BL, FR, FL, UB, DB }};
+      { UR, UF, UL, BR, DR, DF, DL, BL, FR, FL, UB, DB };
 
     static constexpr std::array<unsigned char, 12> edge_ori_B_ =
-      {{ 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1 }};
+      { 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1 };
 
     void
     init_move_cube()
