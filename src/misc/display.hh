@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <SDL/SDL_ttf.h>
 
+#include "misc/state.hh"
+
 namespace display
 {
   class Display
@@ -17,6 +19,7 @@ namespace display
       const std::string& is_intersect(int x, int y) const;
       void draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y);
       void refresh() const;
+      void repaint();
       static Display& Instance();
       static Display& Instance(SDL_Window **window, SDL_Renderer **renderer);
       std::map<std::string, SDL_Rect> elements_;

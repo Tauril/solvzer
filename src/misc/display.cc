@@ -223,4 +223,13 @@ namespace display
   {
     SDL_RenderPresent(renderer_);
   }
+
+  void
+  Display::repaint()
+  {
+    setup_background();
+    draw_rubiks(state::State::Instance().face_str_get());
+    setup_ui();
+    refresh();
+  }
 }
