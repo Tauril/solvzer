@@ -15,7 +15,7 @@
 
 namespace detect
 {
-  enum Direction
+  enum class Direction
   {
     TOP,
     BOTTOM,
@@ -25,10 +25,16 @@ namespace detect
     BOTTOM_RIGHT
   };
 
+  enum class CameraPosition
+  {
+    TOP,
+    BOTTOM
+  };
+
   class Detector
   {
     public:
-      Detector(const std::string& path_to_file);
+      Detector(const CameraPosition position, const std::string& path_to_file);
       ~Detector() = default;
 
       void setCenter(const int x, const int y);
@@ -55,6 +61,7 @@ namespace detect
       cv::Point center_;
       std::vector<cv::Point2f> facelets_;
       std::vector<cube::color> colors_;
+      CameraPosition cameraPosition_;
   };
 
   static void setCenter(int event, int x, int y, int flags, void *userdata);

@@ -7,7 +7,9 @@
 
 namespace detect
 {
-  Detector::Detector(const std::string& path_to_file) : fileName_(path_to_file)
+  Detector::Detector(const CameraPosition position,
+                     const std::string& path_to_file)
+    : fileName_(path_to_file), cameraPosition_(position)
   {
     // We try to load the image
     image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
@@ -78,20 +80,23 @@ namespace detect
     cv::waitKey(0);
 #endif
 
+    cv::Point p1, p2, p3; // The extremities of the rubik's cube
+
     // If the camera is above the rubik's cube, call the appropriate functions
-
-    // TOP CAMERA
-    cv::Point p1 = computeExtremity(Direction::TOP_LEFT, bMask);
-    cv::Point p2 = computeExtremity(Direction::TOP_RIGHT, bMask);
-    cv::Point p3 = computeExtremity(Direction::BOTTOM, bMask);
-
-    // If the camera is below the rubik's cube, call the appropriate functions
-
-    // BOTTOM CAMERA
-    //cv::Point p1 = computeExtremity(Direction::TOP, bMask);
-    //cv::Point p2 = computeExtremity(Direction::BOTTOM_RIGHT, bMask);
-    //cv::Point p3 = computeExtremity(Direction::BOTTOM_LEFT, bMask);
-
+    if (cameraPosition_ == CameraPosition::TOP)
+    {
+      // TOP CAMERA
+      p1 = computeExtremity(Direction::TOP_LEFT, bMask);
+      p2 = computeExtremity(Direction::TOP_RIGHT, bMask);
+      p3 = computeExtremity(Direction::BOTTOM, bMask);
+    }
+    else
+    {
+      // BOTTOM CAMERA
+      p1 = computeExtremity(Direction::TOP, bMask);
+      p2 = computeExtremity(Direction::BOTTOM_RIGHT, bMask);
+      p3 = computeExtremity(Direction::BOTTOM_LEFT, bMask);
+    }
 
     // m1, m2 and m3 are the middle points between the extremities
     cv::Point m1 = cv::Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
