@@ -22,7 +22,7 @@ namespace cube
     static constexpr std::array<char, 3> power =
       { '1', '2', '\'' };
 
-    /// Parses the next move frmo \æ moves.
+    /// Parses the next move from \æ moves.
     std::pair<int, int> parse_move(const char*& moves);
     /// Applies \a moves on \a solution.
     std::string make_moves(std::string solution, const std::string& moves);
