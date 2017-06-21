@@ -57,6 +57,8 @@ namespace display
     SDL_Rect dstrect = {sizes[2] - sizes[0] - 50, 100 * y_offset, sizes[0], sizes[1]};
     SDL_RenderCopy(renderer_, texture, NULL, &dstrect);
     elements_[file] = dstrect;
+    SDL_FreeSurface(image);
+    SDL_DestroyTexture(texture);
   }
 
   void
@@ -84,8 +86,9 @@ namespace display
   {
       SDL_RenderClear(renderer_);
       static SDL_Surface *surf = SDL_LoadBMP("resources/background.bmp");
-      static SDL_Texture *background = SDL_CreateTextureFromSurface(renderer_, surf);
+      SDL_Texture *background = SDL_CreateTextureFromSurface(renderer_, surf);
       SDL_RenderCopy(renderer_, background, nullptr, nullptr);
+      SDL_DestroyTexture(background);
   }
 
   inline
@@ -178,9 +181,9 @@ namespace display
   }
 
   void
-  Display::draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y)
+  Display::draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y, int font_size)
   {
-    TTF_Font* Sans = TTF_OpenFont("resources/Arial-Rounded-Bold.ttf", 30);
+    TTF_Font* Sans = TTF_OpenFont("resources/Arial-Rounded-Bold.ttf", font_size);
     SDL_Color sdl_color = {color[0], color[1], color[2], 1};
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, text.c_str(), sdl_color);
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer_, surfaceMessage);
@@ -192,6 +195,9 @@ namespace display
     Message_rect.h = surfaceMessage->h;
 
     SDL_RenderCopy(renderer_, Message, NULL, &Message_rect);
+    TTF_CloseFont(Sans);
+    SDL_DestroyTexture(Message);
+    SDL_FreeSurface(surfaceMessage);
   }
 
   void
@@ -200,7 +206,6 @@ namespace display
       int index = 0;
       for (char c : rubiks)
         draw_square(get_pos(index++), c);
-      SDL_Delay(500);
   }
 
   void

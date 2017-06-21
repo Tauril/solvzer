@@ -24,6 +24,7 @@ namespace controller
      auto sol = state.search_get().solution(state.face_get(), cube::Search::DEPTH);
      cube::move::make_moves(state.face_str_get(), sol);
      state.face_str_set(cube::Cube::solved_state_);
+     state.clear_vector();
      display::Display::Instance().repaint();
   }
 

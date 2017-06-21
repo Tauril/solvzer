@@ -73,6 +73,41 @@ namespace state
   }
 
   void
+  State::push_move(std::string move)
+  {
+    moves_.push_back(move);
+  }
+
+  void
+  State::clear_vector()
+  {
+    moves_.clear();
+  }
+
+  void
+  draw_moves(const std::vector<std::string>& moves, const std::pair<int, int>& size)
+  {
+    auto& dis = display::Display::Instance();
+    std::array<uint8_t, 3> color{{255, 255, 255}};
+    auto size_x = size.first - 1050;
+    dis.draw_text("Moves: ", color, size_x, size.second - 70, 30);
+    size_x += 90;
+    for (auto it = moves.begin(); it != std::prev(moves.end(), 1); ++it)
+    {
+      auto s = *it;
+      s[1] == '1' ? s[1] = '\0' : s[1] = s[1];
+      it->size() == 2 ? size_x += 40 : size_x += 20;
+      dis.draw_text(s + " ", color, size_x, size.second - 63, 20);
+    }
+    size_x += 35;
+    auto s = moves.back();
+    s[1] == '1' ? s[1] = '\0' : s[1] = s[1];
+    color[1] = 0;
+    color[2] = 0;
+    dis.draw_text(s, color, size_x, size.second - 70, 30);
+  }
+
+  void
   State::draw_text_data() const
   {
     auto& dis = display::Display::Instance();
@@ -82,7 +117,15 @@ namespace state
     // Draw compute time
     std::ostringstream strs;
     strs << compute_time_;
-    std::array<uint8_t, 3> color{{255, 0, 0}};
-    dis.draw_text("Computation time: " + strs.str(), color, size.first - 450, size.second -  150);
+    std::array<uint8_t, 3> color{{255, 255, 255}};
+    dis.draw_text("Computation time: " + strs.str() + " seconds", color, size.first - 1050, size.second -  150, 30);
+
+    // Draw state
+    dis.draw_text("State: ", color, size.first - 1050, size.second - 110, 30);
+    dis.draw_text(face_str_get(), color, size.first - 950, size.second - 100, 17);
+
+    // Draw move
+    if (moves_.size())
+      draw_moves(moves_, size);
   }
 }

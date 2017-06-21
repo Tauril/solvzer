@@ -276,16 +276,22 @@ namespace cube
       {
         std::cout << "Move: ";
         const auto& move = parse_move(sol_str);
-        solution = make_move(solution, move);
-
-        auto face = Face(solution);
         if (state::State::Instance().draw_)
         {
           display::Display::Instance().setup_background();
           display::Display::Instance().draw_rubiks(solution);
+          state::State::Instance().face_str_set(solution);
+          std::string m{move::axis[move.first]};
+          m += move::power[move.second - 1];
+          state::State::Instance().push_move(m);
           state::State::Instance().draw_text_data();
           display::Display::Instance().refresh();
+          SDL_Delay(500);
         }
+
+        solution = make_move(solution, move);
+
+        auto face = Face(solution);
         std::cout << "State: " << solution << std::endl;
         std::cout << "Visual representation:" << std::endl
                   << face << std::endl;

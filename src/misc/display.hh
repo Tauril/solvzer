@@ -17,7 +17,7 @@ namespace display
       void setup_ui();
       void draw_rubiks(const std::string& rubiks) const;
       const std::string& is_intersect(int x, int y) const;
-      void draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y);
+      void draw_text(const std::string& text, const std::array<uint8_t, 3> color, int x, int y, int font_size);
       void refresh() const;
       void repaint();
       void window_size_get(std::pair<int, int>& res) const;

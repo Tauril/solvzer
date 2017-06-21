@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "cube/face.hh"
 #include "cube/search.hh"
 
@@ -22,6 +24,8 @@ namespace state
       double compute_time_get() const;
       static State& Instance();
       void draw_text_data() const;
+      void push_move(std::string move);
+      void clear_vector();
 
     private:
       State();
@@ -30,6 +34,7 @@ namespace state
       cube::Search search_;
       cube::Face face_;
       double compute_time_;
+      std::vector<std::string> moves_;
 
     public:
       bool draw_;
