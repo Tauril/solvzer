@@ -188,6 +188,18 @@ namespace detect
       cv::imshow("detect debug", image_debug_);
       cv::waitKey(1);
     }
+
+    // Histogram equalization
+    std::vector<cv::Mat> channels;
+    cv::Mat img_hist_equalized;
+
+    cv::cvtColor(image_debug_, img_hist_equalized, CV_BGR2YCrCb);
+    cv::split(img_hist_equalized, channels);
+    cv::equalizeHist(channels[0], channels[0]);
+    cv::merge(channels, img_hist_equalized);
+    cv::cvtColor(img_hist_equalized, img_hist_equalized, CV_YCrCb2BGR);
+    cv::imshow("detect debug", img_hist_equalized);
+    cv::waitKey(0);
 #endif
 
     // We convert our image to HSV
@@ -205,7 +217,7 @@ namespace detect
         std::cout << " ORANGE" << std::endl;
       else if (isInRangeMask(cv::Scalar(177, 50, 30), cv::Scalar(180, 255, 255), facelets_[i]))
         std::cout << " ORANGE" << std::endl;
-      else if (isInRangeMask(cv::Scalar(19, 100, 30), cv::Scalar(33, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(19, 50, 30), cv::Scalar(33, 255, 255), facelets_[i]))
         std::cout << " YELLOW" << std::endl;
       else if (isInRangeMask(cv::Scalar(34, 50, 30), cv::Scalar(87, 255, 255), facelets_[i]))
         std::cout << " GREEN" << std::endl;
