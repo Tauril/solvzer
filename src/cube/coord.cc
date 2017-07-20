@@ -63,42 +63,42 @@ namespace cube
       // Workaround to avoid complains about the overloaded method.
       std::function<int()> get_UR_to_DF = [&c]() { return c.get_UR_to_DF(); };
 
-      // Associate the upper bound with the corresponding methods to call.
-      auto func_mapper = [&c, &get_UR_to_DF, is_edge]()
+      std::map<int, std::pair<std::function<void(int)>,
+                              std::function<int()>>> func_mapper =
       {
-        // UR_to_DF and URF_to_DLF have the same constant value.
-        std::map<bool, std::pair<std::function<void(int)>,
-                                std::function<int()>>> UR_to_DF_or_URF_to_DLF =
-        {
-          { true,  { std::bind(&Cube::set_UR_to_DF, &c, _1),
-                               get_UR_to_DF } },
+        { Coord::TWIST,      { std::bind(&Cube::set_twist, &c, _1),
+                               std::bind(&Cube::get_twist, &c) } },
 
-          { false, { std::bind(&Cube::set_URF_to_DLF, &c, _1),
-                               std::bind(&Cube::get_URF_to_DLF, &c) } }
-        };
+        { Coord::FLIP,       { std::bind(&Cube::set_flip, &c, _1),
+                               std::bind(&Cube::get_flip, &c) } },
 
+        { Coord::FR_to_BR,   { std::bind(&Cube::set_FR_to_BR, &c, _1),
+                               std::bind(&Cube::get_FR_to_BR, &c) } },
+
+        { Coord::UR_to_UL,   { std::bind(&Cube::set_UR_to_UL, &c, _1),
+                               std::bind(&Cube::get_UR_to_UL, &c) } },
+
+        { Coord::UB_to_DF,   { std::bind(&Cube::set_UB_to_DF, &c, _1),
+                               std::bind(&Cube::get_UB_to_DF, &c) } }
+      };
+
+      // UR_to_DF and URF_to_DLF have the same constant value.
+      std::map<bool, std::pair<std::function<void(int)>,
+                              std::function<int()>>> UR_to_DF_or_URF_to_DLF =
+      {
+        { true,  { std::bind(&Cube::set_UR_to_DF, &c, _1),
+                             get_UR_to_DF } },
+
+        { false, { std::bind(&Cube::set_URF_to_DLF, &c, _1),
+                             std::bind(&Cube::get_URF_to_DLF, &c) } }
+      };
+
+      // Associate the upper bound with the corresponding methods to call.
+      auto func_mapper_l = [is_edge, &func_mapper, &UR_to_DF_or_URF_to_DLF]()
+      {
         // Distinguish which methods to call.
         if (N == Coord:: URF_to_DLF)
           return UR_to_DF_or_URF_to_DLF[is_edge];
-
-        std::map<int, std::pair<std::function<void(int)>,
-                                std::function<int()>>> func_mapper =
-        {
-          { Coord::TWIST,      { std::bind(&Cube::set_twist, &c, _1),
-                                 std::bind(&Cube::get_twist, &c) } },
-
-          { Coord::FLIP,       { std::bind(&Cube::set_flip, &c, _1),
-                                 std::bind(&Cube::get_flip, &c) } },
-
-          { Coord::FR_to_BR,   { std::bind(&Cube::set_FR_to_BR, &c, _1),
-                                 std::bind(&Cube::get_FR_to_BR, &c) } },
-
-          { Coord::UR_to_UL,   { std::bind(&Cube::set_UR_to_UL, &c, _1),
-                                 std::bind(&Cube::get_UR_to_UL, &c) } },
-
-          { Coord::UB_to_DF,   { std::bind(&Cube::set_UB_to_DF, &c, _1),
-                                 std::bind(&Cube::get_UB_to_DF, &c) } }
-        };
 
         return func_mapper[N];
       };
@@ -111,13 +111,13 @@ namespace cube
 
       for (int i = 0; i < N; i++)
       {
-        func_mapper().first(i);
+        func_mapper_l().first(i);
         for (int j = 0; j < 6; j++)
         {
           for (int k = 0; k < 3; k++)
           {
             multiply[is_edge](Cube::move_cube_[j]);
-            move[i][3 * j + k] = func_mapper().second();
+            move[i][3 * j + k] = func_mapper_l().second();
           }
           multiply[is_edge](Cube::move_cube_[j]);
         }
