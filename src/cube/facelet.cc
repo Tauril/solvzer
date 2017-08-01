@@ -16,7 +16,7 @@ namespace cube
   facelet
   get_facelet(int f)
   {
-    std::map<int, facelet> facelets =
+    static const std::map<int, facelet> facelets =
     {
       { 0,  facelet::U1 }, { 1,  facelet::U2 }, { 2,  facelet::U3 },
       { 3,  facelet::U4 }, { 4,  facelet::U5 }, { 5,  facelet::U6 },

@@ -17,7 +17,7 @@ namespace cube
   get_color(char c)
   {
     /// Associate the ASCII representation with its enum representation.
-    std::map<char, color> colors =
+    static const std::map<char, color> colors =
     {
       { 'U', color::U }, { 'R', color::R }, { 'F', color::F },
       { 'D', color::D }, { 'L', color::L }, { 'B', color::B }

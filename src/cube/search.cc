@@ -296,11 +296,14 @@ namespace cube
   {
     std::string ret = "";
 
-    std::map<int, std::string> axes =
+    static const std::map<int, std::string> axes =
     {
       { 0, "U" }, { 1, "R" }, { 2, "F" }, { 3, "D" }, { 4, "L" }, { 5, "B" }
     };
-    std::map<int, std::string> powers = { { 1, "" }, { 2, "2" }, { 3, "'" } };
+    static const std::map<int, std::string> powers =
+    {
+      { 1, "" }, { 2, "2" }, { 3, "'" }
+    };
 
     for (int i = 0; i < length; i++)
     {
