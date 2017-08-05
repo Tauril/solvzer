@@ -63,7 +63,7 @@ namespace cube
       // Workaround to avoid complains about the overloaded method.
       std::function<int()> get_UR_to_DF = [&c]() { return c.get_UR_to_DF(); };
 
-      std::map<int, std::pair<std::function<void(int)>,
+      const std::map<int, std::pair<std::function<void(int)>,
                               std::function<int()>>> func_mapper =
       {
         { Coord::TWIST,      { std::bind(&Cube::set_twist, &c, _1),
@@ -83,7 +83,7 @@ namespace cube
       };
 
       // UR_to_DF and URF_to_DLF have the same constant value.
-      std::map<bool, std::pair<std::function<void(int)>,
+      const std::map<bool, std::pair<std::function<void(int)>,
                               std::function<int()>>> UR_to_DF_or_URF_to_DLF =
       {
         { true,  { std::bind(&Cube::set_UR_to_DF, &c, _1),
@@ -94,16 +94,16 @@ namespace cube
       };
 
       // Associate the upper bound with the corresponding methods to call.
-      auto func_mapper_l = [is_edge, &func_mapper, &UR_to_DF_or_URF_to_DLF]()
+      const auto func_mapper_l = [is_edge, &func_mapper, &UR_to_DF_or_URF_to_DLF]()
       {
         // Distinguish which methods to call.
         if (N == Coord:: URF_to_DLF)
-          return UR_to_DF_or_URF_to_DLF[is_edge];
+          return UR_to_DF_or_URF_to_DLF.at(is_edge);
 
-        return func_mapper[N];
+        return func_mapper.at(N);
       };
 
-      std::map<bool, std::function<void(const Cube&)>> multiply =
+      static const std::map<bool, std::function<void(const Cube&)>> multiply =
       {
         { true,  std::bind(&Cube::edge_multiply, &c, _1) },
         { false, std::bind(&Cube::corner_multiply, &c, _1) }
@@ -116,10 +116,10 @@ namespace cube
         {
           for (int k = 0; k < 3; k++)
           {
-            multiply[is_edge](Cube::move_cube_[j]);
+            multiply.at(is_edge)(Cube::move_cube_[j]);
             move[i][3 * j + k] = func_mapper_l().second();
           }
-          multiply[is_edge](Cube::move_cube_[j]);
+          multiply.at(is_edge)(Cube::move_cube_[j]);
         }
       }
     }
