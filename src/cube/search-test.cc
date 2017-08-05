@@ -6,10 +6,10 @@ void
 search_check()
 {
   cube::Search search;
-
+  cube::Face face;
   for (int i = 0; i < 1000; i++)
   {
-    auto face = cube::Face(cube::Cube::solved_state_);
+    face.face_set(cube::Cube::solved_state_);
     face.scramble();
     auto solution = search.solution(face, 21);
 
