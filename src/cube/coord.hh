@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <unordered_map>
 
 #include <cube/cube.hh>
 

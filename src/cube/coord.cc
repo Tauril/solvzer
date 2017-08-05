@@ -61,10 +61,11 @@ namespace cube
       Cube c;
 
       // Workaround to avoid complains about the overloaded method.
-      std::function<int()> get_UR_to_DF = [&c]() { return c.get_UR_to_DF(); };
+      std::function<int()> get_UR_to_DF = [&c]{ return c.get_UR_to_DF(); };
 
-      const std::map<int, std::pair<std::function<void(int)>,
-                              std::function<int()>>> func_mapper =
+      const std::unordered_map<int, std::pair<std::function<void(int)>,
+                                              std::function<int()>>>
+        func_mapper =
       {
         { Coord::TWIST,      { std::bind(&Cube::set_twist, &c, _1),
                                std::bind(&Cube::get_twist, &c) } },
@@ -83,8 +84,9 @@ namespace cube
       };
 
       // UR_to_DF and URF_to_DLF have the same constant value.
-      const std::map<bool, std::pair<std::function<void(int)>,
-                              std::function<int()>>> UR_to_DF_or_URF_to_DLF =
+      const std::unordered_map<bool, std::pair<std::function<void(int)>,
+                                               std::function<int()>>>
+        UR_to_DF_or_URF_to_DLF =
       {
         { true,  { std::bind(&Cube::set_UR_to_DF, &c, _1),
                              get_UR_to_DF } },
@@ -94,7 +96,8 @@ namespace cube
       };
 
       // Associate the upper bound with the corresponding methods to call.
-      const auto func_mapper_l = [is_edge, &func_mapper, &UR_to_DF_or_URF_to_DLF]()
+      const auto func_mapper_l =
+        [is_edge, &func_mapper, &UR_to_DF_or_URF_to_DLF]
       {
         // Distinguish which methods to call.
         if (N == Coord:: URF_to_DLF)
@@ -103,7 +106,8 @@ namespace cube
         return func_mapper.at(N);
       };
 
-      static const std::map<bool, std::function<void(const Cube&)>> multiply =
+      static const std::unordered_map<bool, std::function<void(const Cube&)>>
+        multiply =
       {
         { true,  std::bind(&Cube::edge_multiply, &c, _1) },
         { false, std::bind(&Cube::corner_multiply, &c, _1) }
