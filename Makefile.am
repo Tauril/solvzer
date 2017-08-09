@@ -28,6 +28,7 @@ libsolvzer_la_SOURCES = src/misc/contract.hh src/misc/contract.cc	     \
 			 src/cube/coord.hh src/cube/coord.cc		     \
 			 src/cube/search.hh src/cube/search.cc		     \
 			 src/detect/detector.hh src/detect/detector.cc	     \
+			 src/detect/displayer.hh src/detect/displayer.cc     \
 			 src/solvzer.cc
 
 libsolvzer_la_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LDFLAGS)

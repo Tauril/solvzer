@@ -7,18 +7,17 @@
 
 namespace detect
 {
-  Detector::Detector(const CameraPosition position,
-                     const std::string& path_to_file)
-    : fileName_(path_to_file), cameraPosition_(position)
+  Detector::Detector(Displayer& displayer, const CameraPosition position)
+    : displayer_(displayer), cameraPosition_(position)
   {
     // We try to load the image
-    image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
+    //image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
+    capture_ = cv::VideoCapture(1);
 
     // If we failed
-    if (!image_.data)
+    if (!capture_.isOpened())
     {
-      std::cerr << "Could not load image " << path_to_file << ", aborting."
-                << std::endl;
+      std::cerr << "Could not open capture, aborting." << std::endl;
       std::abort();
     }
 
@@ -32,8 +31,6 @@ namespace detect
 #ifdef DEBUG_DETECT
     // image_debug_ is used to display debug info on the detection
     image_debug_ = image_.clone();
-    std::cout << "Loaded " << path_to_file << ", dimension: " << image_.cols
-              << "x" << image_.rows << std::endl;
 
     // If the debug mode is set, we open a window to display the visual debug
     cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
@@ -57,6 +54,10 @@ namespace detect
 #endif
 
     startDetection();
+  }
+
+  void Detector::update()
+  {
   }
 
   void Detector::startDetection()

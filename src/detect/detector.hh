@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <cube/color.hh>
+#include <detect/displayer.hh>
 
 #define DEBUG_DETECT
 #define DEBUG_THICKNESS 5 // size of debug visuals
@@ -34,10 +35,11 @@ namespace detect
   class Detector
   {
     public:
-      Detector(const CameraPosition position, const std::string& path_to_file);
+      Detector(Displayer& displayer, const CameraPosition position);
       ~Detector() = default;
 
       void setCenter(const int x, const int y);
+      void update();
 
     private:
       void startDetection();
@@ -55,7 +57,8 @@ namespace detect
 
       void update_debug() const;
 
-      std::string fileName_;
+      Displayer& displayer_;
+      cv::VideoCapture capture_;
       cv::Mat image_;
       cv::Mat image_debug_;
       cv::Point center_;
