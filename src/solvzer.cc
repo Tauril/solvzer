@@ -26,6 +26,7 @@ int threshb = 150;
 
 int main(int argc, char** argv)
 {
+  /*
   namedWindow("debug", CV_WINDOW_AUTOSIZE);
   createTrackbar("contrast", "debug", &alpha, 300, nullptr);
   createTrackbar("brightness", "debug", &beta, 100, nullptr);
@@ -97,7 +98,7 @@ int main(int argc, char** argv)
   waitKey(0);
   return 0;
   //cube::Search search;
-
+  */
   /*auto face = cube::Face(init_state);
 
   std::cout << face << std::endl;
@@ -118,15 +119,11 @@ int main(int argc, char** argv)
   //auto sol = search.solution(face, cube::Search::DEPTH);
   //assert(search.ack_solution(face, sol));
 
-  if (argc != 2)
-  {
-    std::cout << "Usage: ./solvzer path_to_cube" << std::endl;
-    return 1;
-  }
-  detect::Detector d(displayer, detect::CameraPosition::BOTTOM);
+  detect::Detector d(displayer, detect::CameraPosition::TOP);
   while (true)
   {
     d.update();
+    displayer.display();
   }
 
   return 0;

@@ -3,7 +3,9 @@
 #define GREEN   cv::Scalar(0, 255, 0)
 #define PINK    cv::Scalar(155, 0, 255)
 #define BLUE    cv::Scalar(255, 0, 0)
+#define RED     cv::Scalar(0, 0, 255)
 #define BLACK   cv::Scalar(0, 0, 0)
+#define WHITE   cv::Scalar(255, 255, 255)
 
 namespace detect
 {
@@ -12,7 +14,7 @@ namespace detect
   {
     // We try to load the image
     //image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
-    capture_ = cv::VideoCapture(1);
+    capture_ = cv::VideoCapture(0);
 
     // If we failed
     if (!capture_.isOpened())
@@ -20,26 +22,25 @@ namespace detect
       std::cerr << "Could not open capture, aborting." << std::endl;
       std::abort();
     }
-
     // We blur the image to smooth it
-    cv::blur(image_, image_, cv::Size(5, 5));
 
+/*
     cv::namedWindow("detect main", cv::WINDOW_NORMAL);
     cv::imshow("detect main", image_);
     cv::setMouseCallback("detect main", detect::setCenter, this);
-
+*/
 #ifdef DEBUG_DETECT
     // image_debug_ is used to display debug info on the detection
-    image_debug_ = image_.clone();
+    //image_debug_ = image_.clone();
 
     // If the debug mode is set, we open a window to display the visual debug
-    cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
+    //cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
 #endif
-
+/*
     while (1)
     {
       cv::waitKey(0);
-    }
+    }*/
   }
 
   // Sets the center of the rubik's cube (the closest edge to the camera) and
@@ -58,6 +59,63 @@ namespace detect
 
   void Detector::update()
   {
+    capture_ >> image_;
+    image_debug_ = image_.clone();
+    displayer_.addImage(image_, "displayer", -1);
+    computeCenter();
+    cv::blur(image_, image_, cv::Size(5, 5));
+    std::cout << "center = " << center_ << std::endl;
+    startDetection();
+  }
+
+  void Detector::computeCenter()
+  {
+    cv::Mat center = cv::Mat::zeros(image_.size(), image_.type());
+    cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
+    image_.copyTo(center, center);
+    cv::cvtColor(center, center, CV_BGR2GRAY);
+    cv::cvtColor(center, center, CV_GRAY2BGR);
+    cv::Mat contrast = cv::Mat::zeros(center.size(), center.type());
+
+    double alpha = 3.0;
+    int beta = 100;
+    for (int y = 0; y < center.rows; y++)
+      for (int x = 0; x < center.cols; x++)
+        for (int c = 0; c < 3; c++)
+          contrast.at<cv::Vec3b>(y, x)[c] =
+            cv::saturate_cast<uchar>(alpha * center.at<cv::Vec3b>(y, x)[c] + beta);
+    displayer_.addImage(contrast, "contrast", -1);
+
+    cv::cvtColor(contrast, contrast, CV_BGR2HSV);
+    cv::inRange(contrast, cv::Scalar(0, 0, 0, 0), cv::Scalar(180, 255, 150, 0), contrast);
+    cv::dilate(contrast, contrast, cv::getStructuringElement(cv::MORPH_ELLIPSE,
+          cv::Size(11, 11), cv::Point(5, 5)));
+    center = cv::Mat::zeros(contrast.size(), contrast.type());
+    cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
+    cv::bitwise_and(contrast, center, contrast);
+    displayer_.addImage(contrast, "dilated", CV_GRAY2BGR);
+
+    int x = 0, y = 0, total = 0;
+    for (int j = 0; j < contrast.rows; j++)
+      for (int i = 0; i < contrast.cols; i++)
+      {
+        if (contrast.at<char>(j, i) != 0)
+        {
+          x += i;
+          y += j;
+          total++;
+        }
+      }
+    if (total != 0)
+    {
+      x /= total;
+      y /= total;
+    }
+
+    //cv::circle(image_, cv::Point(x, y), 4, RED, -1, 8, 0);
+    //displayer_.addImage(image_, "center", -1);
+
+    center_ = cv::Point(x, y);
   }
 
   void Detector::startDetection()
@@ -77,8 +135,8 @@ namespace detect
     cv::dilate(bMask, bMask, element);
 
 #ifdef DEBUG_DETECT
-    cv::imshow("detect debug", bMask);
-    cv::waitKey(0);
+    //cv::imshow("detect debug", bMask);
+    //cv::waitKey(0);
 #endif
 
     cv::Point p1, p2, p3; // The extremities of the rubik's cube
@@ -172,7 +230,9 @@ namespace detect
       }
     }
 
-    computeColors();
+    displayer_.addImage(image_debug_, "final", -1);
+
+    //computeColors();
   }
 
   void Detector::computeColors()
@@ -258,8 +318,8 @@ namespace detect
     fillDirection(dir, center_, edge, bMask, img_cpy);
 
 #ifdef DEBUG_DETECT
-    cv::imshow("detect debug", img_cpy);
-    cv::waitKey(0);
+    //cv::imshow("detect debug", img_cpy);
+    //cv::waitKey(0);
     cv::circle(image_debug_, edge, DEBUG_THICKNESS, GREEN, -1);
     update_debug();
 #endif
@@ -275,6 +335,9 @@ namespace detect
                                cv::Point& res, const cv::Mat& bMask,
                                cv::Mat& tmp)
   {
+    if (current.x < 0 || current.y < 0 || current.x >= tmp.cols || current.y >= tmp.rows)
+      return;
+
     // We update the extreme depending on the direction
     updateExtreme(dir, current, res);
 
@@ -397,21 +460,7 @@ namespace detect
   // Refreshes the debug image and wait for a key press to continue
   void Detector::update_debug() const
   {
-    imshow("detect debug", image_debug_);
-    cv::waitKey(0);
-  }
-
-  // This static function calls the setCenter function from the class
-  // to properly set the center (workaround, because opencv is C based)
-  void setCenter(int event, int x, int y, int flags, void *userdata)
-  {
-    if (!userdata)
-      return;
-
-    if (event == cv::EVENT_LBUTTONDOWN)
-    {
-      Detector* detector = reinterpret_cast<Detector*>(userdata);
-      detector->setCenter(x, y);
-    }
+    //imshow("detect debug", image_debug_);
+    //cv::waitKey(0);
   }
 }

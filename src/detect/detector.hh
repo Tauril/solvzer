@@ -42,6 +42,7 @@ namespace detect
       void update();
 
     private:
+      void computeCenter();
       void startDetection();
       void computeColors();
       bool isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
@@ -66,6 +67,4 @@ namespace detect
       std::vector<cube::color> colors_;
       CameraPosition cameraPosition_;
   };
-
-  static void setCenter(int event, int x, int y, int flags, void *userdata);
 }
