@@ -38,7 +38,6 @@ namespace detect
       Detector(Displayer& displayer, const CameraPosition position);
       ~Detector() = default;
 
-      void setCenter(const int x, const int y);
       void update();
 
     private:

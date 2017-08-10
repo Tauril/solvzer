@@ -14,7 +14,7 @@ namespace detect
   {
     // We try to load the image
     //image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
-    capture_ = cv::VideoCapture(0);
+    capture_ = cv::VideoCapture(1);
 
     // If we failed
     if (!capture_.isOpened())
@@ -22,47 +22,16 @@ namespace detect
       std::cerr << "Could not open capture, aborting." << std::endl;
       std::abort();
     }
-    // We blur the image to smooth it
-
-/*
-    cv::namedWindow("detect main", cv::WINDOW_NORMAL);
-    cv::imshow("detect main", image_);
-    cv::setMouseCallback("detect main", detect::setCenter, this);
-*/
-#ifdef DEBUG_DETECT
-    // image_debug_ is used to display debug info on the detection
-    //image_debug_ = image_.clone();
-
-    // If the debug mode is set, we open a window to display the visual debug
-    //cv::namedWindow("detect debug", cv::WINDOW_AUTOSIZE);
-#endif
-/*
-    while (1)
-    {
-      cv::waitKey(0);
-    }*/
-  }
-
-  // Sets the center of the rubik's cube (the closest edge to the camera) and
-  // starts the detecting process
-  void Detector::setCenter(const int x, const int y)
-  {
-    center_ = cv::Point(x, y);
-
-#ifdef DEBUG_DETECT
-    cv::circle(image_debug_, center_, DEBUG_THICKNESS, GREEN, -1);
-    update_debug();
-#endif
-
-    startDetection();
   }
 
   void Detector::update()
   {
     capture_ >> image_;
     image_debug_ = image_.clone();
-    displayer_.addImage(image_, "displayer", -1);
     computeCenter();
+    cv::circle(image_debug_, image_debug_.size() / 2, 60, GREEN, 2, 8, 0);
+    cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
+    displayer_.addImage(image_debug_, "displayer", -1);
     cv::blur(image_, image_, cv::Size(5, 5));
     std::cout << "center = " << center_ << std::endl;
     startDetection();
@@ -84,7 +53,7 @@ namespace detect
         for (int c = 0; c < 3; c++)
           contrast.at<cv::Vec3b>(y, x)[c] =
             cv::saturate_cast<uchar>(alpha * center.at<cv::Vec3b>(y, x)[c] + beta);
-    displayer_.addImage(contrast, "contrast", -1);
+    //displayer_.addImage(contrast, "contrast", -1);
 
     cv::cvtColor(contrast, contrast, CV_BGR2HSV);
     cv::inRange(contrast, cv::Scalar(0, 0, 0, 0), cv::Scalar(180, 255, 150, 0), contrast);
@@ -93,7 +62,7 @@ namespace detect
     center = cv::Mat::zeros(contrast.size(), contrast.type());
     cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
     cv::bitwise_and(contrast, center, contrast);
-    displayer_.addImage(contrast, "dilated", CV_GRAY2BGR);
+    //displayer_.addImage(contrast, "dilated", CV_GRAY2BGR);
 
     int x = 0, y = 0, total = 0;
     for (int j = 0; j < contrast.rows; j++)
@@ -125,8 +94,8 @@ namespace detect
     cv::Scalar lowerb = cv::Scalar(0, 0, 0);
     cv::Scalar upperb = cv::Scalar(50, 50, 50);
     cv::inRange(image_, lowerb, upperb, bMask);
-    int erosion_size = 2;
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
+    int erosion_size = 4;
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
                                                 cv::Size(2 * erosion_size + 1,
                                                          2 * erosion_size + 1),
                                                 cv::Point(erosion_size,
@@ -139,6 +108,7 @@ namespace detect
     //cv::waitKey(0);
 #endif
 
+    displayer_.addImage(bMask, "binary", CV_GRAY2BGR);
     cv::Point p1, p2, p3; // The extremities of the rubik's cube
 
     // If the camera is above the rubik's cube, call the appropriate functions
@@ -163,6 +133,9 @@ namespace detect
     cv::Point m3 = cv::Point((p3.x + p1.x) / 2, (p3.y + p1.y) / 2);
 
 #ifdef DEBUG_DETECT
+    cv::circle(image_debug_, p1, DEBUG_THICKNESS, BLUE, -1);
+    cv::circle(image_debug_, p2, DEBUG_THICKNESS, BLUE, -1);
+    cv::circle(image_debug_, p3, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m1, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m2, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m3, DEBUG_THICKNESS, BLUE, -1);
@@ -221,8 +194,10 @@ namespace detect
         facelets_.push_back(t2);
 
 #ifdef DEBUG_DETECT
+        /*
         std::cout << "intersection " << l << ": t1 = " << t1
                   << ", t2 = " << t2 << std::endl;
+        */
         cv::circle(image_debug_, t1, DEBUG_THICKNESS, PINK, -1);
         cv::circle(image_debug_, t2, DEBUG_THICKNESS, BLACK, -1);
         update_debug();
