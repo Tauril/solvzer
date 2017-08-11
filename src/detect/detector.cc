@@ -32,13 +32,22 @@ namespace detect
     // we try to find the center of the rubik's cube
     computeCenter();
 
-    // we start the detection of the rubik's cube faces with the center as
-    // reference
-    startDetection();
+    std::cout << center_ << std::endl;
+    if (center_.x != -1)
+    {
+      // we start the detection of the rubik's cube faces with the center as
+      // reference
+      startDetection();
+
+      // We compute the colors of the interest facelets
+      computeColors();
+    }
   }
 
   void Detector::computeCenter()
   {
+    center_ = cv::Point(-1, -1);
+
     // We are only interested in the center of the camera, so we remove
     // everything else from the image
     cv::Mat center = cv::Mat::zeros(image_.size(), image_.type());
@@ -77,7 +86,8 @@ namespace detect
 
     // We compute the gravitationnal center of the resulting points
     cv::Moments mu = cv::moments(contrast, true);
-    center_ = cv::Point(mu.m10 / mu.m00, mu.m01 / mu.m00);
+    if (mu.m00 != 0)
+      center_ = cv::Point(mu.m10 / mu.m00, mu.m01 / mu.m00);
 
     // debug purposes
     cv::circle(image_debug_, image_debug_.size() / 2, areaRad_, GREEN, 2, 8, 0);
@@ -145,6 +155,7 @@ namespace detect
     // 'perpendicular' lane, computing each time the intersection of the two
     // lines, thus giving us the approximate center of the facelets near the
     // closest edge
+    facelets_.clear();
     for (size_t i = 0; i < edges.size(); i++)
     {
       // step and step2 are the steps needed to advance 1/2 of a facelet in a
@@ -189,9 +200,7 @@ namespace detect
       }
     }
 
-    displayer_.addImage(image_debug_, "final", -1);
-
-    //computeColors();
+    displayer_.addImage(image_debug_, "final " + std::to_string(facelets_.size()), -1);
   }
 
   void Detector::computeColors()
@@ -201,13 +210,14 @@ namespace detect
     image_debug_ = image_.clone();
     for (size_t i = 0; i < facelets_.size(); i++)
     {
+      /*
       cv::putText(image_debug_, std::to_string(i),
                   facelets_[i] - cv::Point2f(6, 10),
                   cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, BLACK, 1, CV_AA);
+      */
       cv::circle(image_debug_, facelets_[i], DEBUG_THICKNESS, BLACK, 2);
-      cv::imshow("detect debug", image_debug_);
-      cv::waitKey(1);
     }
+    //displayer_.addImage(image_debug_, "interests", -1);
 
     // Histogram equalization
     std::vector<cv::Mat> channels;
@@ -218,41 +228,45 @@ namespace detect
     cv::equalizeHist(channels[0], channels[0]);
     cv::merge(channels, img_hist_equalized);
     cv::cvtColor(img_hist_equalized, img_hist_equalized, CV_YCrCb2BGR);
-    cv::imshow("detect debug", img_hist_equalized);
-    cv::waitKey(0);
+    displayer_.addImage(img_hist_equalized, "hist equalized", -1);
 #endif
 
     // We convert our image to HSV
     cv::cvtColor(image_, image_, CV_BGR2HSV);
     for (size_t i = 0; i < facelets_.size(); i++)
     {
-      std::cout << "[" << i << "] " << facelets_[i] << " = "
-                << image_.at<cv::Vec3b>(facelets_[i]);
+      //std::cout << "[" << i << "] " << facelets_[i] << " = "
+      //          << image_.at<cv::Vec3b>(facelets_[i]);
 
       if (isInRangeMask(cv::Scalar(160, 220, 25), cv::Scalar(180, 255, 255), facelets_[i]))
-        std::cout << " RED" << std::endl;
+        cv::putText(image_debug_, "RED", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " RED" << std::endl;
       else if (isInRangeMask(cv::Scalar(0, 217, 50), cv::Scalar(3, 255, 255), facelets_[i]))
-        std::cout << " RED" << std::endl;
+        cv::putText(image_debug_, "RED", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " RED" << std::endl;
       else if (isInRangeMask(cv::Scalar(0, 50, 30), cv::Scalar(18, 255, 255), facelets_[i]))
-        std::cout << " ORANGE" << std::endl;
+        cv::putText(image_debug_, "ORANGE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " ORANGE" << std::endl;
       else if (isInRangeMask(cv::Scalar(177, 50, 30), cv::Scalar(180, 255, 255), facelets_[i]))
-        std::cout << " ORANGE" << std::endl;
+        cv::putText(image_debug_, "ORANGE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " ORANGE" << std::endl;
       else if (isInRangeMask(cv::Scalar(19, 50, 30), cv::Scalar(33, 255, 255), facelets_[i]))
-        std::cout << " YELLOW" << std::endl;
+        cv::putText(image_debug_, "YELLOW", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " YELLOW" << std::endl;
       else if (isInRangeMask(cv::Scalar(34, 50, 30), cv::Scalar(87, 255, 255), facelets_[i]))
-        std::cout << " GREEN" << std::endl;
+        cv::putText(image_debug_, "GREEN", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " GREEN" << std::endl;
       else if (isInRangeMask(cv::Scalar(88, 50, 30), cv::Scalar(130, 255, 255), facelets_[i]))
-        std::cout << " BLUE" << std::endl;
+        cv::putText(image_debug_, "BLUE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " BLUE" << std::endl;
       else if (isInRangeMask(cv::Scalar(0, 0, 127), cv::Scalar(255, 100, 255), facelets_[i]))
-        std::cout << " WHITE" << std::endl;
+        cv::putText(image_debug_, "WHITE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " WHITE" << std::endl;
       else
-        std::cout << " UNKNOWN" << std::endl;
+        cv::putText(image_debug_, "UNKNOWN", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+        //std::cout << " UNKNOWN" << std::endl;
     }
-
-    while (1)
-    {
-      cv::waitKey(0);
-    }
+    displayer_.addImage(image_debug_, "colors", -1);
   }
 
   // Computes the mask with the given lower bound and upper bound. Returns true
@@ -260,8 +274,9 @@ namespace detect
   bool Detector::isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
                                const cv::Point2f& coord)
   {
-    cv::inRange(image_, low, high, image_debug_);
-    if (image_debug_.at<unsigned char>(coord) != 0)
+    cv::Mat res;
+    cv::inRange(image_, low, high, res);
+    if (res.at<unsigned char>(coord) != 0)
       return true;
 
     return false;
