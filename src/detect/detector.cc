@@ -26,22 +26,27 @@ namespace detect
 
   void Detector::update()
   {
+    // reading from camera and preparing images
     capture_ >> image_;
     image_debug_ = image_.clone();
+
+    // we try to find the center of the rubik's cube
     computeCenter();
-    cv::circle(image_debug_, image_debug_.size() / 2, 60, GREEN, 2, 8, 0);
-    cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-    displayer_.addImage(image_debug_, "displayer", -1);
-    cv::blur(image_, image_, cv::Size(5, 5));
-    std::cout << "center = " << center_ << std::endl;
+
+    // we start the detection of the rubik's cube faces with the center as
+    // reference
     startDetection();
   }
 
   void Detector::computeCenter()
   {
+    // We are only interested in the center of the camera, so we remove
+    // everything else from the image
     cv::Mat center = cv::Mat::zeros(image_.size(), image_.type());
     cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
     image_.copyTo(center, center);
+
+    // We enhance the contrast of the image
     cv::cvtColor(center, center, CV_BGR2GRAY);
     cv::cvtColor(center, center, CV_GRAY2BGR);
     cv::Mat contrast = cv::Mat::zeros(center.size(), center.type());
@@ -52,18 +57,25 @@ namespace detect
       for (int x = 0; x < center.cols; x++)
         for (int c = 0; c < 3; c++)
           contrast.at<cv::Vec3b>(y, x)[c] =
-            cv::saturate_cast<uchar>(alpha * center.at<cv::Vec3b>(y, x)[c] + beta);
-    //displayer_.addImage(contrast, "contrast", -1);
+            cv::saturate_cast<uchar>(alpha * center.at<cv::Vec3b>(y, x)[c]
+                                      + beta);
 
+    // We dilate the contrasted image
     cv::cvtColor(contrast, contrast, CV_BGR2HSV);
-    cv::inRange(contrast, cv::Scalar(0, 0, 0, 0), cv::Scalar(180, 255, 150, 0), contrast);
+    // 150 is our HSV threshold for black
+    cv::inRange(contrast, cv::Scalar(0, 0, 0, 0), cv::Scalar(180, 255, 150, 0),
+        contrast);
     cv::dilate(contrast, contrast, cv::getStructuringElement(cv::MORPH_ELLIPSE,
           cv::Size(11, 11), cv::Point(5, 5)));
+    // Since the outside part of the image is black (outside of the center of
+    // the camera), it will be detected as black. To prevent this, we remove it
+    // from the positive black mask.
     center = cv::Mat::zeros(contrast.size(), contrast.type());
     cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
     cv::bitwise_and(contrast, center, contrast);
-    //displayer_.addImage(contrast, "dilated", CV_GRAY2BGR);
 
+    // We try to compute the center of the edge of the rubik's cube by averaging
+    // the position of black pixels
     int x = 0, y = 0, total = 0;
     for (int j = 0; j < contrast.rows; j++)
       for (int i = 0; i < contrast.cols; i++)
@@ -81,14 +93,17 @@ namespace detect
       y /= total;
     }
 
-    //cv::circle(image_, cv::Point(x, y), 4, RED, -1, 8, 0);
-    //displayer_.addImage(image_, "center", -1);
-
     center_ = cv::Point(x, y);
+
+    // debug purposes
+    cv::circle(image_debug_, image_debug_.size() / 2, 60, GREEN, 2, 8, 0);
+    cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
+    displayer_.addImage(image_debug_, "displayer", -1);
   }
 
   void Detector::startDetection()
   {
+    cv::blur(image_, image_, cv::Size(5, 5));
     // We compute the black mask used to detect extremities
     cv::Mat bMask;
     cv::Scalar lowerb = cv::Scalar(0, 0, 0);
@@ -102,11 +117,6 @@ namespace detect
                                                           erosion_size));
     cv::GaussianBlur(bMask, bMask, cv::Size(3, 3), 0);
     cv::dilate(bMask, bMask, element);
-
-#ifdef DEBUG_DETECT
-    //cv::imshow("detect debug", bMask);
-    //cv::waitKey(0);
-#endif
 
     displayer_.addImage(bMask, "binary", CV_GRAY2BGR);
     cv::Point p1, p2, p3; // The extremities of the rubik's cube
@@ -132,15 +142,13 @@ namespace detect
     cv::Point m2 = cv::Point((p2.x + p3.x) / 2, (p2.y + p3.y) / 2);
     cv::Point m3 = cv::Point((p3.x + p1.x) / 2, (p3.y + p1.y) / 2);
 
-#ifdef DEBUG_DETECT
+    // debug
     cv::circle(image_debug_, p1, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, p2, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, p3, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m1, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m2, DEBUG_THICKNESS, BLUE, -1);
     cv::circle(image_debug_, m3, DEBUG_THICKNESS, BLUE, -1);
-    update_debug();
-#endif
 
     // We add the extremities in a vector to iterate easily
     std::vector<cv::Point> edges;
@@ -168,11 +176,9 @@ namespace detect
       cv::Point stepV(center_ + step2);
       cv::Point stepV2(edges[i] + step2);
 
-#ifdef DEBUG_DETECT
+      // debug
       cv::line(image_debug_, stepH, stepH2, PINK, DEBUG_THICKNESS / 2);
       cv::line(image_debug_, stepV, stepV2, PINK, DEBUG_THICKNESS / 2);
-      update_debug();
-#endif
 
       // There are 3 facelets per column, so we iterate on the middle of each
       // facelet and compute the intersecting point with the line of the column
@@ -193,15 +199,9 @@ namespace detect
           facelets_.push_back(t1);
         facelets_.push_back(t2);
 
-#ifdef DEBUG_DETECT
-        /*
-        std::cout << "intersection " << l << ": t1 = " << t1
-                  << ", t2 = " << t2 << std::endl;
-        */
+        // debug
         cv::circle(image_debug_, t1, DEBUG_THICKNESS, PINK, -1);
         cv::circle(image_debug_, t2, DEBUG_THICKNESS, BLACK, -1);
-        update_debug();
-#endif
       }
     }
 
@@ -292,12 +292,8 @@ namespace detect
     cv::Mat img_cpy = image_.clone();
     fillDirection(dir, center_, edge, bMask, img_cpy);
 
-#ifdef DEBUG_DETECT
-    //cv::imshow("detect debug", img_cpy);
-    //cv::waitKey(0);
+    // debug
     cv::circle(image_debug_, edge, DEBUG_THICKNESS, GREEN, -1);
-    update_debug();
-#endif
 
     return edge;
   }
@@ -430,12 +426,5 @@ namespace detect
       res = cv::Point2f(b2.x, b2.x * m1 + c1);
 
     return res;
-  }
-
-  // Refreshes the debug image and wait for a key press to continue
-  void Detector::update_debug() const
-  {
-    //imshow("detect debug", image_debug_);
-    //cv::waitKey(0);
   }
 }

@@ -55,8 +55,6 @@ namespace detect
       cv::Point2f intersection(const cv::Point2f& o1, const cv::Point2f& o2,
                                const cv::Point2f& p1, const cv::Point2f& p2);
 
-      void update_debug() const;
-
       Displayer& displayer_;
       cv::VideoCapture capture_;
       cv::Mat image_;
