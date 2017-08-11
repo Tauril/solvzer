@@ -13,7 +13,6 @@ namespace detect
     : displayer_(displayer), cameraPosition_(position)
   {
     // We try to load the image
-    //image_ = cv::imread(path_to_file, CV_LOAD_IMAGE_COLOR);
     capture_ = cv::VideoCapture(1);
 
     // If we failed
@@ -43,7 +42,7 @@ namespace detect
     // We are only interested in the center of the camera, so we remove
     // everything else from the image
     cv::Mat center = cv::Mat::zeros(image_.size(), image_.type());
-    cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
+    cv::circle(center, center.size() / 2, areaRad_, WHITE, -1, 8, 0);
     image_.copyTo(center, center);
 
     // We enhance the contrast of the image
@@ -71,32 +70,17 @@ namespace detect
     // the camera), it will be detected as black. To prevent this, we remove it
     // from the positive black mask.
     center = cv::Mat::zeros(contrast.size(), contrast.type());
-    cv::circle(center, center.size() / 2, 60, WHITE, -1, 8, 0);
+    cv::circle(center, center.size() / 2, areaRad_ - 10, WHITE, -1, 8, 0);
     cv::bitwise_and(contrast, center, contrast);
 
-    // We try to compute the center of the edge of the rubik's cube by averaging
-    // the position of black pixels
-    int x = 0, y = 0, total = 0;
-    for (int j = 0; j < contrast.rows; j++)
-      for (int i = 0; i < contrast.cols; i++)
-      {
-        if (contrast.at<char>(j, i) != 0)
-        {
-          x += i;
-          y += j;
-          total++;
-        }
-      }
-    if (total != 0)
-    {
-      x /= total;
-      y /= total;
-    }
+    displayer_.addImage(contrast, "center", CV_GRAY2BGR);
 
-    center_ = cv::Point(x, y);
+    // We compute the gravitationnal center of the resulting points
+    cv::Moments mu = cv::moments(contrast, true);
+    center_ = cv::Point(mu.m10 / mu.m00, mu.m01 / mu.m00);
 
     // debug purposes
-    cv::circle(image_debug_, image_debug_.size() / 2, 60, GREEN, 2, 8, 0);
+    cv::circle(image_debug_, image_debug_.size() / 2, areaRad_, GREEN, 2, 8, 0);
     cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
     displayer_.addImage(image_debug_, "displayer", -1);
   }
@@ -109,7 +93,7 @@ namespace detect
     cv::Scalar lowerb = cv::Scalar(0, 0, 0);
     cv::Scalar upperb = cv::Scalar(50, 50, 50);
     cv::inRange(image_, lowerb, upperb, bMask);
-    int erosion_size = 4;
+    int erosion_size = 6;
     cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
                                                 cv::Size(2 * erosion_size + 1,
                                                          2 * erosion_size + 1),

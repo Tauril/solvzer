@@ -63,5 +63,6 @@ namespace detect
       std::vector<cv::Point2f> facelets_;
       std::vector<cube::color> colors_;
       CameraPosition cameraPosition_;
+      int areaRad_ = 50; // radius of interest circle in detector
   };
 }
