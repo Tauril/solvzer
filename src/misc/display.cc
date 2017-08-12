@@ -243,4 +243,11 @@ namespace display
   {
     SDL_GetWindowSize(window_, &res.first, &res.second);
   }
-}
+
+  void
+  Display::set_window_icon() const
+  {
+    SDL_Surface *icon = IMG_Load(icon_);
+    SDL_SetWindowIcon(window_, icon);
+  }
+} // namespace display

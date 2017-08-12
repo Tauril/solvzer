@@ -2,6 +2,7 @@
 #include <map>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #include "misc/state.hh"
 
@@ -23,6 +24,8 @@ namespace display
       void window_size_get(std::pair<int, int>& res) const;
       static Display& Instance();
       static Display& Instance(SDL_Window **window, SDL_Renderer **renderer);
+      void set_window_icon() const;
+
       std::map<std::string, SDL_Rect> elements_;
 
 
@@ -33,6 +36,8 @@ namespace display
       SDL_Window *window_;
       SDL_Renderer *renderer_;
   };
+
   static constexpr char scramble_button_[] = "resources/button_scramble.bmp";
   static constexpr char resolve_button_[] = "resources/button_resolve.bmp";
+  static constexpr char icon_[] = "resources/icon.png";
 }

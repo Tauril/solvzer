@@ -97,6 +97,9 @@ AC_CHECK_HEADERS([SDL2/SDL.h], [],
 AC_CHECK_HEADERS([SDL2/SDL_ttf.h], [],
   [AC_MSG_ERROR(You need the SDL2_ttf development library.)])
 
+AC_CHECK_HEADERS([SDL2/SDL_image.h], [],
+  [AC_MSG_ERROR(You need the SDL2_image development library.)])
+
 ## ------- ##
 ## Tests.  ##
 ## ------- ##

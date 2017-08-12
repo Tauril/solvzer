@@ -37,6 +37,7 @@ libsolvzer_la_SOURCES = src/misc/contract.hh src/misc/contract.cc	     \
 libsolvzer_la_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LDFLAGS)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs sdl2)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_ttf)
+libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_image)
 libsolvzer_la_LDFLAGS += -lpthread
 libsolvzer_la_LIBADD = $(BOOST_PROGRAM_OPTIONS_LIBS)
 libsolvzer_la_LIBADD += $(OPENCV_LIBS)
