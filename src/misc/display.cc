@@ -69,7 +69,7 @@ namespace display
     setup_ui_for(resolve_button_, 2);
   }
 
-  const std::string&
+  std::string
   Display::is_intersect(int x, int y) const
   {
     for (const auto& el : elements_)

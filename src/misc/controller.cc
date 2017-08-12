@@ -47,10 +47,12 @@ namespace controller
               display::Display::Instance().repaint();
             break;
           case SDL_MOUSEBUTTONUP:
-            auto& check_button = display::Display::Instance().is_intersect(event->button.x, event->button.y);
+            const auto& check_button =
+              display::Display::Instance().is_intersect(event->button.x,
+                                                        event->button.y);
             if (check_button == display::scramble_button_)
               scramble();
-            if (check_button == display::resolve_button_)
+            else if (check_button == display::resolve_button_)
               resolve();
             break;
         }
