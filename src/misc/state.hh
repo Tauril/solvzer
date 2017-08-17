@@ -11,23 +11,37 @@ namespace state
   {
     public:
       ~State();
+
+      // Delete copy constructor and assignement constructor because we
+      // are using Singleton Design Pattern
       State(const State& s) = delete;
       State& operator =(const State& s) = delete;
+
+      // Getters & setters
       cube::Search& search_get();
-      cube::Face& face_get();
       void search_set(cube::Search& s);
+      cube::Face& face_get();
       void face_set(cube::Face& s);
-      std::string move_get();
       const std::string& face_str_get() const;
       void face_str_set(const std::string& state);
-      void compute_time_set(const double d);
       double compute_time_get() const;
+      void compute_time_set(const double d);
+      std::string move_get();
+
+      // Get the Singleton
       static State& Instance();
+
+      // Draw on the screen few informations
       void draw_text_data() const;
+
+      // Add a move in the vector (used when draw_ = true)
       void push_move(std::string move);
+
+      // Remove all elements in moves_
       void clear_vector();
 
     private:
+      // Making default constructor private to ensure the Singleton
       State();
 
     private:
@@ -37,6 +51,12 @@ namespace state
       std::vector<std::string> moves_;
 
     public:
+      // Enable or disable the drawing of the Rubik's Cube when executing moves
       bool draw_;
   };
-}
+
+  // Draw the moves with little animation
+  void draw_moves(const std::vector<std::string>& moves,
+                  const std::pair<int, int>& size);
+
+} // namespace state

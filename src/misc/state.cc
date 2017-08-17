@@ -24,22 +24,16 @@ namespace state
     return search_;
   }
 
-  cube::Face&
-  State::face_get()
-  {
-    return face_;
-  }
-
-  std::string
-  State::move_get()
-  {
-    return search_.solution(face_.face_str_get(), cube::Search::DEPTH);
-  }
-
   void
   State::search_set(cube::Search& s)
   {
     search_ = s;
+  }
+
+  cube::Face&
+  State::face_get()
+  {
+    return face_;
   }
 
   void
@@ -60,16 +54,22 @@ namespace state
     face_.face_str_set(state);
   }
 
+  double
+  State::compute_time_get() const
+  {
+    return compute_time_;
+  }
+
   void
   State::compute_time_set(const double d)
   {
     compute_time_ = d;
   }
 
-  double
-  State::compute_time_get() const
+  std::string
+  State::move_get()
   {
-    return compute_time_;
+    return search_.solution(face_.face_str_get(), cube::Search::DEPTH);
   }
 
   void
@@ -85,7 +85,32 @@ namespace state
   }
 
   void
-  draw_moves(const std::vector<std::string>& moves, const std::pair<int, int>& size)
+  State::draw_text_data() const
+  {
+    auto& dis = display::Display::Instance();
+    std::pair<int, int> size;
+    dis.window_size_get(size);
+
+    // Draw compute time
+    std::ostringstream strs;
+    strs << compute_time_;
+    std::array<uint8_t, 3> color{{255, 255, 255}};
+    dis.draw_text("Computation time: " + strs.str() + " seconds",
+                   color, size.first - 1050, size.second -  150, 30);
+
+    // Draw state
+    dis.draw_text("State: ", color, size.first - 1050, size.second - 110, 30);
+    dis.draw_text(face_str_get(), color, size.first - 950,
+                  size.second - 100, 17);
+
+    // Draw move
+    if (moves_.size())
+      draw_moves(moves_, size);
+  }
+
+  void
+  draw_moves(const std::vector<std::string>& moves,
+             const std::pair<int, int>& size)
   {
     auto& dis = display::Display::Instance();
     std::array<uint8_t, 3> color{{255, 255, 255}};
@@ -105,27 +130,5 @@ namespace state
     color[1] = 0;
     color[2] = 0;
     dis.draw_text(s, color, size_x, size.second - 70, 30);
-  }
-
-  void
-  State::draw_text_data() const
-  {
-    auto& dis = display::Display::Instance();
-    std::pair<int, int> size;
-    dis.window_size_get(size);
-
-    // Draw compute time
-    std::ostringstream strs;
-    strs << compute_time_;
-    std::array<uint8_t, 3> color{{255, 255, 255}};
-    dis.draw_text("Computation time: " + strs.str() + " seconds", color, size.first - 1050, size.second -  150, 30);
-
-    // Draw state
-    dis.draw_text("State: ", color, size.first - 1050, size.second - 110, 30);
-    dis.draw_text(face_str_get(), color, size.first - 950, size.second - 100, 17);
-
-    // Draw move
-    if (moves_.size())
-      draw_moves(moves_, size);
   }
 }

@@ -32,6 +32,7 @@ libsolvzer_la_SOURCES = src/misc/contract.hh src/misc/contract.cc	     \
 			 src/misc/display.hh src/misc/display.cc	     \
 			 src/misc/controller.hh src/misc/controller.cc	     \
 			 src/misc/state.hh src/misc/state.cc		     \
+			 src/misc/texture.hh src/misc/texture.cc	     \
 			 src/solvzer.cc
 
 libsolvzer_la_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LDFLAGS)

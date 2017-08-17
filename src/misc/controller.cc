@@ -1,9 +1,9 @@
+#include "controller.hh"
 #include "cube/cube.hh"
 #include "cube/move.hh"
 #include "cube/search.hh"
 #include "misc/display.hh"
 #include "misc/state.hh"
-#include "controller.hh"
 
 namespace controller
 {
@@ -13,6 +13,8 @@ namespace controller
     state::State::Instance().draw_ = false;
     auto& face = state::State::Instance().face_get();
     face.scramble();
+    display::Display::Instance().toggle_enable("resolve", true);
+    display::Display::Instance().toggle_enable("step_by_step", true);
     display::Display::Instance().repaint();
   }
 
@@ -25,6 +27,9 @@ namespace controller
      cube::move::make_moves(state.face_str_get(), sol);
      state.face_str_set(cube::Cube::solved_state_);
      state.clear_vector();
+     state.compute_time_set(0);
+     display::Display::Instance().toggle_enable("resolve", false);
+     display::Display::Instance().toggle_enable("step_by_step", false);
      display::Display::Instance().repaint();
   }
 
@@ -50,9 +55,11 @@ namespace controller
             const auto& check_button =
               display::Display::Instance().is_intersect(event->button.x,
                                                         event->button.y);
-            if (check_button == display::scramble_button_)
+            if (check_button == "")
+              break;
+            else if (check_button.find("scramble") != std::string::npos)
               scramble();
-            else if (check_button == display::resolve_button_)
+            else if (check_button.find("resolve") != std::string::npos)
               resolve();
             break;
         }
@@ -60,4 +67,4 @@ namespace controller
       SDL_Delay(5);
     }
   }
-}
+} // namespace controller
