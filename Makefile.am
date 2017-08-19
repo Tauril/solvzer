@@ -5,7 +5,6 @@ AM_DEFAULT_SOURCE_EXT = .cc
 
 AM_CXXFLAGS = -std=c++14 -Wall -Wextra
 AM_CPPFLAGS = -I$(top_srcdir)/src -I$(top_builddir)/src
-AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 AM_CPPFLAGS += -I$(top_builddir)
 AM_CPPFLAGS += $(OPENCV_CFLAGS)
 
@@ -35,13 +34,11 @@ libsolvzer_la_SOURCES = src/misc/contract.hh src/misc/contract.cc	     \
 			 src/misc/texture.hh src/misc/texture.cc	     \
 			 src/solvzer.cc
 
-libsolvzer_la_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LDFLAGS)
-libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs sdl2)
+libsolvzer_la_LDFLAGS = $(shell pkg-config --cflags --libs sdl2)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_ttf)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_image)
 libsolvzer_la_LDFLAGS += -lpthread
-libsolvzer_la_LIBADD = $(BOOST_PROGRAM_OPTIONS_LIBS)
-libsolvzer_la_LIBADD += $(OPENCV_LIBS)
+libsolvzer_la_LIBADD = $(OPENCV_LIBS)
 
 bin_PROGRAMS = src/solvzer
 

@@ -86,9 +86,6 @@ AC_CHECK_PROGS([SOLVZER], [solvzer])
 ## Libraries.  ##
 ## ----------- ##
 
-BOOST_REQUIRE([1.61])
-BOOST_PROGRAM_OPTIONS
-
 PKG_CHECK_MODULES([OPENCV], [opencv])
 
 AC_CHECK_HEADERS([SDL2/SDL.h], [],
