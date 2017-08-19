@@ -226,17 +226,20 @@ namespace cube
     std::string
     make_move(const std::string& solution, std::pair<int, int> move)
     {
-      if (state::State::Instance().draw_)
+      auto& state = state::State::Instance();
+      if (state.draw_)
       {
-        display::Display::Instance().setup_background();
-        display::Display::Instance().draw_rubiks(solution);
-        state::State::Instance().face_str_set(solution);
+        auto& display = display::Display::Instance();
+
+        display.setup_background();
+        display.draw_rubiks(solution);
+        state.face_str_set(solution);
         std::string m{move::axis[move.first]};
         m += move::power[move.second - 1];
-        state::State::Instance().push_move(m);
-        state::State::Instance().draw_text_data();
-        display::Display::Instance().refresh();
-        SDL_Delay(500);
+        state.push_move(m);
+        state.draw_text_data();
+        display.refresh();
+        SDL_Delay(state.waiting_time_);
       }
       return make_move(solution, moves_table_[move.first][move.second]);
     }

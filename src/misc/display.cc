@@ -159,6 +159,8 @@ namespace display
     for (auto& texture : textures_)
       if (texture.enable_)
         load_texture(texture);
+      else
+        texture.dstrect_ = {0, 0, 0, 0};
   }
 
   void

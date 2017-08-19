@@ -6,6 +6,7 @@ namespace state
 {
   State::State()
   : draw_(false)
+  , waiting_time_(500)
   {}
 
   State::~State()
@@ -84,8 +85,8 @@ namespace state
     moves_.clear();
   }
 
-  const std::vector<std::string>&
-  State::moves_get() const
+  std::vector<std::string>&
+  State::moves_get()
   {
     return moves_;
   }

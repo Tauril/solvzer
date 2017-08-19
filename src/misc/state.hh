@@ -41,7 +41,7 @@ namespace state
       void clear_vector();
 
       // Get the vector
-      const std::vector<std::string>& moves_get() const;
+      std::vector<std::string>& moves_get();
 
     private:
       // Making default constructor private to ensure the Singleton
@@ -56,6 +56,7 @@ namespace state
     public:
       // Enable or disable the drawing of the Rubik's Cube when executing moves
       bool draw_;
+      unsigned int waiting_time_;
   };
 
   // Draw the moves with little animation
