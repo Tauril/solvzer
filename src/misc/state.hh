@@ -40,6 +40,9 @@ namespace state
       // Remove all elements in moves_
       void clear_vector();
 
+      // Get the vector
+      const std::vector<std::string>& moves_get() const;
+
     private:
       // Making default constructor private to ensure the Singleton
       State();

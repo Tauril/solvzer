@@ -27,6 +27,8 @@ namespace cube
     /// Applies \a moves on \a solution.
     std::string make_moves(std::string solution, const std::string& moves);
 
+    std::string make_move(const std::string& solution, std::pair<int, int> move);
+
   } // namespace move
 
 } // namespace cube

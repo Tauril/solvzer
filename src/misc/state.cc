@@ -84,6 +84,12 @@ namespace state
     moves_.clear();
   }
 
+  const std::vector<std::string>&
+  State::moves_get() const
+  {
+    return moves_;
+  }
+
   void
   State::draw_text_data() const
   {

@@ -221,13 +221,26 @@ namespace cube
         return ret;
       }
 
-      std::string
-      make_move(const std::string& solution, std::pair<int, int> move)
-      {
-        return make_move(solution, moves_table_[move.first][move.second]);
-      }
-
     }
+
+    std::string
+    make_move(const std::string& solution, std::pair<int, int> move)
+    {
+      if (state::State::Instance().draw_)
+      {
+        display::Display::Instance().setup_background();
+        display::Display::Instance().draw_rubiks(solution);
+        state::State::Instance().face_str_set(solution);
+        std::string m{move::axis[move.first]};
+        m += move::power[move.second - 1];
+        state::State::Instance().push_move(m);
+        state::State::Instance().draw_text_data();
+        display::Display::Instance().refresh();
+        SDL_Delay(500);
+      }
+      return make_move(solution, moves_table_[move.first][move.second]);
+    }
+
 
     std::pair<int, int>
     parse_move(const char*& moves)
@@ -276,19 +289,6 @@ namespace cube
       {
         std::cout << "Move: ";
         const auto& move = parse_move(sol_str);
-        if (state::State::Instance().draw_)
-        {
-          display::Display::Instance().setup_background();
-          display::Display::Instance().draw_rubiks(solution);
-          state::State::Instance().face_str_set(solution);
-          std::string m{move::axis[move.first]};
-          m += move::power[move.second - 1];
-          state::State::Instance().push_move(m);
-          state::State::Instance().draw_text_data();
-          display::Display::Instance().refresh();
-          SDL_Delay(500);
-        }
-
         solution = make_move(solution, move);
 
         auto face = Face(solution);
