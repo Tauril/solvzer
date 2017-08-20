@@ -41,10 +41,10 @@
 namespace detect
 {
   CubeDetector::CubeDetector()
-    : t1_(displayer_, CameraPosition::TOP, 1)
-      , t2_(displayer_, CameraPosition::TOP, 2)
-      , b1_(displayer_, CameraPosition::BOTTOM, 3)
-      , b2_(displayer_, CameraPosition::BOTTOM, 4)
+    : t1_(displayer_, CameraPosition::TOP, 0)
+      , t2_(displayer_, CameraPosition::TOP, 1)
+      , b1_(displayer_, CameraPosition::BOTTOM, 2)
+      , b2_(displayer_, CameraPosition::BOTTOM, 3)
   { }
 
   std::string CubeDetector::detect_cube()
