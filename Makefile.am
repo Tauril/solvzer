@@ -47,7 +47,7 @@ libsolvzer_la_SOURCES += src/resolve/resolve.cc
 # main
 libsolvzer_la_SOURCES += src/solvzer.cc
 
-libsolvzer_la_LDFLAGS  = $(shell pkg-config --cflags --libs SDL2)
+libsolvzer_la_LDFLAGS  = $(shell pkg-config --cflags --libs sdl2)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_ttf)
 libsolvzer_la_LDFLAGS += $(shell pkg-config --cflags --libs SDL2_image)
 libsolvzer_la_LDFLAGS += -lpthread
