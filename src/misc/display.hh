@@ -83,11 +83,11 @@ namespace display
   // Static array of all resources user-interactionable
   static std::string resources_[] =
     {
-      "resources/button_scramble.png",
-      "resources/button_resolve.png",
-      "resources/button_step_by_step.png",
-      "resources/button_next.png",
-      "resources/button_previous.png"
+      "../resources/button_scramble.png",
+      "../resources/button_resolve.png",
+      "../resources/button_step_by_step.png",
+      "../resources/button_next.png",
+      "../resources/button_previous.png"
     };
 
   // Return the color given the face

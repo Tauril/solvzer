@@ -56,7 +56,7 @@ namespace display
   Display::draw_text(const std::string& text, const std::array<uint8_t, 3> color,
                      int x, int y, int font_size)
   {
-    TTF_Font* Sans = TTF_OpenFont("resources/Arial-Rounded-Bold.ttf", font_size);
+    TTF_Font* Sans = TTF_OpenFont("../resources/Arial-Rounded-Bold.ttf", font_size);
     SDL_Color sdl_color = {color[0], color[1], color[2], 1};
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, text.c_str(), sdl_color);
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer_, surfaceMessage);
@@ -127,7 +127,7 @@ namespace display
   Display::setup_background() const
   {
       SDL_RenderClear(renderer_);
-      static SDL_Surface *surf = IMG_Load("resources/background.jpg");
+      static SDL_Surface *surf = IMG_Load("../resources/background.jpg");
       SDL_Texture *background = SDL_CreateTextureFromSurface(renderer_, surf);
       SDL_RenderCopy(renderer_, background, nullptr, nullptr);
       SDL_DestroyTexture(background);
@@ -190,7 +190,7 @@ namespace display
   void
   Display::set_window_icon() const
   {
-    SDL_Surface *icon = IMG_Load("resources/icon.png");
+    SDL_Surface *icon = IMG_Load("../resources/icon.png");
     SDL_SetWindowIcon(window_, icon);
   }
 
