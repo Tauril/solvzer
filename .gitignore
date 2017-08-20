@@ -44,3 +44,7 @@ build-aux/test-driver
 
 # Binaries
 /src/cube/search-test
+
+# Misc
+*opencv*
+OpenCV
