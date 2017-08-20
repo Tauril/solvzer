@@ -30,7 +30,8 @@ namespace controller
       auto& display = display::Display::Instance();
 
       reset_state();
-      state.draw_ = false;
+      state.draw_ = true;
+      state.waiting_time_ = 2000;
       auto& face = state.face_get();
       face.scramble();
       display.toggle_enable("resolve", true);

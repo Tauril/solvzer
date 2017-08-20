@@ -11,6 +11,7 @@ namespace state
   , next_move_(0)
   , draw_(false)
   , waiting_time_(500)
+  , resolve_()
   {}
 
   State::~State()

@@ -6,7 +6,7 @@ namespace Resolution
     Resolve::Resolve()
     {
         faces_.face_set(cube::Cube::solved_state_);
-        faces_.scramble();
+        //faces_.scramble();
     }
 
     Resolve::Resolve(std::string& str) : faces_(str)
