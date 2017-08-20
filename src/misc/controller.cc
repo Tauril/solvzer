@@ -42,7 +42,6 @@ namespace controller
     resolve()
     {
        auto& state = state::State::Instance();
-       auto& display = display::Display::Instance();
 
        state.draw_ = true;
        state.waiting_time_ = 500;
@@ -57,6 +56,7 @@ namespace controller
     {
       auto& display = display::Display::Instance();
       display.toggle_enable("next", true);
+      display.toggle_enable("resolve", false);
       display.repaint();
     }
 
