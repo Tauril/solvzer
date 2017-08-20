@@ -18,6 +18,7 @@
 
 int main(int argc, char** argv)
 {
+  /*
   // RESOLVE BY HAND
   std::cout << "Resolution begins\n";
   std::string str = "FRLRULDDLBFBURULBRFFULFFBLFDDUDDLBUUDBRDLUURRDFLBBBFRR";
@@ -27,13 +28,14 @@ int main(int argc, char** argv)
   std::cout << "Resolution ends\n";
   return 0;
   // RESOLVE BY HAND
+  */
 
   // 2D DEBUG
   SDL_Window* window = nullptr;
   SDL_Renderer* renderer = nullptr;
   SDL_Event event;
 
-  detect::Displayer displayer("solvzer");
+  //detect::Displayer displayer("solvzer");
   auto& dis = display::Display::Instance(&window, &renderer);
   auto face = cube::Face(cube::Cube::solved_state_);
   state::State::Instance().face_set(face);
@@ -42,6 +44,7 @@ int main(int argc, char** argv)
   return 0;
   // 2D DEBUG
 
+  /*
   // CUBE DETECTION
   detect::Detector d(displayer, detect::CameraPosition::TOP);
   while (true)
@@ -51,4 +54,5 @@ int main(int argc, char** argv)
   }
   return 0;
   // CUBE DETECTION
+  */
 }
