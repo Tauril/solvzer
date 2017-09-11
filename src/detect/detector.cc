@@ -40,6 +40,8 @@ namespace detect
       startDetection();
 
       // We compute the colors of the interest facelets
+      // WARNING: if no rubik's cube is detected, this part causes a segfault
+      // as it's WIP. Please comment it as you wish.
       computeColors();
     }
   }

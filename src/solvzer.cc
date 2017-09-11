@@ -37,7 +37,7 @@ int main(int argc, char** argv)
   //auto sol = search.solution(face, cube::Search::DEPTH);
   //assert(search.ack_solution(face, sol));
 
-  detect::Detector d(displayer, detect::CameraPosition::BOTTOM);
+  detect::Detector d(displayer, detect::CameraPosition::TOP);
   while (true)
   {
     d.update();
