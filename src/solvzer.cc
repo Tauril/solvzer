@@ -16,19 +16,11 @@
 
 detect::Displayer displayer("solvzer");
 
-#define DRAW
 int main(int argc, char** argv)
 {
-  //cube::Search search;
-  SDL_Window *window = SDL_CreateWindow("SolvZer", SDL_WINDOWPOS_CENTERED,
-      SDL_WINDOWPOS_CENTERED,
-      1280, 680, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-  SDL_Renderer *renderer =  SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  auto display = display::Display(window, renderer);
-  //display.setup_background();
-
-  SDL_Window *window = nullptr;
-  SDL_Renderer *renderer = nullptr;
+  /* 2D DEBUG */
+  SDL_Window* window = nullptr;
+  SDL_Renderer* renderer = nullptr;
   SDL_Event event;
 
   auto& dis = display::Display::Instance(&window, &renderer);
@@ -37,25 +29,16 @@ int main(int argc, char** argv)
   dis.repaint();
   controller::start_controller(&event);
   return 0;
-  cube::Search search;
+  /* 2D DEBUG */
 
-  /*auto face = cube::Face(cube::Cube::solved_state_);
-  std::cout << face << std::endl;
-
-  //std::string moves =
-  //  "L'D2R1F1R1F2L'F'D'F2L'F'R2B'D'F1D'R1D'F'R2B'F2B2U2L1D1B2U'L'";
-  //face.scramble();
-
-  //auto sol = search.solution(face, cube::Search::DEPTH);
-  //assert(search.ack_solution(face, sol));
-
+  /* CUBE DETECTION */
   detect::Detector d(displayer, detect::CameraPosition::TOP);
   while (true)
   {
     d.update();
     displayer.display();
   }
+  /* CUBE DETECTION */
 
-  SDL_Delay(5000);
   return 0;
 }
