@@ -70,8 +70,8 @@ namespace detect
 }
 
 // U BLANC
-// D JAUNE
 // R BLEU
-// L VERT
 // F ROUGE
+// D JAUNE
+// L VERT
 // B ORANGE
