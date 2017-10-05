@@ -32,7 +32,9 @@ libsolvzer_la_SOURCES += src/cube/color.hh src/cube/color.cc		      \
 
 # detector
 libsolvzer_la_SOURCES += src/detect/detector.hh src/detect/detector.cc	      \
-			 src/detect/displayer.hh src/detect/displayer.cc
+			 src/detect/displayer.hh src/detect/displayer.cc      \
+			 src/detect/cube_detector.hh			      \
+			 src/detect/cube_detector.cc
 
 # misc
 libsolvzer_la_SOURCES += src/misc/display.hh src/misc/display.cc	      \
