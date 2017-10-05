@@ -38,6 +38,8 @@ namespace detect
       Detector(Displayer& displayer, const CameraPosition position);
       ~Detector() = default;
 
+      std::vector<cube::color>& getColors();
+
       void update();
 
     private:

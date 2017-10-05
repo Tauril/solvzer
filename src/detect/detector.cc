@@ -23,6 +23,11 @@ namespace detect
     }
   }
 
+  std::vector<cube::color>& Detector::getColors()
+  {
+    return colors_;
+  }
+
   void Detector::update()
   {
     // reading from camera and preparing images
