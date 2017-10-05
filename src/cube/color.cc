@@ -30,6 +30,23 @@ namespace cube
     return clr->second;
   }
 
+  char
+  get_char_from_color(color c)
+  {
+    /// Associate the ASCII representation with its enum representation.
+    static const std::map<color, char> colors =
+    {
+      { color::U, 'U' }, { color::R, 'R' }, { color::F, 'F' },
+      { color::D, 'D' }, { color::L, 'L' }, { color::B, 'B' }
+    };
+
+    auto clr = colors.find(c);
+    if (clr == colors.end())
+      die("Can't match an integer to a color.");
+
+    return clr->second;
+  }
+
   std::string
   color_to_str(enum color c)
   {

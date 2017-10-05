@@ -34,6 +34,11 @@ namespace cube
   /// \return     The color.
   color get_color(char c);
 
+  /// \brief      Returns an ASCII representation from a color
+  /// \param c    The color.
+  /// \return     The ASCII representation.
+  char get_char_from_color(color c);
+
   /// \brief      Returns a human readable string for the enum representation.
   /// \param c    The enum representation.
   /// \return     The string representing the color.
