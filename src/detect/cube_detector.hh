@@ -1,6 +1,7 @@
 #pragma once
 
 #include <detect/detector.hh>
+#include <detect/displayer.hh>
 
 namespace detect
 {
@@ -10,6 +11,16 @@ namespace detect
       CubeDetector();
       ~CubeDetector() = default;
 
+      void detect_cube();
+
     private:
+      bool ack_nb_faces();
+      bool pass_sanity_duplicates();
+      bool pass_unknown_colors();
+      bool no_unknown_colors(Detector& d) const;
+
+      Detector t1_, t2_, b1_, b2_;
+      std::vector<cube::color> colors_;
+      Displayer displayer_ = Displayer("solvzer");
   };
 }
