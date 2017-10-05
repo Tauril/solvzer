@@ -82,7 +82,9 @@ namespace detect
     cv::circle(center, center.size() / 2, areaRad_ - 10, WHITE, -1, 8, 0);
     cv::bitwise_and(contrast, center, contrast);
 
+#ifdef DEBUG_DETECT
     displayer_.addImage(contrast, "center", CV_GRAY2BGR);
+#endif
 
     // We compute the gravitationnal center of the resulting points
     cv::Moments mu = cv::moments(contrast, true);
@@ -92,7 +94,7 @@ namespace detect
     // debug purposes
     cv::circle(image_debug_, image_debug_.size() / 2, areaRad_, GREEN, 2, 8, 0);
     cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-    displayer_.addImage(image_debug_, "displayer", -1);
+    displayer_.addImage(image_debug_, "source", -1);
   }
 
   void Detector::startDetection()
@@ -112,7 +114,9 @@ namespace detect
     cv::GaussianBlur(bMask, bMask, cv::Size(3, 3), 0);
     cv::dilate(bMask, bMask, element);
 
+#ifdef DEBUG_DETECT
     displayer_.addImage(bMask, "binary", CV_GRAY2BGR);
+#endif
     cv::Point p1, p2, p3; // The extremities of the rubik's cube
 
     // If the camera is above the rubik's cube, call the appropriate functions
@@ -206,12 +210,13 @@ namespace detect
       }
     }
 
+#ifdef DEBUG_DETECT
     displayer_.addImage(image_debug_, "final " + std::to_string(facelets_.size()), -1);
+#endif
   }
 
   void Detector::computeColors()
   {
-    //std::cout << facelets_.size() << std::endl;
 #ifdef DEBUG_DETECT
     // We draw circles around the faces spots
     image_debug_ = image_.clone();
@@ -245,36 +250,47 @@ namespace detect
     cv::cvtColor(image_, image_, CV_BGR2HSV);
     for (size_t i = 0; i < facelets_.size(); i++)
     {
-      //std::cout << "[" << i << "] " << facelets_[i] << " = "
-      //          << image_.at<cv::Vec3b>(facelets_[i]) << std::endl;
-
+      // RED
       if (isInRangeMask(cv::Scalar(160, 220, 25), cv::Scalar(180, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "RED", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " RED" << std::endl;
+        colors_.push_back(cube::color::F);
+
+      // RED
       else if (isInRangeMask(cv::Scalar(0, 217, 50), cv::Scalar(3, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "RED", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " RED" << std::endl;
+        colors_.push_back(cube::color::F);
+
+      // ORANGE
       else if (isInRangeMask(cv::Scalar(0, 50, 30), cv::Scalar(18, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "ORANGE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " ORANGE" << std::endl;
+        colors_.push_back(cube::color::B);
+
+      // ORANGE
       else if (isInRangeMask(cv::Scalar(177, 50, 30), cv::Scalar(180, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "ORANGE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " ORANGE" << std::endl;
+        colors_.push_back(cube::color::B);
+
+      // YELLOW
       else if (isInRangeMask(cv::Scalar(19, 50, 30), cv::Scalar(33, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "YELLOW", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " YELLOW" << std::endl;
+        colors_.push_back(cube::color::D);
+
+      // GREEN
       else if (isInRangeMask(cv::Scalar(34, 50, 30), cv::Scalar(87, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "GREEN", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " GREEN" << std::endl;
+        colors_.push_back(cube::color::L);
+
+      // BLUE
       else if (isInRangeMask(cv::Scalar(88, 50, 30), cv::Scalar(130, 255, 255), facelets_[i]))
-        cv::putText(image_debug_, "BLUE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " BLUE" << std::endl;
+        colors_.push_back(cube::color::R);
+
+      // WHITE
       else if (isInRangeMask(cv::Scalar(0, 0, 127), cv::Scalar(255, 100, 255), facelets_[i]))
-        cv::putText(image_debug_, "WHITE", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " WHITE" << std::endl;
+        colors_.push_back(cube::color::U);
+
+      // UNKNOWN
       else
-        cv::putText(image_debug_, "UNKNOWN", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
-        //std::cout << " UNKNOWN" << std::endl;
+        std::cout << "error: unknown color on facelet " << i << " at " << facelets_[i] << std::endl;
+    }
+
+    for (size_t i = 0; i < colors_.size(); i++)
+    {
+      cv::putText(image_debug_, "tmp", facelets_[i] - cv::Point2f(6, 10),
+          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
     }
     displayer_.addImage(image_debug_, "colors", -1);
   }
