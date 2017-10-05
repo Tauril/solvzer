@@ -9,11 +9,11 @@
 
 namespace detect
 {
-  Detector::Detector(Displayer& displayer, const CameraPosition position)
+  Detector::Detector(Displayer& displayer, const CameraPosition position, size_t channel)
     : displayer_(displayer), cameraPosition_(position)
   {
     // We try to load the image
-    capture_ = cv::VideoCapture(1);
+    capture_ = cv::VideoCapture(channel);
 
     // If we failed
     if (!capture_.isOpened())
@@ -314,7 +314,8 @@ namespace detect
 
     for (size_t i = 0; i < colors_.size(); i++)
     {
-      cv::putText(image_debug_, cube::color_to_str(colors_[i]), facelets_[i] - cv::Point2f(6, 10),
+      cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
+          facelets_[i] - cv::Point2f(6, 10),
           cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
     }
     displayer_.addImage(image_debug_, "colors", -1);

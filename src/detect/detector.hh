@@ -11,7 +11,7 @@
 #include <cube/color.hh>
 #include <detect/displayer.hh>
 
-#define DEBUG_DETECT
+//#define DEBUG_DETECT
 #define DEBUG_THICKNESS 5 // size of debug visuals
 
 namespace detect
@@ -35,7 +35,7 @@ namespace detect
   class Detector
   {
     public:
-      Detector(Displayer& displayer, const CameraPosition position);
+      Detector(Displayer& displayer, const CameraPosition position, size_t channel);
       ~Detector() = default;
 
       std::vector<cube::color>& getColors();
