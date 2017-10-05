@@ -51,7 +51,13 @@ namespace detect
     // We are only interested in the center of the camera, so we remove
     // everything else from the image
     cv::Mat center = cv::Mat::zeros(image_.size(), image_.type());
-    cv::circle(center, center.size() / 2, areaRad_, WHITE, -1, 8, 0);
+
+    // If the camera is above the rubik's cube, the center is 'upped' a little for a better angle.
+    // Same if the camera is below, the center is 'downed'.
+    cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, -100) : cv::Size(0, 100));
+    cv::Size centerInterest(center.size() / 2 + offset);
+
+    cv::circle(center, centerInterest, areaRad_, WHITE, -1, 8, 0);
     image_.copyTo(center, center);
 
     // We enhance the contrast of the image
@@ -79,12 +85,8 @@ namespace detect
     // the camera), it will be detected as black. To prevent this, we remove it
     // from the positive black mask.
     center = cv::Mat::zeros(contrast.size(), contrast.type());
-    cv::circle(center, center.size() / 2, areaRad_ - 10, WHITE, -1, 8, 0);
+    cv::circle(center, centerInterest, areaRad_ - 10, WHITE, -1, 8, 0);
     cv::bitwise_and(contrast, center, contrast);
-
-#ifdef DEBUG_DETECT
-    displayer_.addImage(contrast, "center", CV_GRAY2BGR);
-#endif
 
     // We compute the gravitationnal center of the resulting points
     cv::Moments mu = cv::moments(contrast, true);
@@ -92,9 +94,14 @@ namespace detect
       center_ = cv::Point(mu.m10 / mu.m00, mu.m01 / mu.m00);
 
     // debug purposes
-    cv::circle(image_debug_, image_debug_.size() / 2, areaRad_, GREEN, 2, 8, 0);
+    cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
     cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-    displayer_.addImage(image_debug_, "source", -1);
+    displayer_.addImage(image_debug_, std::string("source ")
+        + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
+
+#ifdef DEBUG_DETECT
+    displayer_.addImage(contrast, "center", CV_GRAY2BGR);
+#endif
   }
 
   void Detector::startDetection()
@@ -217,7 +224,6 @@ namespace detect
 
   void Detector::computeColors()
   {
-#ifdef DEBUG_DETECT
     // We draw circles around the faces spots
     image_debug_ = image_.clone();
     for (size_t i = 0; i < facelets_.size(); i++)
@@ -240,6 +246,7 @@ namespace detect
     cv::equalizeHist(channels[0], channels[0]);
     cv::merge(channels, img_hist_equalized);
     cv::cvtColor(img_hist_equalized, img_hist_equalized, CV_YCrCb2BGR);
+#ifdef DEBUG_DETECT
     displayer_.addImage(img_hist_equalized, "hist equalized", -1);
 #endif
 
@@ -290,7 +297,7 @@ namespace detect
     for (size_t i = 0; i < colors_.size(); i++)
     {
       cv::putText(image_debug_, cube::color_to_str(colors_[i]), facelets_[i] - cv::Point2f(6, 10),
-          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
+          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
     }
     displayer_.addImage(image_debug_, "colors", -1);
   }
