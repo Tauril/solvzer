@@ -11,7 +11,7 @@
 #include <cube/color.hh>
 #include <detect/displayer.hh>
 
-//#define DEBUG_DETECT
+#define DEBUG_DETECT
 #define DEBUG_THICKNESS 5 // size of debug visuals
 
 namespace detect

@@ -170,9 +170,9 @@ namespace detect
     for (size_t i = 0; i < edges.size(); i++)
     {
       // step and step2 are the steps needed to advance 1/2 of a facelet in a
-      // given direction
-      cv::Point step = (edges[i] - center_) / 6;
-      cv::Point step2 = (edges[(i + 1) % edges.size()] - center_) / 6;
+      // given direction. Initially at 6, downed to 5.5f to have better precision.
+      cv::Point step = (edges[i] - center_) / 5.5f;
+      cv::Point step2 = (edges[(i + 1) % edges.size()] - center_) / 5.5f;
 
       // stepH and stepH2 are the points tracing the line crossing the centers
       // of all the facelets of one column in the rubik's cube. We use this
@@ -326,6 +326,14 @@ namespace detect
 
     // debug
     cv::circle(image_debug_, edge, DEBUG_THICKNESS, GREEN, -1);
+
+    // Since the two columns hide one facelet on each side, we "simulate" the
+    // extremity going further by adding a value in the right direction.
+    if (dir == Direction::BOTTOM_LEFT || dir == Direction::BOTTOM_RIGHT)
+    {
+      cv::Point test = (edge - center_) / 4.5f;
+      edge += test;
+    }
 
     return edge;
   }
