@@ -111,7 +111,7 @@ namespace detect
       result += t1_.getColors()[10];
       result += b1_.getColors()[1];
       result += 'L';
-      result += 12_.getColors()[11];
+      result += t1_.getColors()[11];
       result += b1_.getColors()[0];
       result += b1_.getColors()[2];
       result += t1_.getColors()[13];
