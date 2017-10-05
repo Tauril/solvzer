@@ -66,3 +66,10 @@ namespace detect
       int areaRad_ = 50; // radius of interest circle in detector
   };
 }
+
+// U BLANC
+// D JAUNE
+// R BLEU
+// L VERT
+// F ROUGE
+// B ORANGE

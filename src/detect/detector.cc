@@ -32,7 +32,7 @@ namespace detect
     // we try to find the center of the rubik's cube
     computeCenter();
 
-    std::cout << center_ << std::endl;
+    //std::cout << center_ << std::endl;
     if (center_.x != -1)
     {
       // we start the detection of the rubik's cube faces with the center as
@@ -40,8 +40,6 @@ namespace detect
       startDetection();
 
       // We compute the colors of the interest facelets
-      // WARNING: if no rubik's cube is detected, this part causes a segfault
-      // as it's WIP. Please comment it as you wish.
       computeColors();
     }
   }
@@ -191,6 +189,12 @@ namespace detect
                                       center_ + (step2 * (l * 2 + 1)),
                                       edges[i] + (step2 * (l * 2 + 1)));
 
+        // If there has been a problem computing the points, we juste ignore
+        // this facelet, and continue.
+        if (std::isnan(t1.x) || std::isnan(t2.x)
+            || std::isnan(t1.y) || std::isnan(t2.y))
+          continue;
+
         // for the first iteration, t1 ~= t2 and we don't want duplicates
         if (l != 0)
           facelets_.push_back(t1);
@@ -207,6 +211,7 @@ namespace detect
 
   void Detector::computeColors()
   {
+    //std::cout << facelets_.size() << std::endl;
 #ifdef DEBUG_DETECT
     // We draw circles around the faces spots
     image_debug_ = image_.clone();
@@ -233,12 +238,15 @@ namespace detect
     displayer_.addImage(img_hist_equalized, "hist equalized", -1);
 #endif
 
+    // The result vector
+    colors_.clear();
+
     // We convert our image to HSV
     cv::cvtColor(image_, image_, CV_BGR2HSV);
     for (size_t i = 0; i < facelets_.size(); i++)
     {
       //std::cout << "[" << i << "] " << facelets_[i] << " = "
-      //          << image_.at<cv::Vec3b>(facelets_[i]);
+      //          << image_.at<cv::Vec3b>(facelets_[i]) << std::endl;
 
       if (isInRangeMask(cv::Scalar(160, 220, 25), cv::Scalar(180, 255, 255), facelets_[i]))
         cv::putText(image_debug_, "RED", facelets_[i] - cv::Point2f(6, 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
