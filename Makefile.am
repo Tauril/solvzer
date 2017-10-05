@@ -40,6 +40,8 @@ libsolvzer_la_SOURCES += src/misc/display.hh src/misc/display.cc	      \
 			 src/misc/state.hh src/misc/state.cc		      \
 			 src/misc/texture.hh src/misc/texture.cc
 
+#resolve
+libsolvzer_la_SOURCES += src/resolve/resolve.cc
 # main
 libsolvzer_la_SOURCES += src/solvzer.cc
 

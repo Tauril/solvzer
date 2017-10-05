@@ -13,16 +13,27 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include "detect/displayer.hh"
+#include "resolve/resolve.hh"
 
-detect::Displayer displayer("solvzer");
 
 int main(int argc, char** argv)
 {
+  // RESOLVE BY HAND
+  std::cout << "Resolution begins\n";
+  std::string str = "FRLRULDDLBFBURULBRFFULFFBLFDDUDDLBUUDBRDLUURRDFLBBBFRR";
+  Resolution::Resolve resolve(str);
+  resolve.find_solution();
+  resolve.resolve_cube();
+  std::cout << "Resolution ends\n";
+  return 0;
+  // RESOLVE BY HAND
+
   // 2D DEBUG
   SDL_Window* window = nullptr;
   SDL_Renderer* renderer = nullptr;
   SDL_Event event;
 
+  detect::Displayer displayer("solvzer");
   auto& dis = display::Display::Instance(&window, &renderer);
   auto face = cube::Face(cube::Cube::solved_state_);
   state::State::Instance().face_set(face);
@@ -38,7 +49,6 @@ int main(int argc, char** argv)
     d.update();
     displayer.display();
   }
-  // CUBE DETECTION
-
   return 0;
+  // CUBE DETECTION
 }
