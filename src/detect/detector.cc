@@ -284,12 +284,12 @@ namespace detect
 
       // UNKNOWN
       else
-        std::cout << "error: unknown color on facelet " << i << " at " << facelets_[i] << std::endl;
+        colors_.push_back(cube::color::UNKNOWN);
     }
 
     for (size_t i = 0; i < colors_.size(); i++)
     {
-      cv::putText(image_debug_, "tmp", facelets_[i] - cv::Point2f(6, 10),
+      cv::putText(image_debug_, cube::color_to_str(colors_[i]), facelets_[i] - cv::Point2f(6, 10),
           cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, GREEN, 1, CV_AA);
     }
     displayer_.addImage(image_debug_, "colors", -1);

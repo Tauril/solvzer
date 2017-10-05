@@ -30,6 +30,22 @@ namespace cube
     return clr->second;
   }
 
+  std::string
+  color_to_str(enum color c)
+  {
+    static const std::map<enum color, std::string> colors =
+    {
+      { color::U, "white" }, { color::R, "blue" }, { color::F, "red" },
+      { color::D, "yellow"}, { color::L, "green" }, { color::B, "orange" }
+    };
+
+    auto clr = colors.find(c);
+    if (clr == colors.end())
+      return "unknown";
+
+    return clr->second;
+  }
+
   std::ostream&
   operator<<(std::ostream& o, const color& c)
   {

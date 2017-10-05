@@ -25,13 +25,19 @@ namespace cube
     F,  // 2
     D,  // 3
     L,  // 4
-    B   // 5
+    B,  // 5
+    UNKNOWN // Error, used for the detection
   };
 
   /// \brief      Returns a color from its ASCII representation.
   /// \param c    The ASCII representation.
   /// \return     The color.
   color get_color(char c);
+
+  /// \brief      Returns a human readable string for the enum representation.
+  /// \param c    The enum representation.
+  /// \return     The string representing the color.
+  std::string color_to_str(enum color c);
 
   /// Reports \a c on \a o for debugging purpose.
   std::ostream& operator<<(std::ostream& o, const color& c);
