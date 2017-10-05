@@ -235,7 +235,6 @@ namespace detect
       */
       cv::circle(image_debug_, facelets_[i], DEBUG_THICKNESS, BLACK, 2);
     }
-    //displayer_.addImage(image_debug_, "interests", -1);
 
     // Histogram equalization
     std::vector<cv::Mat> channels;
@@ -292,6 +291,20 @@ namespace detect
       // UNKNOWN
       else
         colors_.push_back(cube::color::UNKNOWN);
+    }
+
+    // If we are on a bottom camera, we remove the non-visible facelets hiddens
+    // by the colums, respectively facelets n° 5 and 14.
+    if (cameraPosition_ == CameraPosition::BOTTOM && !colors_.empty())
+    {
+      // 4 et 13
+      if (colors_.size() >= 13)
+      {
+        colors_.erase(colors_.begin() + 13);
+        colors_.erase(colors_.begin() + 4);
+        facelets_.erase(facelets_.begin() + 13);
+        facelets_.erase(facelets_.begin() + 4);
+      }
     }
 
     for (size_t i = 0; i < colors_.size(); i++)
