@@ -18,7 +18,7 @@ detect::Displayer displayer("solvzer");
 
 int main(int argc, char** argv)
 {
-  /* 2D DEBUG */
+  // 2D DEBUG
   SDL_Window* window = nullptr;
   SDL_Renderer* renderer = nullptr;
   SDL_Event event;
@@ -29,16 +29,16 @@ int main(int argc, char** argv)
   dis.repaint();
   controller::start_controller(&event);
   return 0;
-  /* 2D DEBUG */
+  // 2D DEBUG
 
-  /* CUBE DETECTION */
+  // CUBE DETECTION
   detect::Detector d(displayer, detect::CameraPosition::TOP);
   while (true)
   {
     d.update();
     displayer.display();
   }
-  /* CUBE DETECTION */
+  // CUBE DETECTION
 
   return 0;
 }

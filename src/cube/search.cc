@@ -33,7 +33,7 @@ namespace cube
 
   Search::Search()
   {
-    std::cout << "Intializing all statics ..." << std::endl;
+    std::cout << "Initializing all statics ..." << std::endl;
     init_statics();
     std::cout << " ... intialization is finished." << std::endl;
   }
