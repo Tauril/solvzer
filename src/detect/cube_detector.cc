@@ -49,7 +49,10 @@ namespace detect
 
   void CubeDetector::detect_cube()
   {
+    std::string result;
+
     colors_.clear();
+    result.clear();
 
     t1_.update();
     t2_.update();
@@ -58,10 +61,77 @@ namespace detect
 
     if (ack_nb_faces() && pass_sanity_duplicates() && pass_unknown_colors())
     {
-      std::cout << "ok!" << std::endl;
+      // TOP (White face)
+      result += t2_.getColors()[4];
+      result += t2_.getColors()[2];
+      result += t2_.getColors()[0];
+      result += t1_.getColors()[1];
+      result += 'U';
+      result += t2_.getColors()[1];
+      result += t1_.getColors()[4];
+      result += t1_.getColors()[2];
+      result += t1_.getColors()[0];
+
+      // RIGHT (Blue face)
+      result += t2_.getColors()[14];
+      result += t2_.getColors()[12];
+      result += t2_.getColors()[10];
+      result += b2_.getColors()[1];
+      result += 'R';
+      result += t2_.getColors()[11];
+      result += b2_.getColors()[0];
+      result += b2_.getColors()[2];
+      result += t2_.getColors()[13];
+
+      // FRONT (Red face)
+      result += t1_.getColors()[5];
+      result += t1_.getColors()[6];
+      result += t1_.getColors()[8];
+      result += t1_.getColors()[7];
+      result += 'F';
+      result += b2_.getColors()[11];
+      result += t1_.getColors()[9];
+      result += b2_.getColors()[10];
+      result += b2_.getColors()[9];
+
+      // DOWN (Yellow face)
+      result += b2_.getColors()[8];
+      result += b2_.getColors()[6];
+      result += b2_.getColors()[4];
+      result += b1_.getColors()[5];
+      result += 'D';
+      result += b2_.getColors()[5];
+      result += b1_.getColors()[8];
+      result += b1_.getColors()[6];
+      result += b1_.getColors()[4];
+
+      // LEFT (Green face)
+      result += t1_.getColors()[14];
+      result += t1_.getColors()[12];
+      result += t1_.getColors()[10];
+      result += b1_.getColors()[1];
+      result += 'L';
+      result += 12_.getColors()[11];
+      result += b1_.getColors()[0];
+      result += b1_.getColors()[2];
+      result += t1_.getColors()[13];
+
+      // BACK (Orange face)
+      result += t2_.getColors()[5];
+      result += t2_.getColors()[6];
+      result += t2_.getColors()[8];
+      result += t2_.getColors()[7];
+      result += 'B';
+      result += b1_.getColors()[11];
+      result += t2_.getColors()[9];
+      result += b1_.getColors()[10];
+      result += b1_.getColors()[9];
+
+      return result;
     }
   }
 
+  // Check that the detectors detect a total of 56 faces
   bool CubeDetector::ack_nb_faces()
   {
     if (b1_.getColors().size() + b2_.getColors().size()
@@ -71,6 +141,7 @@ namespace detect
     return false;
   }
 
+  // Check that the duplicates detected cells hold the same values
   bool CubeDetector::pass_sanity_duplicates()
   {
     if (b1_.getColors()[7] != b2_.getColors()[8])
@@ -93,6 +164,7 @@ namespace detect
     return true;
   }
 
+  // Check that there are no unknown colors detected by the detectors
   bool CubeDetector::pass_unknown_colors()
   {
     return no_unknown_colors(b1_) && no_unknown_colors(b2_)
