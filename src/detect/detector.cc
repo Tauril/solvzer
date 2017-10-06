@@ -10,7 +10,7 @@
 namespace detect
 {
   Detector::Detector(Displayer& displayer, const CameraPosition position, size_t channel)
-    : displayer_(displayer), cameraPosition_(position)
+    : channel_(channel), displayer_(displayer), cameraPosition_(position)
   {
     // We try to load the image
     capture_ = cv::VideoCapture(channel);
@@ -18,7 +18,8 @@ namespace detect
     // If we failed
     if (!capture_.isOpened())
     {
-      std::cerr << "Could not open capture, aborting." << std::endl;
+      std::cerr << "Could not open capture, aborting. " << (int)position
+       << " channel: " << channel << std::endl;
       std::abort();
     }
   }
@@ -47,6 +48,20 @@ namespace detect
       // We compute the colors of the interest facelets
       computeColors();
     }
+
+    cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, 0) : cv::Size(0, 100));
+    cv::Size centerInterest(image_.size() / 2 + offset);
+    cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
+    cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
+
+    for (size_t i = 0; i < colors_.size(); i++)
+    {
+      cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
+          facelets_[i] - cv::Point2f(6, 10),
+          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
+    }
+    displayer_.addImage(image_debug_, std::string("source ")
+        + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
   }
 
   void Detector::computeCenter()
@@ -59,7 +74,7 @@ namespace detect
 
     // If the camera is above the rubik's cube, the center is 'upped' a little for a better angle.
     // Same if the camera is below, the center is 'downed'.
-    cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, -100) : cv::Size(0, 100));
+    cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, 0) : cv::Size(0, 100));
     cv::Size centerInterest(center.size() / 2 + offset);
 
     cv::circle(center, centerInterest, areaRad_, WHITE, -1, 8, 0);
@@ -101,15 +116,15 @@ namespace detect
     // debug purposes
     cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
     cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-    displayer_.addImage(image_debug_, std::string("source ")
-        + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
+    //displayer_.addImage(image_debug_, std::string("source ")
+    //    + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
 
 #ifdef DEBUG_DETECT
     displayer_.addImage(contrast, "center", CV_GRAY2BGR);
 #endif
   }
 
-  void Detector::startDetection()
+  void Detector::detectExtremities(cv::Point& p1, cv::Point& p2, cv::Point& p3)
   {
     cv::blur(image_, image_, cv::Size(5, 5));
     // We compute the black mask used to detect extremities
@@ -129,7 +144,6 @@ namespace detect
 #ifdef DEBUG_DETECT
     displayer_.addImage(bMask, "binary", CV_GRAY2BGR);
 #endif
-    cv::Point p1, p2, p3; // The extremities of the rubik's cube
 
     // If the camera is above the rubik's cube, call the appropriate functions
     if (cameraPosition_ == CameraPosition::TOP)
@@ -146,6 +160,51 @@ namespace detect
       p2 = computeExtremity(Direction::BOTTOM_RIGHT, bMask);
       p3 = computeExtremity(Direction::BOTTOM_LEFT, bMask);
     }
+  }
+
+  void Detector::setFixedExtremities(cv::Point& p1, cv::Point& p2, cv::Point& p3)
+  {
+    if (cameraPosition_ == CameraPosition::TOP)
+    {
+      // TOP CAMERA
+      if (channel_ == 1)
+      {
+        p1 = center_ + cv::Point(20, 220);
+        p2 = center_ + cv::Point(-210, -55);
+        p3 = center_ + cv::Point(130, -110);
+      }
+      else if (channel_ == 2)
+      {
+        p1 = center_ + cv::Point(20, 210);
+        p2 = center_ + cv::Point(-220, -60);
+        p3 = center_ + cv::Point(125, -125);
+      }
+    }
+    else
+    {
+      // BOTTOM CAMERA
+      if (channel_ == 3)
+      {
+        p1 = center_ + cv::Point(10, -230);
+        p2 = center_ + cv::Point(210, 110);
+        p3 = center_ + cv::Point(-190, 90);
+      }
+      else if (channel_ == 4)
+      {
+        p1 = center_ + cv::Point(20, -260);
+        p2 = center_ + cv::Point(190, 140);
+        p3 = center_ + cv::Point(-220, 100);
+      }
+    }
+  }
+
+  void Detector::startDetection()
+  {
+
+    cv::Point p1, p2, p3; // The extremities of the rubik's cube
+
+    //detectExtremities(p1, p2, p3);
+    setFixedExtremities(p1, p2, p3);
 
     // m1, m2 and m3 are the middle points between the extremities
     cv::Point m1 = cv::Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
@@ -175,9 +234,9 @@ namespace detect
     for (size_t i = 0; i < edges.size(); i++)
     {
       // step and step2 are the steps needed to advance 1/2 of a facelet in a
-      // given direction. Initially at 6, downed to 5.5f to have better precision.
-      cv::Point step = (edges[i] - center_) / 5.5f;
-      cv::Point step2 = (edges[(i + 1) % edges.size()] - center_) / 5.5f;
+      // given direction. Initially at 6.f, downed to 5.5f to have better precision.
+      cv::Point step = (edges[i] - center_) / 6.f;
+      cv::Point step2 = (edges[(i + 1) % edges.size()] - center_) / 6.f;
 
       // stepH and stepH2 are the points tracing the line crossing the centers
       // of all the facelets of one column in the rubik's cube. We use this
@@ -207,8 +266,8 @@ namespace detect
 
         // If there has been a problem computing the points, we juste ignore
         // this facelet, and continue.
-        if (std::isnan(t1.x) || std::isnan(t2.x)
-            || std::isnan(t1.y) || std::isnan(t2.y))
+        if (!std::isfinite(t1.x) || !std::isfinite(t2.x)
+            || !std::isfinite(t1.y) || !std::isfinite(t2.y))
           continue;
 
         // for the first iteration, t1 ~= t2 and we don't want duplicates
@@ -253,6 +312,7 @@ namespace detect
 #ifdef DEBUG_DETECT
     displayer_.addImage(img_hist_equalized, "hist equalized", -1);
 #endif
+    image_ = img_hist_equalized.clone();
 
     // The result vector
     colors_.clear();
@@ -261,41 +321,52 @@ namespace detect
     cv::cvtColor(image_, image_, CV_BGR2HSV);
     for (size_t i = 0; i < facelets_.size(); i++)
     {
+      std::cerr << "color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
+          << " on camera " << channel_ << std::endl;
+
+      // YELLOW
+      if (isInRangeMask(cv::Scalar(0, 180, 60), cv::Scalar(5, 220, 100), facelets_[i]))
+        colors_.push_back(cube::color::D);
+
       // RED
-      if (isInRangeMask(cv::Scalar(160, 220, 25), cv::Scalar(180, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(170, 45, 35), cv::Scalar(180, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::F);
 
       // RED
-      else if (isInRangeMask(cv::Scalar(0, 217, 50), cv::Scalar(3, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(0, 45, 35), cv::Scalar(3, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::F);
 
       // ORANGE
-      else if (isInRangeMask(cv::Scalar(0, 50, 30), cv::Scalar(18, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(4, 70, 35), cv::Scalar(19, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::B);
 
       // ORANGE
-      else if (isInRangeMask(cv::Scalar(177, 50, 30), cv::Scalar(180, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(150, 50, 30), cv::Scalar(180, 210, 210), facelets_[i]))
         colors_.push_back(cube::color::B);
 
       // YELLOW
-      else if (isInRangeMask(cv::Scalar(19, 50, 30), cv::Scalar(33, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(20, 45, 35), cv::Scalar(33, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::D);
 
       // GREEN
-      else if (isInRangeMask(cv::Scalar(34, 50, 30), cv::Scalar(87, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(33, 45, 35), cv::Scalar(85, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::L);
 
       // BLUE
-      else if (isInRangeMask(cv::Scalar(88, 50, 30), cv::Scalar(130, 255, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(80, 101, 35), cv::Scalar(135, 255, 255), facelets_[i]))
         colors_.push_back(cube::color::R);
 
       // WHITE
-      else if (isInRangeMask(cv::Scalar(0, 0, 127), cv::Scalar(255, 100, 255), facelets_[i]))
+      else if (isInRangeMask(cv::Scalar(0, 0, 100), cv::Scalar(180, 100, 255), facelets_[i]))
         colors_.push_back(cube::color::U);
 
       // UNKNOWN
       else
+      {
         colors_.push_back(cube::color::UNKNOWN);
+        std::cerr << "unknown color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
+          << " on camera " << channel_ << std::endl;
+      }
     }
 
     // If we are on a bottom camera, we remove the non-visible facelets hiddens
@@ -311,14 +382,6 @@ namespace detect
         facelets_.erase(facelets_.begin() + 4);
       }
     }
-
-    for (size_t i = 0; i < colors_.size(); i++)
-    {
-      cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
-          facelets_[i] - cv::Point2f(6, 10),
-          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
-    }
-    displayer_.addImage(image_debug_, "colors", -1);
   }
 
   // Computes the mask with the given lower bound and upper bound. Returns true
@@ -350,7 +413,7 @@ namespace detect
     // extremity going further by adding a value in the right direction.
     if (dir == Direction::BOTTOM_LEFT || dir == Direction::BOTTOM_RIGHT)
     {
-      cv::Point test = (edge - center_) / 4.5f;
+      cv::Point test = (edge - center_) / 6.f;
       edge += test;
     }
 

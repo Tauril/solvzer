@@ -48,6 +48,8 @@ namespace detect
       void computeColors();
       bool isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
                          const cv::Point2f& coord);
+      void detectExtremities(cv::Point& p1, cv::Point& p2, cv::Point& p3);
+      void setFixedExtremities(cv::Point& p1, cv::Point& p2, cv::Point& p3);
       cv::Point computeExtremity(const detect::Direction dir,
                                  const cv::Mat& mat);
       void fillDirection(const Direction dir, const cv::Point current,
@@ -57,6 +59,7 @@ namespace detect
       cv::Point2f intersection(const cv::Point2f& o1, const cv::Point2f& o2,
                                const cv::Point2f& p1, const cv::Point2f& p2);
 
+      int channel_;
       Displayer& displayer_;
       cv::VideoCapture capture_;
       cv::Mat image_;
