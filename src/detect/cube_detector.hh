@@ -11,7 +11,7 @@ namespace detect
       CubeDetector();
       ~CubeDetector() = default;
 
-      void detect_cube();
+      std::string detect_cube();
 
     private:
       bool ack_nb_faces();
