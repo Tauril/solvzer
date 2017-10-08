@@ -20,7 +20,6 @@ namespace detect
       bool no_unknown_colors(Detector& d) const;
 
       Detector t1_, t2_, b1_, b2_;
-      std::vector<cube::color> colors_;
       Displayer displayer_ = Displayer("solvzer");
   };
 }

@@ -286,6 +286,84 @@ namespace detect
 #endif
   }
 
+  cube::color test(cv::Vec3b color)
+  {
+    // U BLANC
+    // R BLEU
+    // F ROUGE
+    // D JAUNE
+    // L VERT
+    // B ORANGE
+
+    static const std::vector<std::pair<cv::Vec3b, cube::color>> colors =
+    {
+      { cv::Vec3b(11, 130, 130), cube::color::B },
+      { cv::Vec3b(39, 127, 129), cube::color::B },
+      { cv::Vec3b(17, 132, 120), cube::color::B },
+      { cv::Vec3b(43, 127, 126), cube::color::B },
+      { cv::Vec3b(255, 126, 126), cube::color::U },
+      { cv::Vec3b(176, 121, 125), cube::color::U },
+      { cv::Vec3b(131, 129, 138), cube::color::U },
+      { cv::Vec3b(85, 133, 135), cube::color::U },
+      { cv::Vec3b(172, 125, 133), cube::color::U },
+      { cv::Vec3b(143, 125, 136), cube::color::U },
+      { cv::Vec3b(211, 126, 128), cube::color::U },
+      { cv::Vec3b(159, 135, 122), cube::color::U },
+      { cv::Vec3b(151, 133, 127), cube::color::U },
+      { cv::Vec3b(127, 211, 0), cube::color::R },
+      { cv::Vec3b(0, 211, 0), cube::color::R },
+      { cv::Vec3b(58, 142, 87), cube::color::R },
+      { cv::Vec3b(134, 123, 101), cube::color::R },
+      { cv::Vec3b(155, 124, 122), cube::color::R },
+      { cv::Vec3b(11, 132, 114), cube::color::R },
+      { cv::Vec3b(42, 136, 100), cube::color::R },
+      { cv::Vec3b(46, 123, 116), cube::color::R },
+      { cv::Vec3b(82, 124, 109), cube::color::R },
+      { cv::Vec3b(29, 128, 116), cube::color::R },
+      { cv::Vec3b(127, 255, 255), cube::color::F },
+      { cv::Vec3b(90, 180, 152), cube::color::F },
+      { cv::Vec3b(108, 193, 181), cube::color::F },
+      { cv::Vec3b(127, 174, 158), cube::color::F },
+      { cv::Vec3b(51, 162, 148), cube::color::F },
+      { cv::Vec3b(94, 188, 173), cube::color::F },
+      { cv::Vec3b(58, 168, 158), cube::color::F },
+      { cv::Vec3b(75, 176, 161), cube::color::F },
+      { cv::Vec3b(91, 185, 173), cube::color::F },
+      { cv::Vec3b(127, 127, 255), cube::color::D },
+      { cv::Vec3b(255, 127, 255), cube::color::D },
+      { cv::Vec3b(176, 128, 162), cube::color::D },
+      { cv::Vec3b(102, 146, 171), cube::color::D },
+      { cv::Vec3b(73, 144, 164), cube::color::D },
+      { cv::Vec3b(193, 121, 151), cube::color::D },
+      { cv::Vec3b(126, 141, 161), cube::color::D },
+      { cv::Vec3b(255, 0, 255), cube::color::L },
+      { cv::Vec3b(127, 0, 255), cube::color::L },
+      { cv::Vec3b(96, 92, 144), cube::color::L },
+      { cv::Vec3b(148, 78, 153), cube::color::L },
+      { cv::Vec3b(42, 104, 144), cube::color::L },
+      { cv::Vec3b(148, 98, 136), cube::color::L },
+      { cv::Vec3b(151, 113, 125), cube::color::L },
+      { cv::Vec3b(119, 110, 131), cube::color::L },
+      { cv::Vec3b(82, 112, 138), cube::color::L },
+      { cv::Vec3b(176, 104, 131), cube::color::L }
+    };
+
+    auto min = 255 * 255 + 100 * 100 + 100 * 100;
+    std::pair<cv::Vec3b, cube::color> pair = colors[0];
+    for (auto p : colors)
+    {
+      auto delta = (p.first[0] - color[0]) * (p.first[0] - color[0])
+        + (p.first[1] - color[1]) * (p.first[1] - color[1])
+        + (p.first[2] - color[2]) * (p.first[2] - color[2]);
+      if (delta < min)
+      {
+        min = delta;
+        pair = p;
+      }
+    }
+    return pair.second;
+  }
+
   void Detector::computeColors()
   {
     // We draw circles around the faces spots
@@ -313,16 +391,24 @@ namespace detect
     displayer_.addImage(img_hist_equalized, "hist equalized", -1);
 #endif
     image_ = img_hist_equalized.clone();
+    //image_debug_ = img_hist_equalized.clone();
+
+    //cv::fastNlMeansDenoisingColored(image_, image_);
+    cv::GaussianBlur(image_, image_, cv::Size(7, 7), 0, 0);
+    image_debug_ = image_.clone();
 
     // The result vector
     colors_.clear();
 
     // We convert our image to HSV
-    cv::cvtColor(image_, image_, CV_BGR2HSV);
+    cv::cvtColor(image_, image_, CV_BGR2Lab); // BGR2HSV
     for (size_t i = 0; i < facelets_.size(); i++)
     {
       std::cerr << "color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
           << " on camera " << channel_ << std::endl;
+
+      colors_.push_back(test(image_.at<cv::Vec3b>(facelets_[i])));
+      /*
 
       // YELLOW
       if (isInRangeMask(cv::Scalar(0, 180, 60), cv::Scalar(5, 220, 100), facelets_[i]))
@@ -367,6 +453,7 @@ namespace detect
         std::cerr << "unknown color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
           << " on camera " << channel_ << std::endl;
       }
+      */
     }
 
     // If we are on a bottom camera, we remove the non-visible facelets hiddens

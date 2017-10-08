@@ -7,6 +7,7 @@
 #include <unistd.h> // for sleep
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 #include <cube/color.hh>
 #include <detect/displayer.hh>

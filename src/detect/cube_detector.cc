@@ -50,11 +50,73 @@ namespace detect
   std::string CubeDetector::detect_cube()
   {
     std::string result;
+    std::vector<int[6]> values(54);
 
+    for (size_t i = 0; i < 30; i++)
+    {
+      t1_.update();
+      t2_.update();
+      b1_.update();
+      b2_.update();
+
+      displayer_.display();
+
+      constexpr std::array<int, 54> indexes =
+      {
+        9, 7, 5, 6, -1 , 6 , 5, 7, 9,
+        4, 2, 0, 1, -1, 1, 0, 2, 3,
+        10, 11, 13, 12, -1, 11, 14, 10, 9,
+        8, 6, 4, 5, -1, 5, 4, 6, 8,
+        4, 2, 0, 1, -1, 1, 0, 2, 3,
+        10, 11, 13, 12, -1, 11, 14, 10, 9,
+      };
+
+      std::vector<Detector*> detectors =
+      {
+        &t2_, &t2_, &t2_, &t1_, nullptr, &t2_, &t1_, &t1_, &t1_,
+        &t2_, &t2_, &t2_, &b2_, nullptr, &t2_, &b2_, &b2_, &t2_,
+        &t1_, &t1_, &t1_, &t1_, nullptr, &b2_, &t1_, &b2_, &b2_,
+        &b2_, &b2_, &b2_, &b1_, nullptr, &b2_, &b1_, &b1_, &b1_,
+        &t1_, &t1_, &t1_, &b1_, nullptr, &t1_, &b1_, &b1_, &t1_,
+        &t2_, &t2_, &t2_, &t2_, nullptr, &b1_, &t2_, &b1_, &b1_
+      };
+
+      int counter = 0;
+      for (size_t i = 0; i < 54; i++)
+      {
+        if (detectors[i] == nullptr)
+          values[i][counter++]++;
+        else
+          values[i][ detectors[i]->getColors()[ indexes[i] ] ]++;
+      }
+    }
+
+    std::vector<std::string> c = { "blanc", "bleu", "rouge", "jaune", "vert", "orange" };
+
+    for (size_t i = 0; i < 54; i++)
+    {
+      std::cout << i << ": ";
+      for (size_t j = 0; j < 6; j++)
+        std::cout << c[j] << " = " << values[i][j] << ",";
+      std::cout << std::endl;
+    }
+
+    for (size_t i = 0; i < 54; i++)
+    {
+      int maxIndex = 0;
+      for (size_t j = 1; j < 6; j++)
+      {
+        if (values[i][j] > values[i][maxIndex])
+          maxIndex = j;
+      }
+      result += cube::get_char_from_color((cube::color)maxIndex);
+    }
+
+    return result;
+
+    /*
     while (true)
     {
-
-      colors_.clear();
       result.clear();
 
       t1_.update();
@@ -135,8 +197,8 @@ namespace detect
         break;
       }
     }
-
     return result;
+*/
   }
 
   // Check that the detectors detect a total of 56 faces
