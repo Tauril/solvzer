@@ -293,7 +293,6 @@ namespace cube
       return "Wrong parity!";
 
     return "";
-
   }
 
   void
