@@ -22,11 +22,12 @@ namespace display
 
       // Get the Singleton
       static Display& Instance();
-      static Display& Instance(SDL_Window **window, SDL_Renderer **renderer);
+      static Display& Instance(SDL_Window** window, SDL_Renderer** renderer);
 
       // Draw things on the screen
       void draw_rubiks(const std::string& rubiks) const;
-      void draw_text(const std::string& text, const std::array<uint8_t, 3> color,
+      void draw_text(const std::string& text,
+                     const std::array<uint8_t, 3>& color,
                      int x, int y, int font_size);
 
       // Refresh the screen
@@ -39,7 +40,7 @@ namespace display
       void window_size_get(std::pair<int, int>& res) const;
 
       // Enable/Disable a button on the screen
-      void toggle_enable(const std::string& element, const bool enable);
+      void toggle_enable(const std::string& element, bool enable);
 
       // Check for click in buttons
       std::string is_intersect(int x, int y) const;
@@ -49,7 +50,7 @@ namespace display
 
     private:
       // Making default constructor private to ensure the Singleton
-      Display(SDL_Window **window, SDL_Renderer **renderer);
+      Display(SDL_Window** window, SDL_Renderer** renderer);
 
       // Init the textures vector with all resources
       void init_textures();
@@ -62,10 +63,10 @@ namespace display
       void update_ui();
 
       // Wrapper to draw a square with its position and color
-      void draw_square(const std::pair<int, int>& pos, const char& c) const;
+      void draw_square(const std::pair<int, int>& pos, char c) const;
 
       // Dynamically returns the rectangle the next button should be set to
-      SDL_Rect get_rect(SDL_Texture *texture, unsigned int offset);
+      SDL_Rect get_rect(SDL_Texture* texture, unsigned int offset);
 
       // Set the program icon to our
       void set_window_icon() const;
@@ -73,8 +74,8 @@ namespace display
     private:
 
       // SDL-mandatory variable to load and display things on the screen
-      SDL_Window *window_;
-      SDL_Renderer *renderer_;
+      SDL_Window* window_;
+      SDL_Renderer* renderer_;
 
       // Contain every textures the program is using
       std::vector<Texture> textures_;
@@ -91,9 +92,9 @@ namespace display
     };
 
   // Return the color given the face
-  void get_color(std::array<int, 3>& color, const char& c);
+  void get_color(std::array<int, 3>& color, char c);
 
   // Return the position of the square to be drawed given its index in the cube
-  const std::pair<int, int> get_pos(const int& index);
+  const std::pair<int, int> get_pos(int index);
 
 } // namespace display
