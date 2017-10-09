@@ -314,6 +314,7 @@ namespace detect
       { cv::Vec3b(11, 130, 130), cube::color::B },
       { cv::Vec3b(39, 127, 129), cube::color::B },
       { cv::Vec3b(17, 132, 120), cube::color::B },
+      { cv::Vec3b(49, 135, 115), cube::color::B },
       { cv::Vec3b(43, 127, 126), cube::color::B },
       { cv::Vec3b(255, 126, 126), cube::color::U },
       { cv::Vec3b(176, 121, 125), cube::color::U },
@@ -418,8 +419,8 @@ namespace detect
     cv::cvtColor(image_, image_, CV_BGR2Lab); // BGR2HSV
     for (size_t i = 0; i < facelets_.size(); i++)
     {
-      std::cerr << "color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
-          << " on camera " << channel_ << std::endl;
+      //std::cerr << "color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
+      //    << " on camera " << channel_ << std::endl;
 
       colors_.push_back(test(image_.at<cv::Vec3b>(facelets_[i])));
       /*

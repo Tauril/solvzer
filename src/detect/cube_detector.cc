@@ -54,6 +54,7 @@ namespace detect
 
     for (size_t i = 0; i < 30; i++)
     {
+      std::cout << "run " << i << "..." << std::endl;
       t1_.update();
       t2_.update();
       b1_.update();
