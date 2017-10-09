@@ -15,6 +15,12 @@
 //#define DEBUG_DETECT
 #define DEBUG_THICKNESS 5 // size of debug visuals
 
+#ifdef _PI_
+# define START_CHANNEL 0
+#else
+# define START_CHANNEL 1
+#endif
+
 namespace detect
 {
   enum class Direction

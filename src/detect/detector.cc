@@ -13,6 +13,7 @@ namespace detect
     : channel_(channel), displayer_(displayer), cameraPosition_(position)
   {
     // We try to load the image
+#ifndef _PI_
     capture_ = cv::VideoCapture(channel);
 
     // If we failed
@@ -22,6 +23,7 @@ namespace detect
        << " channel: " << channel << std::endl;
       std::abort();
     }
+#endif
   }
 
   std::vector<cube::color>& Detector::getColors()
@@ -32,7 +34,14 @@ namespace detect
   void Detector::update()
   {
     // reading from camera and preparing images
+#ifdef _PI_
+    capture_ = cv::VideoCapture(channel_);
+#endif
     capture_ >> image_;
+#ifdef _PI_
+    capture_.release();
+#endif
+
     image_debug_ = image_.clone();
 
     // we try to find the center of the rubik's cube
@@ -47,21 +56,26 @@ namespace detect
 
       // We compute the colors of the interest facelets
       computeColors();
+
+      cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, 0) : cv::Size(0, 100));
+      cv::Size centerInterest(image_.size() / 2 + offset);
+      cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
+      cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
+
+      for (size_t i = 0; i < colors_.size(); i++)
+      {
+        cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
+            facelets_[i] - cv::Point2f(6, 10),
+            cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
+      }
+      displayer_.addImage(image_debug_, std::string("source ")
+          + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
     }
-
-    cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, 0) : cv::Size(0, 100));
-    cv::Size centerInterest(image_.size() / 2 + offset);
-    cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
-    cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-
-    for (size_t i = 0; i < colors_.size(); i++)
+    else
     {
-      cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
-          facelets_[i] - cv::Point2f(6, 10),
-          cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, PINK, 1, CV_AA);
+      std::cout << "Error computing center on camera " << channel_
+        << " // center = " << center_ << std::endl;
     }
-    displayer_.addImage(image_debug_, std::string("source ")
-        + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
   }
 
   void Detector::computeCenter()
@@ -167,13 +181,13 @@ namespace detect
     if (cameraPosition_ == CameraPosition::TOP)
     {
       // TOP CAMERA
-      if (channel_ == 1)
+      if (channel_ == START_CHANNEL)
       {
         p1 = center_ + cv::Point(20, 220);
         p2 = center_ + cv::Point(-210, -55);
         p3 = center_ + cv::Point(130, -110);
       }
-      else if (channel_ == 2)
+      else if (channel_ == START_CHANNEL + 1)
       {
         p1 = center_ + cv::Point(20, 210);
         p2 = center_ + cv::Point(-220, -60);
@@ -183,13 +197,13 @@ namespace detect
     else
     {
       // BOTTOM CAMERA
-      if (channel_ == 3)
+      if (channel_ == START_CHANNEL + 2)
       {
         p1 = center_ + cv::Point(10, -230);
         p2 = center_ + cv::Point(210, 110);
         p3 = center_ + cv::Point(-190, 90);
       }
-      else if (channel_ == 4)
+      else if (channel_ == START_CHANNEL + 3)
       {
         p1 = center_ + cv::Point(20, -260);
         p2 = center_ + cv::Point(190, 140);
