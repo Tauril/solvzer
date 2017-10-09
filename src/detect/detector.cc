@@ -15,6 +15,7 @@ namespace detect
     // We try to load the image
 #ifndef _PI_
     capture_ = cv::VideoCapture(channel);
+    capture_.set(cv::CAP_PROP_FPS, 1.0);
 
     // If we failed
     if (!capture_.isOpened())
@@ -36,6 +37,7 @@ namespace detect
     // reading from camera and preparing images
 #ifdef _PI_
     capture_ = cv::VideoCapture(channel_);
+    capture_.set(cv::CAP_PROP_FPS, 1.0);
 #endif
     capture_ >> image_;
 #ifdef _PI_

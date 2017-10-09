@@ -52,7 +52,7 @@ namespace detect
     std::string result;
     std::vector<int[6]> values(54);
 
-    for (size_t i = 0; i < 30; i++)
+    for (size_t i = 0; i < 10; i++)
     {
       std::cout << "run " << i << "..." << std::endl;
       t1_.update();
