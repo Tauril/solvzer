@@ -3,6 +3,7 @@
 #include <cube/cube.hh>
 #include <cube/search.hh>
 #include <detect/detector.hh>
+#include <detect/cube_detector.hh>
 #include <misc/display.hh>
 #include <misc/controller.hh>
 #include <misc/state.hh>
@@ -44,15 +45,31 @@ int main(int argc, char** argv)
   return 0;
   // 2D DEBUG
 
+  /* CUBE DETECTION DEBUG (camera par camera) */
   /*
-  // CUBE DETECTION
-  detect::Detector d(displayer, detect::CameraPosition::TOP);
+  detect::Displayer displayer("solvzer");
+
+  if (argc < 2)
+  {
+    std::cout << "usage: ./solvzer [-t | -b] [channel] for top or bottom camera" << std::endl;
+    return 1;
+  }
+  detect::Detector d(displayer, argv[1][1] == 't' ? detect::CameraPosition::TOP
+                                                  : detect::CameraPosition::BOTTOM,
+                                argv[2][0] - '0');
   while (true)
   {
     d.update();
     displayer.display();
   }
   return 0;
-  // CUBE DETECTION
+  */
+
+  /* CUBE DETECTION */
+  /*
+  detect::CubeDetector detector;
+  std::string state = detector.detect_cube();
+  std::cout << "state: " << state << std::endl;
+  return 0;
   */
 }
