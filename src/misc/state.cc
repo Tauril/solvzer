@@ -1,16 +1,23 @@
 #include <sstream>
+#include <cstring>
+
 #include "state.hh"
 #include "display.hh"
 
 namespace state
 {
   State::State()
-  : draw_(false)
+  : solution_(new char[100])
+  , next_move_(0)
+  , draw_(false)
   , waiting_time_(500)
   {}
 
   State::~State()
-  {}
+  {
+    if (solution_)
+      delete[] solution_;
+  }
 
   State&
   State::Instance()
@@ -89,6 +96,32 @@ namespace state
   State::moves_get()
   {
     return moves_;
+  }
+
+  void
+  State::sol_set(const std::string& sol)
+  {
+    auto size = sol.size();
+    std::memcpy(const_cast<char*>(solution_), sol.c_str(), size);
+    next_move_ = 0;
+  }
+
+  void
+  State::next_move_incr()
+  {
+    next_move_++;
+  }
+
+  void
+  State::next_move_decr()
+  {
+    next_move_--;
+  }
+
+  const char*
+  State::next_move_get()
+  {
+    return solution_ + next_move_;
   }
 
   void

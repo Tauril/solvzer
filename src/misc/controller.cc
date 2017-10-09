@@ -45,15 +45,19 @@ namespace controller
 
        state.draw_ = true;
        state.waiting_time_ = 500;
-       auto sol = state.search_get().solution(state.face_get(), cube::Search::DEPTH);
-       cube::move::make_moves(state.face_str_get(), sol);
-       state.face_str_set(cube::Cube::solved_state_);
+       auto sol =
+         state.search_get().solution(state.face_get(), cube::Search::DEPTH);
+       const auto& ret = cube::move::make_moves(state.face_str_get(), sol);
+       state.face_str_set(ret);
        reset_state();
     }
+
+    static bool step_by_step_activated = false;
 
     void
     step_by_step()
     {
+      step_by_step_activated = true;
       auto& display = display::Display::Instance();
       display.toggle_enable("next", true);
       display.toggle_enable("resolve", false);
@@ -63,60 +67,73 @@ namespace controller
     void
     next()
     {
-       auto& state = state::State::Instance();
-       auto& display = display::Display::Instance();
+      auto& state = state::State::Instance();
+      auto& display = display::Display::Instance();
 
-       if (state.face_str_get() == cube::Cube::solved_state_)
-       {
-          reset_state();
-          return;
-       }
+      if (state.face_str_get() == cube::Cube::solved_state_)
+      {
+         reset_state();
+         return;
+      }
 
-       state.draw_ = true;
-       state.waiting_time_ = 0;
-       const char *sol_str = state.search_get().solution(state.face_get(),
-                                                   cube::Search::DEPTH).c_str();
-       auto len = state.moves_get().size();
-       while (len)
-       {
-         if (*sol_str == ' ')
-           len--;
-         sol_str++;
-       }
-       const auto& move = cube::move::parse_move(sol_str);
-       auto new_state = cube::move::make_move(state.face_str_get(), move);
-       state.face_str_set(new_state.c_str());
-       display.toggle_enable("next", true);
-       display.toggle_enable("previous", true);
-       display.repaint();
+      state.draw_ = true;
+      state.waiting_time_ = 0;
+
+      if (step_by_step_activated)
+      {
+        state.sol_set(state.search_get().solution(state.face_get(),
+                                                  cube::Search::DEPTH));
+        step_by_step_activated = false;
+      }
+
+      auto next = state.next_move_get();
+
+      std::cout << "Next move: ";
+      const auto& move = cube::move::parse_move(next);
+      state.next_move_incr();
+      state.next_move_incr();
+      if (move.second > 1)
+        state.next_move_incr();
+      const auto& new_state =
+        cube::move::make_move(state.face_str_get(), move);
+      state.face_str_set(new_state);
+      display.toggle_enable("next", true);
+      display.toggle_enable("previous", true);
+      display.repaint();
     }
 
     void
     previous()
     {
-       auto& state = state::State::Instance();
-       auto& display = display::Display::Instance();
+      auto& state = state::State::Instance();
+      auto& display = display::Display::Instance();
 
-       state.draw_ = true;
-       state.waiting_time_ = 0;
-       const char *last_move = state.moves_get().back().c_str();
-       const auto& move = cube::move::parse_move(last_move);
+      state.draw_ = true;
+      state.waiting_time_ = 0;
+      const char* last_move = state.moves_get().back().c_str();
+      std::cout << "Previous move: ";
+      const auto& move = cube::move::parse_move(last_move);
 
-       // Doing 3 times the last move to cancel it
-       for (unsigned int i = 0; i < 3; ++i)
-       {
-         state.draw_ = false;
-         auto new_state = cube::move::make_move(state.face_str_get(), move);
-         state.face_str_set(new_state.c_str());
-       }
-       state.draw_ = true;
-       state.moves_get().pop_back();
-       display.toggle_enable("next", true);
-       if (state.moves_get().size() > 0)
-        display.toggle_enable("previous", true);
-       else
-        display.toggle_enable("previous", false);
-       display.repaint();
+      unsigned int end = move.second == 2 ? 1 : 3;
+      for (unsigned int i = 0; i < end; ++i)
+      {
+        state.draw_ = false;
+        auto new_state = cube::move::make_move(state.face_str_get(), move);
+        state.face_str_set(new_state.c_str());
+      }
+      state.draw_ = true;
+      state.moves_get().pop_back();
+      state.next_move_decr();
+      state.next_move_decr();
+      if (move.second > 1)
+        state.next_move_decr();
+
+      display.toggle_enable("next", true);
+      if (state.moves_get().size() > 0)
+       display.toggle_enable("previous", true);
+      else
+       display.toggle_enable("previous", false);
+      display.repaint();
     }
   } // namespace
 

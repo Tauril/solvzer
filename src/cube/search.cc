@@ -154,7 +154,7 @@ namespace cube
       }
     } while (true);
 
-    return 0;
+    return "";
   }
 
   std::string
