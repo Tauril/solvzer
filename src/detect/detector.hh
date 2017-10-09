@@ -17,6 +17,7 @@
 
 #ifdef _PI_
 # define START_CHANNEL 0
+# undef DEBUG_DETECT
 #else
 # define START_CHANNEL 1
 #endif
