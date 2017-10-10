@@ -16,7 +16,7 @@ namespace controller
 
        state.clear_vector();
        state.compute_time_set(0);
-       display.toggle_enable("resolve", false);
+       display.toggle_enable("resolve", true);
        display.toggle_enable("step_by_step", false);
        display.toggle_enable("previous", false);
        display.toggle_enable("next", false);
@@ -45,7 +45,7 @@ namespace controller
        auto& state = state::State::Instance();
 
        state.draw_ = true;
-       state.waiting_time_ = 500;
+       state.waiting_time_ = 3000;
        auto sol =
          state.search_get().solution(state.face_get(), cube::Search::DEPTH);
        const auto& ret = cube::move::make_moves(state.face_str_get(), sol);

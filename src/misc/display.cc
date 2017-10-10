@@ -17,6 +17,7 @@ namespace display
     set_window_icon();
     init_textures();
     toggle_enable("scramble", true);
+    toggle_enable("resolve", true);
   }
 
   Display::~Display()

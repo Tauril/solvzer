@@ -31,19 +31,6 @@ int main(int argc, char** argv)
   // RESOLVE BY HAND
   */
 
-  // 2D DEBUG
-  SDL_Window* window = nullptr;
-  SDL_Renderer* renderer = nullptr;
-  SDL_Event event;
-
-  //detect::Displayer displayer("solvzer");
-  auto& dis = display::Display::Instance(&window, &renderer);
-  auto face = cube::Face(cube::Cube::solved_state_);
-  state::State::Instance().face_set(face);
-  dis.repaint();
-  controller::start_controller(&event);
-  return 0;
-  // 2D DEBUG
 
   /* CUBE DETECTION DEBUG (camera par camera) */
   /*
@@ -66,10 +53,26 @@ int main(int argc, char** argv)
   */
 
   /* CUBE DETECTION */
-  /*
   detect::CubeDetector detector;
   std::string state = detector.detect_cube();
   std::cout << "state: " << state << std::endl;
+
+  // 2D DEBUG
+
+  SDL_Window* window = nullptr;
+  SDL_Renderer* renderer = nullptr;
+  SDL_Event event;
+
+  //detect::Displayer displayer("solvzer");
+  auto& dis = display::Display::Instance(&window, &renderer);
+  auto f = cube::Face(state);
+  state::State::Instance().face_set(face);
+  dis.repaint();
+  controller::start_controller(&event);
   return 0;
-  */
+
+  // 2D DEBUG
+
+
+  return 0;
 }
