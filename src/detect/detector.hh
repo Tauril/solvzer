@@ -54,6 +54,7 @@ namespace detect
       void computeCenter();
       void startDetection();
       void computeColors();
+      cube::color classifyColor(cv::Vec3b color);
       bool isInRangeMask(const cv::Scalar& low, const cv::Scalar& high,
                          const cv::Point2f& coord);
       void detectExtremities(cv::Point& p1, cv::Point& p2, cv::Point& p3);

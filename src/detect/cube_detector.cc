@@ -62,6 +62,7 @@ namespace detect
 
       displayer_.display();
 
+      // We map each camera's color index to an index in our cube (see cube.hh)
       constexpr std::array<int, 54> indexes =
       {
         9, 7, 5, 6, -1 , 6 , 5, 7, 9,
@@ -92,8 +93,8 @@ namespace detect
       }
     }
 
+    // This is a debug (print) loop
     std::vector<std::string> c = { "blanc", "bleu", "rouge", "jaune", "vert", "orange" };
-
     for (size_t i = 0; i < 54; i++)
     {
       std::cout << i << ": ";
@@ -102,6 +103,7 @@ namespace detect
       std::cout << std::endl;
     }
 
+    // We build the result string representing the state of the cube.
     for (size_t i = 0; i < 54; i++)
     {
       int maxIndex = 0;

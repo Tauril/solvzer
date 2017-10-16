@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
   //detect::Displayer displayer("solvzer");
   auto& dis = display::Display::Instance(&window, &renderer);
-  auto f = cube::Face(state);
+  auto face = cube::Face(state);
   state::State::Instance().face_set(face);
   dis.repaint();
   controller::start_controller(&event);

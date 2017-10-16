@@ -49,7 +49,6 @@ namespace detect
     // we try to find the center of the rubik's cube
     computeCenter();
 
-    //std::cout << center_ << std::endl;
     if (center_.x != -1)
     {
       // we start the detection of the rubik's cube faces with the center as
@@ -59,11 +58,13 @@ namespace detect
       // We compute the colors of the interest facelets
       computeColors();
 
+      // We print the area of interest on the debug image
       cv::Size offset = (cameraPosition_ == CameraPosition::TOP ? cv::Size(0, 0) : cv::Size(0, 100));
       cv::Size centerInterest(image_.size() / 2 + offset);
       cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
       cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
 
+      // We display detected colors
       for (size_t i = 0; i < colors_.size(); i++)
       {
         cv::putText(image_debug_, std::to_string(i) + " " + cube::color_to_str(colors_[i]),
@@ -132,8 +133,6 @@ namespace detect
     // debug purposes
     cv::circle(image_debug_, centerInterest, areaRad_, GREEN, 2, 8, 0);
     cv::circle(image_debug_, center_, DEBUG_THICKNESS, RED, -1);
-    //displayer_.addImage(image_debug_, std::string("source ")
-    //    + (cameraPosition_ == CameraPosition::TOP ? "(top)" : "(bottom)"), -1);
 
 #ifdef DEBUG_DETECT
     displayer_.addImage(contrast, "center", CV_GRAY2BGR);
@@ -216,9 +215,14 @@ namespace detect
 
   void Detector::startDetection()
   {
-
     cv::Point p1, p2, p3; // The extremities of the rubik's cube
 
+    /*
+     * The first function tries to detect extremities from the center of the
+     * cube by expanding the black lines, but since each camera is fixed, we
+     * can hardcode the rubik's cube values and this is done in the second
+     * function.
+    */
     //detectExtremities(p1, p2, p3);
     setFixedExtremities(p1, p2, p3);
 
@@ -302,7 +306,7 @@ namespace detect
 #endif
   }
 
-  cube::color test(cv::Vec3b color)
+  cube::color Detector::classifyColor(cv::Vec3b color)
   {
     // U BLANC
     // R BLEU
@@ -311,6 +315,11 @@ namespace detect
     // L VERT
     // B ORANGE
 
+    /*
+     * This part classifies the given color to any of the 6 colors represented
+     * by coordinates in the CIE-Lab color space. We simply find the closest
+     * color in these coordinates and return it.
+    */
     static const std::vector<std::pair<cv::Vec3b, cube::color>> colors =
     {
       { cv::Vec3b(11, 130, 130), cube::color::B },
@@ -387,19 +396,13 @@ namespace detect
     // We draw circles around the faces spots
     image_debug_ = image_.clone();
     for (size_t i = 0; i < facelets_.size(); i++)
-    {
-      /*
-      cv::putText(image_debug_, std::to_string(i),
-                  facelets_[i] - cv::Point2f(6, 10),
-                  cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, BLACK, 1, CV_AA);
-      */
       cv::circle(image_debug_, facelets_[i], DEBUG_THICKNESS, BLACK, 2);
-    }
 
     // Histogram equalization
     std::vector<cv::Mat> channels;
     cv::Mat img_hist_equalized;
 
+    // We equalize the histograms to smooth the image
     cv::cvtColor(image_debug_, img_hist_equalized, CV_BGR2YCrCb);
     cv::split(img_hist_equalized, channels);
     cv::equalizeHist(channels[0], channels[0]);
@@ -411,6 +414,8 @@ namespace detect
     image_ = img_hist_equalized.clone();
     //image_debug_ = img_hist_equalized.clone();
 
+    // The best way to denoise the image is to call fastNlMeansDenoising, but
+    // it is too slow on the PI, so we simply do a GaussianBlur instead.
     //cv::fastNlMeansDenoisingColored(image_, image_);
     cv::GaussianBlur(image_, image_, cv::Size(7, 7), 0, 0);
     image_debug_ = image_.clone();
@@ -425,53 +430,7 @@ namespace detect
       std::cerr << "[" << channel_ << "][" << i << "]: "
         << image_.at<cv::Vec3b>(facelets_[i]) << std::endl;
 
-      colors_.push_back(test(image_.at<cv::Vec3b>(facelets_[i])));
-      /*
-
-      // YELLOW
-      if (isInRangeMask(cv::Scalar(0, 180, 60), cv::Scalar(5, 220, 100), facelets_[i]))
-        colors_.push_back(cube::color::D);
-
-      // RED
-      else if (isInRangeMask(cv::Scalar(170, 45, 35), cv::Scalar(180, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::F);
-
-      // RED
-      else if (isInRangeMask(cv::Scalar(0, 45, 35), cv::Scalar(3, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::F);
-
-      // ORANGE
-      else if (isInRangeMask(cv::Scalar(4, 70, 35), cv::Scalar(19, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::B);
-
-      // ORANGE
-      else if (isInRangeMask(cv::Scalar(150, 50, 30), cv::Scalar(180, 210, 210), facelets_[i]))
-        colors_.push_back(cube::color::B);
-
-      // YELLOW
-      else if (isInRangeMask(cv::Scalar(20, 45, 35), cv::Scalar(33, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::D);
-
-      // GREEN
-      else if (isInRangeMask(cv::Scalar(33, 45, 35), cv::Scalar(85, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::L);
-
-      // BLUE
-      else if (isInRangeMask(cv::Scalar(80, 101, 35), cv::Scalar(135, 255, 255), facelets_[i]))
-        colors_.push_back(cube::color::R);
-
-      // WHITE
-      else if (isInRangeMask(cv::Scalar(0, 0, 100), cv::Scalar(180, 100, 255), facelets_[i]))
-        colors_.push_back(cube::color::U);
-
-      // UNKNOWN
-      else
-      {
-        colors_.push_back(cube::color::UNKNOWN);
-        std::cerr << "unknown color at " << i << ": " << image_.at<cv::Vec3b>(facelets_[i])
-          << " on camera " << channel_ << std::endl;
-      }
-      */
+      colors_.push_back(classifyColor(image_.at<cv::Vec3b>(facelets_[i])));
     }
 
     // If we are on a bottom camera, we remove the non-visible facelets hiddens
