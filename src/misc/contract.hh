@@ -13,17 +13,12 @@
 # endif
 #endif
 
-#ifndef ATTRIBUTE_NORETURN
-# define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
-#endif
-
-
-void __FailedCondition(const char* condType,
+[[noreturn]] void __FailedCondition(const char* condType,
                        const char* condText,
                        const char* fileName,
-                       int fileLine) ATTRIBUTE_NORETURN;
+                       int fileLine);
 
-void __Terminate(const char*, int, const char*) ATTRIBUTE_NORETURN;
+[[noreturn]] void __Terminate(const char*, int, const char*);
 
 #define die(Reason)              __Terminate(__FILE__, __LINE__, Reason)
 #define unreachable()            die("unreachable code reached")
