@@ -25,9 +25,7 @@ namespace Resolution
         public:
             Resolve();
             Resolve(std::string& str);
-            void find_solution();
             void resolve_cube();
-            bool move_step_motor(std::pair<int, int> move);
 
         private:
             cube::Face faces_;
@@ -35,11 +33,12 @@ namespace Resolution
 
     };
 
-    static constexpr int motorU_[] = {19, 26};
-    static constexpr int motorL_[] = {27, 22};
-    static constexpr int motorF_[] = {6, 13};
-    static constexpr int motorR_[] = {20, 21};
-    static constexpr int motorB_[] = {17, 18};
-    static constexpr int motorD_[] = {23, 24};
-    static constexpr int nb_rotate_for_90_dg = 400;
+    bool move_step_motor(std::pair<int, int> move);
+    static constexpr int motorU_[] = {19, 26}; // WHITE
+    static constexpr int motorL_[] = {27, 22}; // GREEN
+    static constexpr int motorF_[] = {6, 13};  // RED
+    static constexpr int motorR_[] = {20, 21}; // BLUE
+    static constexpr int motorB_[] = {17, 18}; // ORANGE/BLACK
+    static constexpr int motorD_[] = {23, 24}; // YELLOW
+    static constexpr int nb_rotate_for_90_dg = 420;
 }

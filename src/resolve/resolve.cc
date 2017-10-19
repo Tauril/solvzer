@@ -6,33 +6,19 @@ namespace Resolution
     Resolve::Resolve()
     {
         faces_.face_set(cube::Cube::solved_state_);
-        //faces_.scramble();
     }
 
     Resolve::Resolve(std::string& str) : faces_(str)
     {}
 
-    void Resolve::find_solution()
+    void Resolve::resolve_cube()
     {
         cube::Search search;
         solutions_ = search.solution(faces_, 21);
         assert(search.ack_solution(faces_, solutions_));
     }
 
-    void Resolve::resolve_cube()
-    {
-        this->find_solution();
-        const char* moves = solutions_.c_str();
-        std::pair<int, int> move;
-        while (*moves)
-        {
-            move = cube::move::parse_move(moves);
-            if (!this->move_step_motor(move))
-                exit(1);
-        }
-    }
-
-    bool Resolve::move_step_motor(std::pair<int, int> move)
+    bool move_step_motor(std::pair<int, int> move)
     {
         int nb_rotation = 0;
         bool rotate_right = false;
@@ -61,21 +47,27 @@ namespace Resolution
         {
             case cube::color::U:
                 str << motorU_[0] << " " << motorU_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
                 break;
             case cube::color::R:
                 str << motorR_[0] << " " << motorR_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
                 break;
             case cube::color::F:
                 str << motorF_[0] << " " << motorF_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
                 break;
             case cube::color::D:
                 str << motorD_[0] << " " << motorD_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
                 break;
             case cube::color::L:
                 str << motorL_[0] << " " << motorL_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
                 break;
             case cube::color::B:
                 str << motorB_[0] << " " << motorB_[1];
+                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 410 * 2 : 420;
                 break;
             default:
                 exit(4);
@@ -90,4 +82,5 @@ namespace Resolution
         std::this_thread::sleep_for(std::chrono::seconds(3));
        return true; 
     }
+
 }

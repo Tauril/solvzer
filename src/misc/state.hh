@@ -65,7 +65,6 @@ namespace state
       // Enable or disable the drawing of the Rubik's Cube when executing moves
       bool draw_;
       unsigned int waiting_time_;
-      Resolution::Resolve resolve_;
   };
 
   // Draw the moves with little animation

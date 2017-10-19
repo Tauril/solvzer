@@ -227,7 +227,7 @@ namespace cube
     make_move(const std::string& solution, std::pair<int, int> move)
     {
       auto& state = state::State::Instance();
-      state.resolve_.move_step_motor(move);
+      Resolution::move_step_motor(move);
       if (state.draw_)
       {
         auto& display = display::Display::Instance();
