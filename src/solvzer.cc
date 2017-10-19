@@ -7,6 +7,9 @@
 #include <misc/display.hh>
 #include <misc/controller.hh>
 #include <misc/state.hh>
+#include <iostream>
+#include <thread>
+#include <future>
 
 // temp
 #include <opencv2/imgcodecs.hpp>
@@ -15,6 +18,31 @@
 #include <opencv2/opencv.hpp>
 #include "detect/displayer.hh"
 #include "resolve/resolve.hh"
+
+
+void check_camera(short count)
+{
+    using namespace std::literals;
+
+    auto f = std::async(std::launch::async, [] {
+        while (std::cin.get() != '\n');
+        return 0;
+    });
+    detect::Displayer displayer("solvzer");
+    detect::Detector d(displayer, count < 2 ? detect::CameraPosition::TOP
+                                                    : detect::CameraPosition::BOTTOM,
+                                  count);
+
+    do
+    {
+        d.update();
+        displayer.display();
+    }
+    while (f.wait_for(1s) != std::future_status::ready);
+
+
+}
+
 
 
 int main(int argc, char** argv)
@@ -32,50 +60,34 @@ int main(int argc, char** argv)
 #endif
 
 
-#if 0
-  // CUBE DETECTION DEBUG (camera par camera)
-  detect::Displayer displayer("solvzer");
+    for (short count = 0; count < 4; count++)
+        check_camera(count);
 
-  if (argc < 2)
-  {
-    std::cout << "usage: ./solvzer [-t | -b] [channel] for top or bottom camera" << std::endl;
-    return 1;
-  }
-  detect::Detector d(displayer, argv[1][1] == 't' ? detect::CameraPosition::TOP
-                                                  : detect::CameraPosition::BOTTOM,
-                                argv[2][0] - '0');
-  while (true)
-  {
-    d.update();
-    displayer.display();
-  }
-  return 0;
-#endif
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+    SDL_Event event;
 
-  SDL_Window* window = nullptr;
-  SDL_Renderer* renderer = nullptr;
-  SDL_Event event;
-
-  detect::CubeDetector detector;
+    detect::CubeDetector detector;
 
   // While we detect wrong colors, keep trying.
-  while (true)
-  {
-    try {
-      std::string state = detector.detect_cube();
-      std::cout << "state: " << state << std::endl;
+    while (true)
+    {
+        try {
 
-      auto& dis = display::Display::Instance(&window, &renderer);
-      auto face = cube::Face(state);
-      auto cube = cube::Cube(face);
-      cube.verify();
-      state::State::Instance().face_set(face);
-      dis.repaint();
-      break;
-    } catch (const std::exception& e) {
-      std::cerr << e.what() << '\n';
+            std::string state = detector.detect_cube();
+            std::cout << "state: " << state << std::endl;
+
+            auto& dis = display::Display::Instance(&window, &renderer);
+            auto face = cube::Face(state); // throw if wrong number of colors
+            auto cube = cube::Cube(face);
+            cube.verify(); // throw execption if not a regulat cube
+            state::State::Instance().face_set(face);
+            dis.repaint();
+            break;
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << '\n';
+        }
     }
-  }
 
   controller::start_controller(&event);
 
