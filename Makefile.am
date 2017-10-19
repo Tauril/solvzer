@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 
 AM_DEFAULT_SOURCE_EXT = .cc
 
-AM_CXXFLAGS  = -std=c++14 -Wall -Wextra
+AM_CXXFLAGS  = -std=c++14 -Wall -Wextra -pedantic -D_PI_
 AM_CPPFLAGS  = -I$(top_srcdir)/src -I$(top_builddir)/src -I$(top_builddir)
 AM_CPPFLAGS += $(OPENCV_CFLAGS)
 
