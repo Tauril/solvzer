@@ -1,5 +1,7 @@
 #include <detect/cube_detector.hh>
 
+#define _NB_RUN 10
+
 /* This class handles all the Detectors to recreate the cube from the camera
  * visions. The cameras are created in this order:
  *    Camera t1: TOP 1- Left is Green, Right is Red
@@ -38,8 +40,26 @@
  *    b2 12 - t1 8
  */
 
+
+
 namespace detect
 {
+  std::string get_color(const std::string &str)
+  {
+    if (str == "red")
+      return std::string("F");
+    if (str == "black")
+      return std::string("B");
+    if (str == "blue")
+      return std::string("R");
+    if (str == "green")
+      return std::string("L");
+    if (str == "yellow")
+      return std::string("D");
+
+    return std::string("U");
+
+  }
   CubeDetector::CubeDetector()
     : t1_(displayer_, CameraPosition::TOP, START_CHANNEL)
       , t2_(displayer_, CameraPosition::TOP, START_CHANNEL + 1)
@@ -47,12 +67,12 @@ namespace detect
       , b2_(displayer_, CameraPosition::BOTTOM, START_CHANNEL + 3)
   { }
 
-  std::string CubeDetector::detect_cube()
+  std::string CubeDetector::detect_cube(bool second_run)
   {
     std::string result;
     std::vector<int[6]> values(54);
 
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < _NB_RUN; i++)
     {
       std::cout << "run " << i << "..." << std::endl;
       t1_.update();
@@ -112,7 +132,23 @@ namespace detect
         if (values[i][j] > values[i][maxIndex])
           maxIndex = j;
       }
-      result += cube::get_char_from_color((cube::color)maxIndex);
+      if (second_run)
+      {
+        if (values[i][maxIndex] == _NB_RUN)
+          result += cube::get_char_from_color((cube::color)maxIndex);
+        else
+        {
+          std::cout << "Please indicate which color is at " << cube::move::axis[i / 9] << (i % 9) + 1 << std::endl;
+
+          std::string s;
+          std::cin >> s;
+
+          result += get_color(s);
+          std::cout << result << std::endl;
+        }
+      }
+      else
+        result += cube::get_char_from_color((cube::color)maxIndex);
     }
 
     return result;

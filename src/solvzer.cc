@@ -52,7 +52,6 @@ int main(int argc, char** argv)
   std::cout << "Resolution begins\n";
   std::string str = "FRLRULDDLBFBURULBRFFULFFBLFDDUDDLBUUDBRDLUURRDFLBBBFRR";
   Resolution::Resolve resolve(str);
-  resolve.find_solution();
   resolve.resolve_cube();
   std::cout << "Resolution ends\n";
   return 0;
@@ -61,7 +60,7 @@ int main(int argc, char** argv)
 
 
     for (short count = 0; count < 4; count++)
-        check_camera(count);
+      check_camera(count);
 
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
@@ -70,13 +69,13 @@ int main(int argc, char** argv)
     detect::CubeDetector detector;
 
   // While we detect wrong colors, keep trying.
+    bool second_run = false;
     while (true)
     {
         try {
 
-            std::string state = detector.detect_cube();
+            std::string state = detector.detect_cube(second_run);
             std::cout << "state: " << state << std::endl;
-
             auto& dis = display::Display::Instance(&window, &renderer);
             auto face = cube::Face(state); // throw if wrong number of colors
             auto cube = cube::Cube(face);
@@ -85,7 +84,14 @@ int main(int argc, char** argv)
             dis.repaint();
             break;
         } catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
+            if (!second_run)
+                second_run = true;
+            else
+            {
+                std::cerr << "Could not detect properly colors." << std::endl;
+                std::cout << e.what() << std::endl;
+                return 1;
+            }
         }
     }
 

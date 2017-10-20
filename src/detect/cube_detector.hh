@@ -2,6 +2,7 @@
 
 #include <detect/detector.hh>
 #include <detect/displayer.hh>
+#include <cube/move.hh>
 
 namespace detect
 {
@@ -11,7 +12,7 @@ namespace detect
       CubeDetector();
       ~CubeDetector() = default;
 
-      std::string detect_cube();
+      std::string detect_cube(bool second_run);
 
     private:
       Detector t1_, t2_, b1_, b2_;

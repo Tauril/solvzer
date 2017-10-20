@@ -427,8 +427,8 @@ namespace detect
     cv::cvtColor(image_, image_, CV_BGR2Lab); // BGR2HSV
     for (size_t i = 0; i < facelets_.size(); i++)
     {
-      std::cerr << "[" << channel_ << "][" << i << "]: "
-        << image_.at<cv::Vec3b>(facelets_[i]) << std::endl;
+      /*std::cerr << "[" << channel_ << "][" << i << "]: "
+        << image_.at<cv::Vec3b>(facelets_[i]) << std::endl;*/
 
       colors_.push_back(classifyColor(image_.at<cv::Vec3b>(facelets_[i])));
     }
