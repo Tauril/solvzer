@@ -34,11 +34,24 @@ namespace Resolution
     };
 
     bool move_step_motor(std::pair<int, int> move);
+
+    // Related pin for each motor
     static constexpr int motorU_[] = {19, 26}; // WHITE
     static constexpr int motorL_[] = {27, 22}; // GREEN
     static constexpr int motorF_[] = {6, 13};  // RED
     static constexpr int motorR_[] = {20, 21}; // BLUE
     static constexpr int motorB_[] = {17, 18}; // ORANGE/BLACK
     static constexpr int motorD_[] = {23, 24}; // YELLOW
-    static constexpr int nb_rotate_for_90_dg = 420;
+    /*
+     *  MOTOR ROTATIONS
+     *  custome rotation for each motors, index 0 one rotation, index 1 two
+     *  rotations
+     */
+    static constexpr int rotateU_[] = {420, 810}; // WHITE
+    static constexpr int rotateL_[] = {420, 820}; // GREEN
+    static constexpr int rotateF_[] = {410, 830};  // RED
+    static constexpr int rotateR_[] = {420, 830}; // BLUE
+    static constexpr int rotateB_[] = {420, 820}; // ORANGE/BLACK
+    static constexpr int rotateD_[] = {410, 830}; // YELLOW
+
 }

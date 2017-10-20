@@ -24,13 +24,13 @@ namespace Resolution
         bool rotate_right = false;
 
         if (move.second == 1)
-            nb_rotation = nb_rotate_for_90_dg;
+            nb_rotation =  1;
         else if (move.second == 2)
-            nb_rotation = 2 * nb_rotate_for_90_dg;
+            nb_rotation = 2;
         else if (move.second == 3)
         {
             rotate_right = true;
-            nb_rotation = nb_rotate_for_90_dg;
+            nb_rotation = 1;
         }
 
         // These two motors need more power to turn on the left.
@@ -40,34 +40,39 @@ namespace Resolution
 
         std::stringstream str;
         str << "python step_motor_final.py "
-            << (rotate_right ? "right" : "left")
-            << " " << nb_rotation << " ";
+            << (rotate_right ? "right" : "left");
 
         switch (move.first)
         {
             case cube::color::U:
-                str << motorU_[0] << " " << motorU_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateU_[0] : rotateU_[1])
+                    << " " <<motorU_[0] << " " << motorU_[1];
                 break;
             case cube::color::R:
-                str << motorR_[0] << " " << motorR_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateR_[0] : rotateR_[1])
+                    << " " << motorR_[0] << " " << motorR_[1];
                 break;
             case cube::color::F:
-                str << motorF_[0] << " " << motorF_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateF_[0] : rotateF_[1])
+                    << " " <<motorF_[0] << " " << motorF_[1];
                 break;
             case cube::color::D:
-                str << motorD_[0] << " " << motorD_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateD_[0] : rotateD_[1])
+                    << " " <<motorD_[0] << " " << motorD_[1];
+                break;
+
                 break;
             case cube::color::L:
-                str << motorL_[0] << " " << motorL_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 415 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateL_[0] : rotateL_[1])
+                    << " " <<motorL_[0] << " " << motorL_[1];
+                break;
+
                 break;
             case cube::color::B:
-                str << motorB_[0] << " " << motorB_[1];
-                nb_rotation = nb_rotation > nb_rotate_for_90_dg ? 410 * 2 : 420;
+                str << " " << (nb_rotation == 1 ? rotateB_[0] : rotateB_[1])
+                    << " " <<motorB_[0] << " " << motorB_[1];
+                break;
+
                 break;
             default:
                 exit(4);
@@ -75,11 +80,12 @@ namespace Resolution
 
         }
 
+
         printf("instruction <%s>\n", str.str().c_str());
         int ret = std::system(str.str().c_str());
         printf("return value %d\n", ret);
 
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
        return true; 
     }
 
