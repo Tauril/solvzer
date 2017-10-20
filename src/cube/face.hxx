@@ -28,7 +28,8 @@ namespace cube
     face_str_set(state);
 
     // Assert we have only 6 colors in our Face.
-    throw std::runtime_error("Less than 6 different colors detected.\n");
+    if (cube_colors.size() != 6)
+      throw std::runtime_error("Less than 6 different colors detected.\n");
     // Assert we only have 9 of each color.
     if (!std::all_of(cube_colors.begin(), cube_colors.end(),
                      [](const auto& m) { return m.second == 9; }))
