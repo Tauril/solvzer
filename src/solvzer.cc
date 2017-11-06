@@ -19,7 +19,7 @@
 
 int main(int argc, char** argv)
 {
-  /*
+#if 0
   // RESOLVE BY HAND
   std::cout << "Resolution begins\n";
   std::string str = "FRLRULDDLBFBURULBRFFULFFBLFDDUDDLBUUDBRDLUURRDFLBBBFRR";
@@ -29,11 +29,11 @@ int main(int argc, char** argv)
   std::cout << "Resolution ends\n";
   return 0;
   // RESOLVE BY HAND
-  */
+#endif
 
 
-  /* CUBE DETECTION DEBUG (camera par camera) */
-  /*
+#if 0
+  // CUBE DETECTION DEBUG (camera par camera)
   detect::Displayer displayer("solvzer");
 
   if (argc < 2)
@@ -50,29 +50,34 @@ int main(int argc, char** argv)
     displayer.display();
   }
   return 0;
-  */
-
-  /* CUBE DETECTION */
-  detect::CubeDetector detector;
-  std::string state = detector.detect_cube();
-  std::cout << "state: " << state << std::endl;
-
-  // 2D DEBUG
+#endif
 
   SDL_Window* window = nullptr;
   SDL_Renderer* renderer = nullptr;
   SDL_Event event;
 
-  //detect::Displayer displayer("solvzer");
-  auto& dis = display::Display::Instance(&window, &renderer);
-  auto face = cube::Face(state);
-  state::State::Instance().face_set(face);
-  dis.repaint();
+  detect::CubeDetector detector;
+
+  // While we detect wrong colors, keep trying.
+  while (true)
+  {
+    try {
+      std::string state = detector.detect_cube();
+      std::cout << "state: " << state << std::endl;
+
+      auto& dis = display::Display::Instance(&window, &renderer);
+      auto face = cube::Face(state);
+      auto cube = cube::Cube(face);
+      cube.verify();
+      state::State::Instance().face_set(face);
+      dis.repaint();
+      break;
+    } catch (const std::exception& e) {
+      std::cerr << e.what() << '\n';
+    }
+  }
+
   controller::start_controller(&event);
-  return 0;
-
-  // 2D DEBUG
-
 
   return 0;
 }

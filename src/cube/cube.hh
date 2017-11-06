@@ -117,7 +117,7 @@ namespace cube
     void set_UB_to_DF(int id);
 
     /// Checks the cube is not ill-formed.
-    std::string verify() const;
+    void verify() const;
 
     void to_face(Face& face) const;
     /** \} */

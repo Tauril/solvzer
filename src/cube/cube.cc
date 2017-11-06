@@ -260,7 +260,7 @@ namespace cube
     }
   }
 
-  std::string
+  void
   Cube::verify() const
   {
     std::array<int, 12> edge_cnt = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -268,31 +268,29 @@ namespace cube
       edge_cnt[edge_perm_[e]]++;
     for (int cnt : edge_cnt)
       if (cnt != 1)
-        return "Wrong edge count!";
+        throw std::runtime_error("The cube is ill formed: Wrong edge count!");
 
     int sum = 0;
     for (int ori : edge_ori_)
       sum += ori;
     if (sum % 2 != 0)
-      return "Edge flipped!";
+      throw std::runtime_error("The cube is ill formed: Edge flipped!");
 
     std::array<int, 8> corner_cnt = { 0, 0, 0, 0, 0, 0, 0, 0 };
     for (corner c : corners)
       corner_cnt[corner_perm_[c]]++;
     for (int cnt : corner_cnt)
       if (cnt != 1)
-        return "Wrong corner count!";
+        throw std::runtime_error("The cube is ill formed: Wrong corner count!");
 
     sum = 0;
     for (int ori : corner_ori_)
       sum += ori;
     if (sum % 3 != 0)
-      return "Corner twisted!";
+      throw std::runtime_error("The cube is ill formed: Corner twisted!");
 
     if ((edge_parity() ^ corner_parity()) != 0)
-      return "Wrong parity!";
-
-    return "";
+      throw std::runtime_error("The cube is ill formed: Wrong parity!");
   }
 
   void

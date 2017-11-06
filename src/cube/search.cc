@@ -46,11 +46,7 @@ namespace cube
       return "";
 
     Cube cube(face);
-
-    const auto& cube_state = cube.verify();
-    if (cube_state != "")
-      throw std::runtime_error("The cube is ill formed: " + cube_state);
-
+    cube.verify();
     Coord coord(cube);
 
     power_[0] = 0;
