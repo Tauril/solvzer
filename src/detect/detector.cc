@@ -185,14 +185,14 @@ namespace detect
       if (channel_ == START_CHANNEL)
       {
         p1 = center_ + cv::Point(20, 220);
-        p2 = center_ + cv::Point(-210, -55);
-        p3 = center_ + cv::Point(130, -110);
+        p2 = center_ + cv::Point(-200, -60);
+        p3 = center_ + cv::Point(140, -100);
       }
       else if (channel_ == START_CHANNEL + 1)
       {
         p1 = center_ + cv::Point(20, 210);
         p2 = center_ + cv::Point(-220, -60);
-        p3 = center_ + cv::Point(125, -125);
+        p3 = center_ + cv::Point(100, -125);
       }
     }
     else
@@ -200,15 +200,15 @@ namespace detect
       // BOTTOM CAMERA
       if (channel_ == START_CHANNEL + 2)
       {
-        p1 = center_ + cv::Point(10, -230);
+        p1 = center_ + cv::Point(10, -250);
         p2 = center_ + cv::Point(210, 110);
         p3 = center_ + cv::Point(-190, 90);
       }
       else if (channel_ == START_CHANNEL + 3)
       {
         p1 = center_ + cv::Point(20, -260);
-        p2 = center_ + cv::Point(190, 140);
-        p3 = center_ + cv::Point(-220, 100);
+        p2 = center_ + cv::Point(180, 130);
+        p3 = center_ + cv::Point(-200, 90);
       }
     }
   }
