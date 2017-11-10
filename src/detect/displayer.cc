@@ -4,7 +4,7 @@ namespace detect
 {
   Displayer::Displayer(std::string name) : name_(name), rows_(0), cols_(0)
   {
-    cv::namedWindow(name, CV_WINDOW_AUTOSIZE);
+    //cv::namedWindow(name, CV_WINDOW_AUTOSIZE);
   }
 
   void Displayer::addImage(cv::Mat img, const std::string& imgName, int convert)

@@ -80,7 +80,7 @@ namespace detect
       b1_.update();
       b2_.update();
 
-      displayer_.display();
+      //displayer_.display();
 
       // We map each camera's color index to an index in our cube (see cube.hh)
       constexpr std::array<int, 54> indexes =
