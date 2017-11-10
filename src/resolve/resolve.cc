@@ -3,11 +3,6 @@
 namespace Resolution
 {
 
-    Resolve::Resolve()
-    {
-        faces_.face_set(cube::Cube::solved_state_);
-    }
-
     Resolve::Resolve(std::string& str) : faces_(str)
     {}
 
@@ -85,7 +80,7 @@ namespace Resolution
         int ret = std::system(str.str().c_str());
         printf("return value %d\n", ret);
 
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(3));
        return true; 
     }
 
