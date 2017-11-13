@@ -240,7 +240,7 @@ namespace cube
         state.push_move(m);
         state.draw_text_data();
         display.refresh();
-        SDL_Delay(state.waiting_time_);
+        //SDL_Delay(state.waiting_time_);
       }
       return make_move(solution, moves_table_[move.first][move.second]);
     }
