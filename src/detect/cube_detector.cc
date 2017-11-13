@@ -70,7 +70,7 @@ namespace detect
   std::string CubeDetector::detect_cube(bool second_run)
   {
     std::string result;
-    std::vector<std::array<int, 3>> values(54);
+    std::vector<std::array<int, 6>> values(54);
 
     for (size_t i = 0; i < _NB_RUN; i++)
     {
@@ -114,7 +114,7 @@ namespace detect
     }
 
     // This is a debug (print) loop
-    std::vector<std::string> c = { "blanc", "bleu", "rouge", "jaune", "vert", "orange" };
+    std::vector<std::string> c = { "blanc", "bleu", "rouge", "jaune", "vert", "noir" };
     for (size_t i = 0; i < 54; i++)
     {
       std::cout << i << ": ";

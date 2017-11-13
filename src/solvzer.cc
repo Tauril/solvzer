@@ -23,7 +23,7 @@
 namespace
 {
 
-  void check_camera(short count)
+  void check_camera(detect::Displayer& displayer, short count)
   {
     using namespace std::literals;
 
@@ -33,7 +33,6 @@ namespace
                             return 0;
                           });
 
-    detect::Displayer displayer("solvzer");
     detect::Detector d(displayer,
                        count < 2 ? detect::CameraPosition::TOP
                                  : detect::CameraPosition::BOTTOM,
@@ -60,8 +59,10 @@ int main(int argc, char** argv)
   // RESOLVE BY HAND
 #endif
 
+  detect::Displayer displayer("solvZer");
   for (short count = 0; count < 4; count++)
-    check_camera(count);
+    check_camera(displayer, count);
+  displayer.destroy();
 
   SDL_Window* window = nullptr;
   SDL_Renderer* renderer = nullptr;
