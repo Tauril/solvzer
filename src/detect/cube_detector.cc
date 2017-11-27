@@ -70,7 +70,7 @@ namespace detect
   std::string CubeDetector::detect_cube(bool second_run)
   {
     std::string result;
-    std::vector<int[6]> values(54);
+    std::vector<std::array<int, 3>> values(54);
 
     for (size_t i = 0; i < _NB_RUN; i++)
     {

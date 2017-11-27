@@ -271,7 +271,7 @@ namespace cube
           break;
         case '1':
           moves++;
-          [[fallthrough]]
+          [[fallthrough]];
         default:
           times = 1;
           break;
