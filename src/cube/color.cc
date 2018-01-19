@@ -53,7 +53,7 @@ namespace cube
     static const std::map<enum color, std::string> colors =
     {
       { color::U, "white" }, { color::R, "blue" }, { color::F, "red" },
-      { color::D, "yellow"}, { color::L, "green" }, { color::B, "orange" }
+      { color::D, "yellow"}, { color::L, "green" }, { color::B, "black" }
     };
 
     auto clr = colors.find(c);

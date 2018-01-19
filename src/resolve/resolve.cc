@@ -28,11 +28,6 @@ namespace Resolution
             nb_rotation = 1;
         }
 
-        // These two motors need more power to turn on the left.
-        if ((move.first == cube::color::F || move.first == cube::color::R)
-            && rotate_right)
-            nb_rotation += 10;
-
         std::stringstream str;
         str << "python step_motor_final.py "
             << (rotate_right ? "right" : "left");
@@ -55,19 +50,13 @@ namespace Resolution
                 str << " " << (nb_rotation == 1 ? rotateD_[0] : rotateD_[1])
                     << " " <<motorD_[0] << " " << motorD_[1];
                 break;
-
-                break;
             case cube::color::L:
                 str << " " << (nb_rotation == 1 ? rotateL_[0] : rotateL_[1])
                     << " " <<motorL_[0] << " " << motorL_[1];
                 break;
-
-                break;
             case cube::color::B:
                 str << " " << (nb_rotation == 1 ? rotateB_[0] : rotateB_[1])
                     << " " <<motorB_[0] << " " << motorB_[1];
-                break;
-
                 break;
             default:
                 exit(4);

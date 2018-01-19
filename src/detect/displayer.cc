@@ -7,6 +7,12 @@ namespace detect
     //cv::namedWindow(name, CV_WINDOW_AUTOSIZE);
   }
 
+  void
+  Displayer::destroy()
+  {
+    cv::destroyWindow(name_);
+  }
+
   void Displayer::addImage(cv::Mat img, const std::string& imgName, int convert)
   {
     cv::Mat copy;

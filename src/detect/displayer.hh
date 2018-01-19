@@ -15,6 +15,7 @@ namespace detect
     public:
       Displayer(std::string name);
 
+      void destroy();
       void addImage(cv::Mat img, const std::string& imgName, int convert);
       void display();
 

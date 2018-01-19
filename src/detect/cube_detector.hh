@@ -18,4 +18,6 @@ namespace detect
       Detector t1_, t2_, b1_, b2_;
       Displayer displayer_ = Displayer("solvzer");
   };
+
+  void last_chance_detection(std::string &state);
 }

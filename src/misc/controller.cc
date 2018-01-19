@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "controller.hh"
 #include "cube/cube.hh"
 #include "cube/move.hh"
@@ -21,22 +23,6 @@ namespace controller
        display.toggle_enable("previous", false);
        display.toggle_enable("next", false);
        display.repaint();
-    }
-
-    void
-    scramble()
-    {
-      auto& state = state::State::Instance();
-      auto& display = display::Display::Instance();
-
-      reset_state();
-      state.draw_ = true;
-      state.waiting_time_ = 2000;
-      auto& face = state.face_get();
-      face.scramble();
-      display.toggle_enable("resolve", true);
-      display.toggle_enable("step_by_step", true);
-      display.repaint();
     }
 
     void
@@ -161,9 +147,7 @@ namespace controller
                                                         event->button.y);
             if (check_button == "")
               break;
-            else if (check_button.find("scramble") != std::string::npos)
-              scramble();
-            else if (check_button.find("resolve") != std::string::npos)
+            if (check_button.find("resolve") != std::string::npos)
               resolve();
             else if (check_button.find("step_by_step") != std::string::npos)
               step_by_step();

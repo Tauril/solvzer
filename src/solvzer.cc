@@ -48,6 +48,7 @@ namespace
 
 int main(int argc, char** argv)
 {
+
 #if 0
   // RESOLVE BY HAND
   std::cout << "Resolution begins\n";
@@ -72,11 +73,13 @@ int main(int argc, char** argv)
 
   // While we detect wrong colors, keep trying.
   bool second_run = false;
+
+  std::string state;
+
   while (true)
   {
     try {
-      std::string state = detector.detect_cube(second_run);
-      std::cout << "state: " << state << std::endl;
+      state = detector.detect_cube(second_run);
       auto& dis = display::Display::Instance(&window, &renderer);
       auto face = cube::Face(state); // throw if wrong number of colors
       auto cube = cube::Cube(face);
@@ -91,7 +94,16 @@ int main(int argc, char** argv)
       {
           std::cerr << "Could not detect properly colors." << std::endl;
           std::cout << e.what() << std::endl;
-          return 1;
+          std::cout << "Actual state " << state << std::endl;
+          detect::last_chance_detection(state);
+          std::cout << "final state " << state << std::endl;
+          auto& dis = display::Display::Instance(&window, &renderer);
+          auto face = cube::Face(state); // throw if wrong number of colors
+          auto cube = cube::Cube(face);
+          cube.verify(); // throw execption if not a regulat cube
+          state::State::Instance().face_set(face);
+          dis.repaint();
+          break;
       }
     }
   }

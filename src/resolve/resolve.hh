@@ -65,7 +65,7 @@ namespace Resolution
     static constexpr int rotateU_[] = {405, 805}; // WHITE
     static constexpr int rotateL_[] = {405, 805}; // GREEN
     static constexpr int rotateF_[] = {405, 805};  // RED
-    static constexpr int rotateR_[] = {405, 805}; // BLUE
+    static constexpr int rotateR_[] = {200, 400}; // BLUE
     static constexpr int rotateB_[] = {405, 805}; // ORANGE/BLACK
     static constexpr int rotateD_[] = {405, 805}; // YELLOW
 

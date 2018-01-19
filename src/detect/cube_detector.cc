@@ -56,9 +56,15 @@ namespace detect
       return std::string("L");
     if (str == "yellow")
       return std::string("D");
+    if (str == "white")
+      return std::string("U");
 
-    return std::string("U");
+    std::cout << "Error: color does not exist. Try again" << std::endl;
 
+    std::string s;
+    std::cin >> s;
+
+    return get_color(s);
   }
   CubeDetector::CubeDetector()
     : t1_(displayer_, CameraPosition::TOP, START_CHANNEL)
@@ -152,5 +158,69 @@ namespace detect
     }
 
     return result;
+  }
+
+  int get_face_number(char c)
+  {
+    if (c == 'U')
+      return 0;
+    if (c == 'R')
+      return 1;
+    if (c == 'F')
+      return 2;
+    if (c == 'D')
+      return 3;
+    if (c == 'L')
+      return 4;
+    if (c == 'B')
+      return 5;
+
+    return -1;
+  }
+
+
+  void last_chance_detection(std::string &state)
+  {
+    std::cout << "This is the detected cube, type <FACE><NUMBER>_<COLOR> "
+              << "to effectuate changement. Type \"end\" when you finished."
+              << std::endl;
+
+    std::string s;
+
+    do
+    {
+      std::cin >> s;
+      if (s.length() < 6)
+      {
+        std::cout << "test s: " << s << std::endl;
+        std::cout << "Bad input, should be  <FACE><NUMBER> <COLOR>" << std::endl;
+        continue;
+      }
+      int face = get_face_number(s[0]);
+      if (face == -1)
+      {
+        std::cout << "Face should be U (up) or F (face) or B (back) or L (left)"
+                  << " or R (right) or D (down). Try again." << std::endl;
+        continue;
+      }
+      std::string n;
+      n.push_back(s[1]);
+      int number = std::atoi(n.c_str());
+      if (number < 1 || number > 9)
+      {
+        std::cout << "Number should be between 1 and 9. Try again." << std::endl;
+        continue;
+      }
+      state[face * 9 + (number - 1)] = get_color(s.substr(3, s.length() - 3))[0];
+      std::cout << "New state : ";
+      for (int i = 0; i < 6; i++)
+      {
+        for (int j = 1; j <= 9; j++)
+            std::cout << state[i * 9 + j - 1];
+        if (i != 5)
+          std::cout << " ";
+      }
+      std::cout << std::endl;
+    } while (s != "end");
   }
 }
