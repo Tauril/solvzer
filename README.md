@@ -5,6 +5,8 @@
 The SolvZer project aims to implement a Rubik's Cube solving algorithm and
 integrate it into a robot.
 
+[![Solvzer presentation](https://github.com/tauril/solvzer/blob/master/resources/presentation-preview.png)](https://youtu.be/nVswGOk3PPo)
+
 ### Authors
 
 * [Thibault Liotier](https://github.com/thib0)
