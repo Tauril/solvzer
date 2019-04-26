@@ -9,7 +9,7 @@ integrate it into a robot.
 
 ### Authors
 
-* [Thibault Liotier](https://github.com/thib0)
+* [Thibault Liotier](https://github.com/thibzr)
 * [Guillaume Marques](https://github.com/tauril)
 * [Cyprien Orfila](https://github.com/addramer)
 * [Jeanne Petit](https://github.com/jeajeamax)
